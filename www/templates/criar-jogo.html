@@ -1,0 +1,31 @@
+<ion-modal-view>
+    <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Criar Jogo</h1>
+        <button class="button button-clear button-primary ion-close-round" ng-click="hideModal()"></button>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list">
+            <label class="item item-input">
+            <input type="text" ng-model="novoJogo.nome" placeholder="Nome da Partida">
+        </label>
+            <label class="item item-input">
+            <input type="text" placeholder="Location" location-suggestion location="location" ng-model="location.formatted_address">
+        </label>
+            <h4>Número de jogadores</h4>
+            <rzslider rz-slider-model="novoJogo.minJogadores" rz-slider-high="novoJogo.maxJogadores" rz-slider-options="modalForm.jogadoresRange.options"></rzslider>
+        </div>
+        <h4>Dia</h4>
+        <a-carousel on-select="onDateSelect(item)" carousel-options="modalForm.dateSelectorConfig" array-provider="modalForm.dateSelector"></a-carousel>
+        <h4>Horário de início</h4>
+            <rzslider rz-slider-model="modalForm.horarioRange.value" rz-slider-options="modalForm.horarioRange.options"></rzslider>
+        <div class="button-bar padding">
+            <a grouped-radio="1" ng-model="modalForm.visibilidade">Público</a>
+            <a grouped-radio="2" ng-model="modalForm.visibilidade">Amigos de amigos</a>
+            <a grouped-radio="3" ng-model="modalForm.visibilidade">Amigos</a>
+            <a grouped-radio="4" ng-model="modalForm.visibilidade">Convocados</a>
+        </div>
+        <button ng-click="salvarJogo(location.geometry.location);" class="button button-block button-positive">
+      Criar Jogo
+    </button>
+    </ion-content>
+</ion-modal-view>

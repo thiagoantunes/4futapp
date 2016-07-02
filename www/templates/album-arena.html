@@ -1,0 +1,24 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header bar-positive">
+    <h1 class="title">Confirmar Reserva</h1>
+    <button class="button button-clear button-primary ion-close-round" ng-click="modalAlbum.hide()"></button>
+  </ion-header-bar>
+  <ion-content>
+    <div class="list half">
+      <div ng-repeat="imagem in albumArena" class="card card-gallery item item-text-wrap">
+        <div class="ink dark-bg">
+          <h2>Where's Elsa?</h2>
+          <img class="full-image" src="{{imagem.img}}">
+        </div>
+        <div class="item tabs tabs-secondary tabs-icon-left">
+          <a class="tab-item stable-bg assertive">
+            <i class="icon ion-heart"></i> 4
+          </a>
+          <a class="tab-item stable-bg positive-900">
+            <i class="icon ion-chatbubbles"></i> 2
+          </a>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-modal-view>

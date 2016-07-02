@@ -1,0 +1,80 @@
+$light:                           #fff !default;
+$stable:                          #F7F7F7 !default;
+$positive:                        #009688 !default;
+$calm:                            #00BCD4 !default;
+$balanced:                        #66cc33 !default;
+$energized:                       #FF9800 !default;
+$assertive:                       #F34235 !default;
+$royal:                           #8a6de9 !default;
+$dark:                            #2e2f31 !default;
+
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../lib/ionic/fonts" !default;
+
+$RobotoDraftFontPath: "../fonts"; // REMINDER: edit as appropriate!
+$RobotoDraftFontName: "RobotoDraft";
+$RobotoDraftFontVersion: "1.0.0";
+
+// Include all of Ionic
+@import "www/lib/ionic/scss/ionic";
+
+@import 
+    "www/lib/bourbon/app/assets/stylesheets/_bourbon",
+    "www/lib/robotodraft/sass/robotodraft.scss";
+
+@import 
+    "scss/inc/cards",
+    "scss/inc/carousel",
+    
+    "scss/inc/arena-view",
+    "scss/inc/list-view"; 
+
+body{
+    color:#888;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    color:#555;
+}
+
+hr{
+   display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 1em 0;
+    padding: 0; 
+}
+
+.angular-google-map-container { height: 40vh; }
+
+.item-icon-small { font-size:large !important; color: #666 }
+
+.button-bar > .button:last-child {
+  border-radius: 0px 20px 20px 0px !important;
+}
+.button-bar > .button:first-child {
+    border-radius: 20px 0px 0px 20px !important;
+}
+
+#gmap {
+  width: 100%;
+  height: 100% !important;
+}
+
+.scroll, 
+.mapWrap {
+  height: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+

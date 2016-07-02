@@ -1,0 +1,43 @@
+.profile-view{
+  background-color: #ededed;
+
+  .tabs-profile {
+    position:relative  ;   
+    background-color: #fff !important; 
+    border:none; 
+    background-image: none;
+    .tab-item{
+      border-top:0px!important;
+      .icon{
+        font-size: 22px; 
+        padding-top: 10px; 
+        opacity: 0.7;
+      }
+    }
+  }
+
+  .card-title{
+      padding-left: 15px; padding-top: 5px;
+  }
+
+  .horarios{
+    .row{
+      padding:0px;
+    }
+
+    .col{
+        padding: 5px 5px 5px 0px; margin-right: 3px;
+        button{
+            height:40px; 
+            line-height: 15px ; 
+            border: solid 1px #ddd;
+            box-shadow:none; 
+            padding:0px; 
+            span{
+                font-weight: bold;
+                font-size: 0.8em;
+            }
+        }
+    }
+  }
+}
