@@ -10043,6 +10043,32 @@ ion-spinner.spinner-on-load {
   .profile-view .card-title {
     padding-left: 15px;
     padding-top: 5px; }
+  .profile-view .estrutura {
+    padding-left: 15px;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    display: inline-flex; }
+    .profile-view .estrutura .item-estrutura {
+      width: 70px;
+      height: 55px; }
+      .profile-view .estrutura .item-estrutura .quantidade {
+        width: 35px;
+        text-align: center;
+        line-height: 28px;
+        font-size: x-large; }
+      .profile-view .estrutura .item-estrutura .imagem {
+        display: block;
+        margin: 0 auto; }
+        .profile-view .estrutura .item-estrutura .imagem img {
+          margin-top: -5px;
+          box-shadow: none;
+          display: block;
+          margin: 0 auto; }
+      .profile-view .estrutura .item-estrutura .desc {
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap; }
   .profile-view .horarios .row {
     padding: 0px; }
   .profile-view .horarios .col {
@@ -10057,6 +10083,40 @@ ion-spinner.spinner-on-load {
       .profile-view .horarios .col button span {
         font-weight: bold;
         font-size: 0.8em; }
+
+.confirmacao-reserva {
+  background-color: rgba(40, 40, 40, 0.9); }
+  .confirmacao-reserva h1, .confirmacao-reserva h2, .confirmacao-reserva h3, .confirmacao-reserva h4, .confirmacao-reserva h5, .confirmacao-reserva h6 {
+    color: #efefef;
+    margin: 0px 5px; }
+  .confirmacao-reserva .header {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    height: 165px;
+    position: relative;
+    background: #009688;
+    color: white; }
+    .confirmacao-reserva .header button {
+      color: white;
+      float: right;
+      font-size: 1.5em; }
+    .confirmacao-reserva .header .content {
+      padding: 60px 30px 20px 30px; }
+      .confirmacao-reserva .header .content i {
+        font-size: 1.6em;
+        margin-right: 10px; }
+  .confirmacao-reserva .button-bar {
+    margin-top: 10px;
+    box-shadow: none; }
+    .confirmacao-reserva .button-bar .button {
+      margin: 0px 5px;
+      border-radius: 4px !important; }
+    .confirmacao-reserva .button-bar .button:not(.button-positive) {
+      background-color: #555;
+      color: #fff; }
+    .confirmacao-reserva .button-bar .button:last-child {
+      border-radius: 4px !important; }
+    .confirmacao-reserva .button-bar .button:first-child {
+      border-radius: 4px !important; }
 
 .cards-view {
   background-color: #ededed; }

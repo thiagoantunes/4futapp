@@ -6,6 +6,7 @@ angular.module('main')
     vm.arena = ArenasService.arenaSelecionada;
     vm.album = ArenasService.getAlbum($stateParams.id);
     vm.quadras = ArenasService.getQuadrasArena(vm.arena.id);
+    vm.estrutura = ArenasService.getEstrutura(vm.arena.id);
     vm.intervaloSelecionado = {};
     vm.horariosPorQuadra = [];
     vm.reservas = [];
@@ -20,20 +21,28 @@ angular.module('main')
       });
       vm.carouselOptions1 = {
         carouselId: 'carousel-1',
-        align: 'left',
+        align: 'left', 
         selectFirst: true,
         centerOnSelect: false,
-        template: 'templates/carousel-template.html'
+        template: 'templates/misc/carousel-template.html'
       };
       vm.carouselData1 = createArray();
-      $ionicModal.fromTemplateUrl('templates/confirma-reserva.html', {
+      $ionicModal.fromTemplateUrl('templates/modal/confirma-reserva.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
         $scope.modal = modal;
       });
 
-      $ionicModal.fromTemplateUrl('templates/album-arena.html', {
+      $ionicModal.fromTemplateUrl('templates/modal/album-arena.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function (modal) {
+        $scope.modalAlbum = modal;
+        $scope.albumArena = vm.album;
+      });
+
+      $ionicModal.fromTemplateUrl('templates/modal/estrutura-arena.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
@@ -140,6 +149,7 @@ angular.module('main')
       vm.horarioSelecionado = horario.horarios[index];
 
       $scope.modalData = {
+        arena: vm.arena.nome,
         horario: vm.horarioSelecionado,
         quadra: horario.quadra,
         duracao: 1,
@@ -197,12 +207,6 @@ angular.module('main')
         selector: '.slide-up'
       });
     }, 300);
-
-    $timeout(function () {
-      ionicMaterialMotion.fadeSlideInRight({
-        startVelocity: 3000
-      });
-    }, 700);
 
     // Set Ink
     ionicMaterialInk.displayEffect();

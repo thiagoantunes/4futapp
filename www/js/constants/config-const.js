@@ -7,10 +7,10 @@
 
 // Initialize Firebase
 var config = {
-  apiKey: 'AIzaSyAhiZwY-x3As6G7ItyKwmSBUzS4Mcg3SnY',
-  authDomain: 'pelapp.firebaseapp.com',
-  databaseURL: 'https://pelapp.firebaseio.com',
-  storageBucket: 'project-1558131433489077274.appspot.com',
+    apiKey: "AIzaSyAfkQ7QG4LY6w0x5XNKzvu1VRiGOVyOxCY",
+    authDomain: "rdqdb-a9419.firebaseapp.com",
+    databaseURL: "https://rdqdb-a9419.firebaseio.com",
+    storageBucket: "rdqdb-a9419.appspot.com",
 };
 
 // Initialize the FirebaseUI Widget using Firebase.

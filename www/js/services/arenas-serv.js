@@ -1,7 +1,7 @@
 /*global GeoFire*/
 'use strict';
 angular.module('main')
-  .factory('ArenasService', function (Ref, $firebaseArray, $firebaseObject, $cordovaGeolocation) {
+  .factory('ArenasService', function (Ref, $firebaseArray, $firebaseObject, $cordovaGeolocation, FilteredArray) {
     var service = {
       getRef: getRef,
       getGeoQuery: getGeoQuery,
@@ -10,6 +10,7 @@ angular.module('main')
       getArenaNoSync: getArenaNoSync,
       getQuadrasArena: getQuadrasArena,
       getAlbum: getAlbum,
+      getEstrutura: getEstrutura,
       arenaSelecionada: null
       //createGeo: createGeo
     };
@@ -49,5 +50,34 @@ angular.module('main')
     function getAlbum(arena) {
       return $firebaseArray(Ref.child('arenasAlbuns/' + arena));
     }
+
+    function getEstrutura(arena) {
+      var ref = Ref.child('arenasEstrutura/' + arena).orderByChild('ordem');
+      return new FilteredArray(ref, estruturaFilterFunc);
+    }
+
+    // function getEstrutura(arena) {
+    //   return $firebaseArray(Ref.child('arenasEstrutura/' + arena).orderByChild('ordem').startAt(true).endAt(true));
+    // }
+
+    function estruturaFilterFunc(rec) {
+      return rec.ativo;
+    }
+
+  })
+
+  .factory('FilteredArray', function ($firebaseArray) {
+   /*jshint -W004 */
+        function FilteredArray(ref, filterFn) {
+            this.filterFn = filterFn;
+            return $firebaseArray.call(this, ref);
+        }
+        FilteredArray.prototype.$$added = function (snap) {
+            var rec = $firebaseArray.prototype.$$added.call(this, snap);
+            if (!this.filterFn || this.filterFn(rec)) {
+                return rec;
+            }
+        };
+        return $firebaseArray.$extend(FilteredArray);
 
   });

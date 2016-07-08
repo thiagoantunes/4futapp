@@ -89,7 +89,7 @@ angular.module('main')
           align: 'left',
           selectFirst: true,
           centerOnSelect: false,
-          template: 'templates/carousel-template.html'
+          template: 'templates/misc/carousel-template.html'
         },
         dateSelector: createArray(),
         jogadoresRange: {
@@ -126,7 +126,7 @@ angular.module('main')
         status: 'agendado'
       };
 
-      $ionicModal.fromTemplateUrl('templates/criar-jogo.html', {
+      $ionicModal.fromTemplateUrl('templates/modal/criar-jogo.html', {
         scope: $scope
       }).then(function (modal) {
         $scope.novoJogoModal = modal;
