@@ -28,7 +28,6 @@ angular.module('main', [
 
       }
       if (window.StatusBar) {
-        // org.apache.cordova.statusbar required
         StatusBar.styleDefault();
       }
 
@@ -168,7 +167,6 @@ angular.module('main', [
   })
 
   .controller('ApplicationController', function ($state, $rootScope) {
-
     var hideTabsStates = ['tab.arenas-detail'];
 
     $rootScope.$on('$ionicView.beforeEnter', function () {
@@ -180,7 +178,7 @@ angular.module('main', [
     uiGmapGoogleMapApiProvider.configure({
       //    key: 'your api key',
       v: '3.20', //defaults to latest 3.X anyhow
-      libraries: 'weather,geometry,visualization'
+      libraries: 'weather,geometry,visualizazzzztion'
     });
   })
 

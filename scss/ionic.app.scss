@@ -1,12 +1,24 @@
 $light:                           #fff !default;
-$stable:                          #F7F7F7 !default;
+$stable:                          #555 !default;
 $positive:                        #009688 !default;
 $calm:                            #00BCD4 !default;
 $balanced:                        #66cc33 !default;
-$energized:                       #FF9800 !default;
+$energized:                       #FFC107 !default;
 $assertive:                       #F34235 !default;
 $royal:                           #8a6de9 !default;
 $dark:                            #2e2f31 !default;
+$base-background-color:           #282828 !default;
+
+$base-color:                      #efefef !default;
+$card-header-bg:                  #444 !default;
+$card-body-bg:                    #333 !default;
+$card-footer-bg:                  #444 !default;
+
+$button-stable-bg:                $stable !default;
+$button-stable-text:              #efefef !default;
+$button-stable-border:            #444 !default;
+$button-stable-active-bg:         #444 !default;
+$button-stable-active-border:     #333 !default;
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
@@ -16,7 +28,8 @@ $RobotoDraftFontName: "RobotoDraft";
 $RobotoDraftFontVersion: "1.0.0";
 
 // Include all of Ionic
-@import "www/lib/ionic/scss/ionic";
+@import "www/lib/ionic/scss/ionic",
+        "www/lib/ionic-material/src/scss/index";
 
 @import 
     "www/lib/bourbon/app/assets/stylesheets/_bourbon",
@@ -29,19 +42,13 @@ $RobotoDraftFontVersion: "1.0.0";
     "scss/inc/arena-view",
     "scss/inc/list-view"; 
 
-body{
-    color:#888;
-}
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-    color:#555;
-}
 
 hr{
    display: block;
     height: 1px;
     border: 0;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #555;
     margin: 1em 0;
     padding: 0; 
 }
