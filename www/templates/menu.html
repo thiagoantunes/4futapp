@@ -5,10 +5,9 @@
 
     <!-- header bar -->
     <!-- the nav bar will be updated as we navigate between views -->
-    <ion-nav-bar class="bar-energized">
+    <ion-nav-bar class="bar-positive">
       <!-- back button, shown if applicable -->
-      <ion-nav-back-button>
-      </ion-nav-back-button>
+      <ion-nav-back-button class="no-text"></ion-nav-back-button>
       <!-- nav button, shown if applicable -->
       <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
@@ -24,19 +23,30 @@
   <!-- SIDEMENU -->
   <ion-side-menu side="left">
 
-    <!-- menu header -->
-    <ion-header-bar class="bar-energized">
-      <h1 class="title">Nav</h1>
+    <ion-header-bar class="bar-profile">
+      <div class="profile">
+        <img class="profile-picture" src="img/logo-menu.png" />
+        <h3 class="name">Thronester</h3>
+      </div>
     </ion-header-bar>
 
     <!-- menu content -->
     <ion-content>
       <ion-list>
         <ion-item menu-close ui-sref="main.arenas">
-          Arenas
+          <i class="ion-ios-browsers"></i>
+          <b class="padding"> ARENAS </b>
+        </ion-item>
+        <ion-item menu-close ui-sref="main.jogos">
+          <i class="ion-ios-football"></i>
+          <b class="padding"> JOGOS </b>
+        </ion-item>
+        <ion-item menu-close ui-sref="main.jogos">
+          <i class="ion-person"></i>
+          <b class="padding"> PERFIL </b>
         </ion-item>
         <ion-item menu-close ng-click="menu.logOut();">
-          Sair
+          SAIR
         </ion-item>
       </ion-list>
     </ion-content>

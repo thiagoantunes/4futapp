@@ -46,8 +46,16 @@ angular.module('main')
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
-        $scope.modalAlbum = modal;
-        $scope.albumArena = vm.album;
+        $scope.modalEstrutura = modal;
+        $scope.estrutura = vm.estrutura;
+      });
+
+      $ionicModal.fromTemplateUrl('templates/modal/quadras-arena.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function (modal) {
+        $scope.modalQuadras = modal;
+        $scope.quadras = vm.quadras;
       });
     }
 

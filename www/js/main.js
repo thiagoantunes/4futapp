@@ -73,7 +73,7 @@ angular.module('main', [
         if (user) {
           // User is signed in.
           if (toState.name === 'login') {
-            $state.go('tab.arenas');
+            $state.go('main.arenas');
           }
         } else if (toState.name !== 'login') {
           // User is signed out.
@@ -86,13 +86,13 @@ angular.module('main', [
   })
 
   .config(function ($stateProvider, $urlRouterProvider, tmhDynamicLocaleProvider, $ionicConfigProvider) {
-    $ionicConfigProvider.tabs.style('standard');
-    $ionicConfigProvider.tabs.position('bottom');
+    //$ionicConfigProvider.tabs.style('standard');
+    //$ionicConfigProvider.tabs.position('bottom');
     tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-locale-pt-br/angular-locale_pt-br.js');
 
     // ROUTING with ui.router
     //$urlRouterProvider.otherwise('/login');
-    $urlRouterProvider.otherwise('/tab/arenas');
+    $urlRouterProvider.otherwise('/main/arenas');
     $stateProvider
       // this state is placed in the <ion-nav-view> in the index.html
       .state('login', {
@@ -117,6 +117,42 @@ angular.module('main', [
           }]
         }
       })
+
+      .state('main', {
+        url: '/main',
+        abstract: true,
+        templateUrl: 'templates/menu.html',
+        controller: 'MenuCtrl as menu'
+      })
+      .state('main.arenas', {
+        url: '/arenas',
+        views: {
+          'pageContent': {
+            templateUrl: 'templates/arenas-list.html',
+            controller: 'ArenasCtrl as actrl'
+          }
+        }
+      })
+      .state('main.arenas-detail', {
+        url: '/arenas/:id',
+        views: {
+          'pageContent': {
+            templateUrl: 'templates/arenas-detail.html',
+            controller: 'ArenaDetailsCtrl as vm',
+          }
+        }
+      })
+
+      .state('main.jogos', {
+        url: '/jogos',
+        views: {
+          'pageContent': {
+            templateUrl: 'templates/jogos.html',
+            controller: 'JogosCtrl as vm'
+          }
+        }
+      })
+
 
       .state('tab', {
         url: '/tab',

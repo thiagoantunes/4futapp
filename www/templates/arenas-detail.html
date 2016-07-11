@@ -1,116 +1,64 @@
-<ion-view view-title="{{vm.arena.nome}}" class="profile-view">
+<ion-view  view-title="{{vm.arena.nome}}" class="profile-view">
   <ion-content ng-class="{expanded:$scope.isExpanded}">
-    <div class="hero has-mask slide-up" style="background-image: url('{{vm.album[0].img}}');">
+    <div class="hero has-mask slide-up" style="background-image: url('{{vm.album[0].thumb}}');">
       <div class="content">
         <div class="avatar" style="background-image: url('{{vm.arena.fotoPerfil}}');"></div>
-        <div class="content">
-          <button style="color:white; padding:0px" class="button  button-clear flat waves-effect waves-button waves-light icon ion-ios-star-outline pull-right text-white"></button>
-          <button style="color:white; padding:0px" ng-click="modalAlbum.show();" class="button  button-clear flat waves-effect waves-button waves-light icon ion-images pull-right text-white"></button>
-        </div>
-      </div>
-    </div>
-    <div class="padding-horizontal" style="margin: 15px 0px;">
-      <div class="card">
-        <h5 class="card-title">ESTRUTURA</h5>
-        <hr/>
-        <div class="estrutura">
-            <div class="item-estrutura">
-              <div class="row">
-                <div class="quantidade">{{vm.quadras.length}}</div>
-                <div class="imagem"><img src="/img/estrutura/quadra.png" alt=""></div>
-              </div>
-              <div class="desc"> Quadras</div>
-            </div>
-
-            <div class="item-estrutura" ng-if="vm.estrutura.length > 0">
-              <div class="row">
-                <div ng-if="vm.estrutura[0].quantidade > 1" class="quantidade">{{vm.estrutura[0].quantidade}}</div>
-                <div class="imagem"><img src="/img/estrutura/{{vm.estrutura[0].id}}.png" alt=""></div>
-              </div>
-              <div class="desc"> {{vm.estrutura[0].desc}} </div>
-            </div>
-
-            <div class="item-estrutura" ng-if="vm.estrutura.length > 1">
-              <div class="row">
-                <div ng-if="vm.estrutura[1].quantidade > 1" class="quantidade">{{vm.estrutura[1].quantidade}}</div>
-                <div class="imagem"><img src="/img/estrutura/{{vm.estrutura[1].id}}.png" alt=""></div>
-              </div>
-              <div class="desc"> {{vm.estrutura[1].desc}} </div>
-            </div>
-
-            <div class="item-estrutura" ng-if="vm.estrutura.length == 3">
-              <div class="row">
-                <div ng-if="vm.estrutura[2].quantidade > 1" class="quantidade">{{vm.estrutura[2].quantidade}}</div>
-                <div class="imagem"><img src="/img/estrutura/{{vm.estrutura[2].id}}.png" alt=""></div>
-              </div>
-              <div class="desc"> {{vm.estrutura[2].desc}} </div>
-            </div>
-
-            <div class="item-estrutura" ng-if="vm.estrutura.length > 3">
-              <div class="row">
-                <div class="imagem"><img src="/img/estrutura/{{vm.estrutura[2].id}}.png" alt=""></div>
-              </div>
-              <div class="desc"> Mais </div>
-            </div>
-
-        </div>
-      </div>
-    </div>
-    <!--<div class="padding-horizontal" style="margin: 15px 0px;">
-      <div class="card">
-        <h5 class="card-title">Contato</h5>
-        <hr/>
-        <div class="list" style="margin-top: -10px;">
-
-          <a class="item item-icon-left" href="#">
-            <i style="font-size: 22px;" class="icon ion-ios-location"></i> {{vm.arena.endereco}}
-          </a>
-
-          <a class="item item-icon-left" href="#">
-            <i style="font-size: 22px;" class="icon ion-social-whatsapp"></i> {{vm.arena.telefone}}
-          </a>
-
-          <a class="item item-icon-left" href="#">
-            <i style="font-size: 22px;" class="icon ion-social-facebook"></i> {{vm.arena.site}}
-          </a>
-        </div>
-      </div>
-    </div>-->
-    <div class="padding-horizontal">
-      <div class="card">
-        <h5 class="card-title">HORÁRIOS DISPONÍVEIS</h5>
-        <hr/>
-        <div class="content padding double-padding-x">
-          <a-carousel carousel-options="::vm.carouselOptions1" array-provider="::vm.carouselData1" on-select="vm.onSelectCarousel(item)">
-          </a-carousel>
+        <h4>{{vm.arena.nome}}
           <br/>
-          <ion-list class="horarios">
-            <ul>
-              <li ng-repeat="horario in vm.horariosPorQuadra" ng-if="horario.horarios.length >0">
-                <p>{{horario.quadra.nome}} ({{horario.quadra.tipo}})</p>
-                <div class="row" ng-repeat="hr in horario.horarios | orderBy:'start'" ng-if="$index % 3 === 0">
-                  <div class="col col-33" ng-if="$index < horario.horarios.length">
-
-                    <button ng-click="vm.openConfirmacaoModal(horario , $index);" class="button button-block button-small button-stable">
-                {{horario.horarios[$index].start | date :'HH:mm'}} <br/>  <span class="energized" >{{horario.horarios[$index].preco | currency : "R$"}}</span>
-              </button>
-                  </div>
-                  <div class="col col-33" ng-if="$index + 1 < horario.horarios.length">
-                    <button ng-click="vm.openConfirmacaoModal(horario, $index + 1);" class="button button-block button-small button-stable">
-               {{horario.horarios[$index + 1].start| date :'HH:mm'}} <br/>  <span class="energized" >{{horario.horarios[$index + 1].preco | currency : "R$"}}</span>
-              </button>
-                  </div>
-                  <div class="col col-33" ng-if="$index + 2 < horario.horarios.length">
-                    <button ng-click="vm.openConfirmacaoModal(horario , $index + 2);" class="button button-block button-small button-stable">
-                {{horario.horarios[$index + 2].start| date :'HH:mm'}} <br/>  <span class="energized" >{{horario.horarios[$index + 2].preco | currency : "R$"}}</span>
-              </button>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </ion-list>
+          <small><i class="icon ion-navigate"></i> {{vm.arena.distance | number : 2}} km</small>
+        </h4>
+      </div>
+    </div>
+    <div class="info">
+      <div class="row">
+        <div ng-click="modalQuadras.show();"  class="col text-center">
+          <i class="icon ion-ios-browsers-outline"></i>
+          <br/> Quadras
+        </div>
+        <div ng-click="modalEstrutura.show();"  class="col text-center">
+          <i class="icon ion-grid"></i>
+          <br/> Estrutura
+        </div>
+        <div ng-click="modalAlbum.show();"  class="col text-center">
+          <i class="icon ion-images"></i>
+          <br/> Album
         </div>
       </div>
+      <div class="padding">
+        <i style="margin-right: 10px" class="icon ion-ios-location"></i> {{vm.arena.endereco}}
+      </div>
+    </div>
+    <br/>
+    <h5 class="text-center">HORÁRIOS DISPONÍVEIS</h5>
+    <div class="padding double-padding-x">
+      <a-carousel carousel-options="::vm.carouselOptions1" array-provider="::vm.carouselData1" on-select="vm.onSelectCarousel(item)">
+      </a-carousel>
+      <br/>
+      <ion-list class="horarios">
+        <ul>
+          <li ng-repeat="horario in vm.horariosPorQuadra" ng-if="horario.horarios.length >0">
+            <p class="text-center">{{horario.quadra.nome}} ({{horario.quadra.tipo}})</p>
+            <div class="row" ng-repeat="hr in horario.horarios | orderBy:'start'" ng-if="$index % 3 === 0">
+              <div class="col col-33" ng-if="$index < horario.horarios.length">
+
+                <button ng-click="vm.openConfirmacaoModal(horario , $index);" class="button button-block button-small button-stable">
+                {{horario.horarios[$index].start | date :'HH:mm'}} <br/>  <span class="balanced" >{{horario.horarios[$index].preco | currency : "R$"}}</span>
+              </button>
+              </div>
+              <div class="col col-33" ng-if="$index + 1 < horario.horarios.length">
+                <button ng-click="vm.openConfirmacaoModal(horario, $index + 1);" class="button button-block button-small button-stable">
+               {{horario.horarios[$index + 1].start| date :'HH:mm'}} <br/>  <span class="balanced" >{{horario.horarios[$index + 1].preco | currency : "R$"}}</span>
+              </button>
+              </div>
+              <div class="col col-33" ng-if="$index + 2 < horario.horarios.length">
+                <button ng-click="vm.openConfirmacaoModal(horario , $index + 2);" class="button button-block button-small button-stable">
+                {{horario.horarios[$index + 2].start| date :'HH:mm'}} <br/>  <span class="balanced" >{{horario.horarios[$index + 2].preco | currency : "R$"}}</span>
+              </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </ion-list>
     </div>
     <br/>
 

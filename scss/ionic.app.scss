@@ -2,7 +2,7 @@ $light:                           #fff !default;
 $stable:                          #555 !default;
 $positive:                        #009688 !default;
 $calm:                            #00BCD4 !default;
-$balanced:                        #66cc33 !default;
+$balanced:                        #03b7a5 !default;
 $energized:                       #FFC107 !default;
 $assertive:                       #F34235 !default;
 $royal:                           #8a6de9 !default;
@@ -43,6 +43,31 @@ $RobotoDraftFontVersion: "1.0.0";
     "scss/inc/list-view"; 
 
 
+.bar.bar-profile {
+    height: 180px;
+}
+
+.bar .profile {
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 0;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    padding-top: 15px;
+}
+
+.profile-picture {
+    max-height: 150px
+}
+
+.menu .has-header
+{
+    top: 179px;
+}
 
 hr{
    display: block;
@@ -51,6 +76,17 @@ hr{
     border-top: 1px solid #555;
     margin: 1em 0;
     padding: 0; 
+}
+
+.bar-subheader.custom
+{
+  height: 40vh !important;
+  border: none;
+  
+}
+
+.has-subheader-custom {
+    top: 40vh !important;
 }
 
 .angular-google-map-container { height: 40vh; }

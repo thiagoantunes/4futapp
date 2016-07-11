@@ -1,5 +1,8 @@
 .profile-view{
 
+    .hero{
+        box-shadow: none;
+    }
 
   .tabs-profile {
     position:relative  ;   
@@ -20,42 +23,16 @@
       padding-left: 15px; padding-top: 5px;
   }
 
-  .estrutura{
-      padding-left: 15px; 
-      margin-top: -5px; 
-      margin-bottom:10px;
-      display: inline-flex;
-
-      .item-estrutura{
-          width: 70px; 
-          height: 55px;
-
-          .quantidade{
-              width:35px; 
-              text-align:center; 
-              line-height: 28px; 
-              font-size:x-large;
-          }
-
-          .imagem{
-              display: block; 
-              margin: 0 auto;
-              img{
-                  margin-top: -5px; 
-                  box-shadow:none; 
-                  display: block; 
-                  margin: 0 auto;
+  .info{
+      background-color: #333;
+      .row{
+          border-bottom: 1px solid #444;
+          .col{
+              i{
+                  font-size: 24px;
               }
           }
-
-          .desc{
-                text-align: center;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-          }
       }
-
   }
 
   .horarios{
@@ -80,7 +57,7 @@
   }
 }
 
-.confirmacao-reserva{
+.modal-arena{
       background-color: rgba(40,40,40, 0.9);
 
       h1,h2,h3,h4,h5,h6{
@@ -98,6 +75,10 @@
             color: white;
             float: right;
             font-size: 1.5em;
+        }
+
+        .title{
+            padding: 90px 30px 20px 10px;
         }
 
         .content{

@@ -1,0 +1,18 @@
+<ion-modal-view class="modal-arena">
+  <ion-content>
+    <div class="header">
+      <button class="button button-clear button-primary ion-close-round" ng-click="modalQuadras.hide()"></button>
+      <div class="title">
+        <h1>Quadras</h1>
+      </div>
+    </div>
+    <div>
+      <br/>
+      <div ng-repeat="quadra in quadras">
+        <h4 class="padding-horizontal">{{quadra.nome}} - {{quadra.tipo}} <span ng-if="quadra.coberta"> coberta</span> ({{quadra.capacidade}}
+          vs {{quadra.capacidade}})</h4>
+          <hr/>
+      </div>
+    </div>
+  </ion-content>
+</ion-modal-view>
