@@ -28,9 +28,11 @@
       </div>
       <br/><br/>
     </div>
-    <ui-gmap-google-map  ng-if="actrl.mapView" center='actrl.map.center' options='actrl.map.options' zoom='actrl.map.zoom'>
-      <ui-gmap-marker ng-repeat="arena in actrl.arenas" idKey='arena.id' coords='arena.l'>
-      </ui-gmap-marker>
+    <ui-gmap-google-map ng-if="actrl.mapView" center='actrl.map.center' options='actrl.map.options' zoom='actrl.map.zoom'>
+      <ui-gmap-window templateurl="'/templates/misc/arena-map-window.html'" templateParameter="actrl.arenaService.arenaSelecionada" show="actrl.map.window.show" coords="actrl.arenaService.arenaSelecionada" options="actrl.map.window.options" closeclick="actrl.map.window.closeClick()">
+      </ui-gmap-window>
+      <ui-gmap-markers events="actrl.map.markersEvents" models="actrl.arenas" icon="'icon'"  coords="'self'"'>
+      </ui-gmap-markers>
     </ui-gmap-google-map>
   </ion-content>
 </ion-view>

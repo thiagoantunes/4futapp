@@ -14,7 +14,8 @@ angular.module('main', [
   'ionic.wizard',
   'rzModule',
   'ionic-material',
-  'ionMdInput'
+  'ionMdInput',
+  'ion-gallery'
   // TODO: load other modules selected during generation
 ])
 

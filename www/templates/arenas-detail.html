@@ -1,4 +1,4 @@
-<ion-view  view-title="{{vm.arena.nome}}" class="profile-view">
+<ion-view view-title="{{vm.arena.nome}}" class="profile-view">
   <ion-content ng-class="{expanded:$scope.isExpanded}">
     <div class="hero has-mask slide-up" style="background-image: url('{{vm.album[0].thumb}}');">
       <div class="content">
@@ -11,17 +11,17 @@
     </div>
     <div class="info">
       <div class="row">
-        <div ng-click="modalQuadras.show();"  class="col text-center">
+        <div ng-click="vm.openQuadrasModal();" class="col text-center">
           <i class="icon ion-ios-browsers-outline"></i>
           <br/> Quadras
         </div>
-        <div ng-click="modalEstrutura.show();"  class="col text-center">
+        <div ng-click="vm.openEstruturaModal();" class="col text-center">
           <i class="icon ion-grid"></i>
           <br/> Estrutura
         </div>
-        <div ng-click="modalAlbum.show();"  class="col text-center">
+        <div ng-click="vm.openAlbumModal();" class="col text-center">
           <i class="icon ion-images"></i>
-          <br/> Album
+          <br/> Imagens
         </div>
       </div>
       <div class="padding">
@@ -58,6 +58,11 @@
             </div>
           </li>
         </ul>
+        <div ng-if="vm.nenhumHorario">
+          <h4 class="empty">
+            <i class="icon ion-ios-close-outline"></i> <br/> Nenhum horário disponível para este dia
+          </h4>
+        </div>
       </ion-list>
     </div>
     <br/>

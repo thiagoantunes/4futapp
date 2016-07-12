@@ -12,6 +12,9 @@ angular.module('main')
     vm.reservas = [];
     vm.onSelectCarousel = onSelectCarousel;
     vm.openConfirmacaoModal = openConfirmacaoModal;
+    vm.openAlbumModal = openAlbumModal;
+    vm.openQuadrasModal = openQuadrasModal;
+    vm.openEstruturaModal = openEstruturaModal;
 
     activate();
 
@@ -33,29 +36,43 @@ angular.module('main')
       }).then(function (modal) {
         $scope.modal = modal;
       });
+    }
 
-      $ionicModal.fromTemplateUrl('templates/modal/album-arena.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-      }).then(function (modal) {
-        $scope.modalAlbum = modal;
-        $scope.albumArena = vm.album;
-      });
-
+    function openEstruturaModal(){
       $ionicModal.fromTemplateUrl('templates/modal/estrutura-arena.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
         $scope.modalEstrutura = modal;
         $scope.estrutura = vm.estrutura;
+        modal.show();
       });
+    }
 
+    function openQuadrasModal(){
       $ionicModal.fromTemplateUrl('templates/modal/quadras-arena.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
         $scope.modalQuadras = modal;
         $scope.quadras = vm.quadras;
+        modal.show();
+      });
+    }
+
+    function openAlbumModal(){
+      $ionicModal.fromTemplateUrl('templates/modal/album-arena.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function (modal) {
+        $scope.modalAlbum = modal;
+        $scope.albumArena = _.map(vm.album, function(val){
+          return {
+            src: val.img,
+            thumb: val.thumb
+          }
+        });
+        modal.show();
       });
     }
 
@@ -100,6 +117,9 @@ angular.module('main')
           quadra: quadra,
           horarios: horarios
         });
+      });
+      vm.nenhumHorario = _.every(vm.horariosPorQuadra, function(val){
+        return val.horarios.length == 0;
       });
     }
 

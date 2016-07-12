@@ -6,22 +6,6 @@
         <h1>Imagens</h1>
       </div>
     </div>
-    <div class="row" ng-repeat="item in albumArena | orderBy: 'ordem'" ng-if="$index % 2 === 0">
-      <div ng-if="$index < albumArena.length" class="col-50">
-        <div class="row">
-          <img style="box-shadow:none; 
-                  display: block; 
-                  margin: 0 auto;
-                  height:90px;
-                  width:90px" src="{{albumArena[$index].img}}" alt="">
-        </div>
-      </div>
-      <div ng-if="$index + 1 < albumArena.length" class="col-50">
-        <div class="row" ">
-          <img style="box-shadow:none; display: block; margin: 0 auto; height:90px; width:90px " src="{{albumArena[$index
-          + 1].img}} " alt=" ">
-        </div>
-      </div>
-    </div>
+    <ion-gallery ion-gallery-items="albumArena"></ion-gallery>
   </ion-content>
 </ion-modal-view>

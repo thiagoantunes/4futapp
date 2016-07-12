@@ -12045,6 +12045,14 @@ ion-spinner.spinner-on-load {
       font-weight: bold;
       font-size: 0.8em; }
 
+.profile-view .horarios .empty {
+  width: 200px;
+  display: block;
+  margin: 0 auto;
+  text-align: center; }
+  .profile-view .horarios .empty i {
+    font-size: 70px; }
+
 .modal-arena {
   background-color: rgba(40, 40, 40, 0.9); }
   .modal-arena h1, .modal-arena h2, .modal-arena h3, .modal-arena h4, .modal-arena h5, .modal-arena h6 {
@@ -12164,7 +12172,7 @@ hr {
   top: 40vh !important; }
 
 .angular-google-map-container {
-  height: 40vh; }
+  height: 100vh; }
 
 .item-icon-small {
   font-size: large !important;

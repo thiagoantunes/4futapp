@@ -14,7 +14,7 @@
                   display: block; 
                   margin: 0 auto;
                   height:90px;
-                  width:90px" src="/img/estrutura/{{estrutura[$index].img}}" alt="">
+                  width:90px" src="img/estrutura/{{estrutura[$index].img}}" alt="">
           </div>
           <h5 class="text-center">{{estrutura[$index].quantidade}} {{estrutura[$index].desc}}</h5>
         </div>
@@ -22,7 +22,7 @@
       <div style="padding: 5px;" ng-if="$index + 1 < estrutura.length" class="col-50">
         <div style="border: solid 1px #444; padding: 10px;">
           <div class="row" ">
-          <img style="box-shadow:none; display: block; margin: 0 auto; height:90px; width:90px " src="/img/estrutura/{{estrutura[$index
+          <img style="box-shadow:none; display: block; margin: 0 auto; height:90px; width:90px " src="img/estrutura/{{estrutura[$index
             + 1].img}} " alt=" ">
         </div>
         <h5 class="text-center ">{{estrutura[$index + 1].desc}}</h5>
