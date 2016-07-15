@@ -12003,6 +12003,9 @@ ion-spinner.spinner-on-load {
 .a-carousel li.active .carousel-item.demo-1 .circle > span {
   color: #efefef; }
 
+#arenas-view .angular-google-map-container {
+  height: 100vh; }
+
 .profile-view .hero {
   box-shadow: none; }
 
@@ -12059,7 +12062,6 @@ ion-spinner.spinner-on-load {
     color: #efefef;
     margin: 0px 5px; }
   .modal-arena .header {
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     height: 165px;
     position: relative;
     background: #009688;
@@ -12088,6 +12090,81 @@ ion-spinner.spinner-on-load {
       border-radius: 4px !important; }
     .modal-arena .button-bar .button:first-child {
       border-radius: 4px !important; }
+
+.modal-jogo {
+  background-color: #282828; }
+  .modal-jogo h1, .modal-jogo h2, .modal-jogo h3, .modal-jogo h4, .modal-jogo h5, .modal-jogo h6 {
+    color: #efefef;
+    margin: 0px 5px; }
+  .modal-jogo .item-md-label .input-label {
+    letter-spacing: 0px; }
+  .modal-jogo .item-md-label input {
+    letter-spacing: 0px; }
+  .modal-jogo .input-label {
+    color: #efefef; }
+  .modal-jogo label {
+    color: #888;
+    font-size: 16px;
+    padding: 30px 0 0 10px;
+    background: transparent; }
+    .modal-jogo label .rzslider {
+      margin-top: 50px; }
+      .modal-jogo label .rzslider .rz-bubble {
+        color: #009688;
+        font-weight: bold; }
+        .modal-jogo label .rzslider .rz-bubble .rz-limit {
+          color: #ccc; }
+      .modal-jogo label .rzslider .rz-bubble.rz-limit {
+        color: #888; }
+      .modal-jogo label .rzslider .rz-pointer {
+        background-color: #009688; }
+      .modal-jogo label .rzslider .rz-pointer.rz-active:after {
+        background: #F34235; }
+      .modal-jogo label .rzslider .rz-bar {
+        background: #888; }
+      .modal-jogo label .rzslider .rz-bar.rz-selection {
+        background: #555; }
+    .modal-jogo label .a-carousel {
+      margin-top: 10px; }
+  .modal-jogo .item-md-label {
+    margin: 0px;
+    border-bottom: solid 1px #555; }
+    .modal-jogo .item-md-label input {
+      background: transparent; }
+    .modal-jogo .item-md-label .highlight-calm {
+      background: #009688 !important; }
+  .modal-jogo .header {
+    height: 100px;
+    position: relative;
+    background: #009688;
+    color: white; }
+    .modal-jogo .header button {
+      color: white;
+      float: right;
+      font-size: 1.5em; }
+    .modal-jogo .header .title {
+      padding: 55px 30px 20px 10px; }
+    .modal-jogo .header .content {
+      padding: 60px 30px 20px 30px; }
+      .modal-jogo .header .content i {
+        font-size: 1.6em;
+        margin-right: 10px; }
+  .modal-jogo .button-bar {
+    margin-top: 10px;
+    box-shadow: none; }
+    .modal-jogo .button-bar .button {
+      margin: 0px 5px;
+      border-radius: 4px !important; }
+    .modal-jogo .button-bar .button:not(.button-positive) {
+      background-color: #555;
+      color: #fff; }
+    .modal-jogo .button-bar .button:last-child {
+      border-radius: 4px !important; }
+    .modal-jogo .button-bar .button:first-child {
+      border-radius: 4px !important; }
+
+#jogos-view .angular-google-map-container {
+  height: 100vh; }
 
 .cards-view .bar-header {
   background: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.5));
@@ -12135,6 +12212,9 @@ ion-spinner.spinner-on-load {
         .cards-view .card-2 .card-outer .card-content .card-description-outer .card-description:last-child {
           margin-bottom: 0px; }
 
+.bar {
+  box-shadow: none; }
+
 .bar.bar-profile {
   height: 180px; }
 
@@ -12170,9 +12250,6 @@ hr {
 
 .has-subheader-custom {
   top: 40vh !important; }
-
-.angular-google-map-container {
-  height: 100vh; }
 
 .item-icon-small {
   font-size: large !important;

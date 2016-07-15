@@ -40,8 +40,13 @@ $RobotoDraftFontVersion: "1.0.0";
     "scss/inc/carousel",
     
     "scss/inc/arena-view",
+    "scss/inc/jogos-view",
     "scss/inc/list-view"; 
 
+
+.bar{
+    box-shadow: none;
+}
 
 .bar.bar-profile {
     height: 180px;
@@ -89,8 +94,6 @@ hr{
     top: 40vh !important;
 }
 
-.angular-google-map-container { height: 100vh; }
-
 .item-icon-small { font-size:large !important; color: #666 }
 
 .button-bar > .button:last-child {
@@ -109,15 +112,3 @@ hr{
 .mapWrap {
   height: 100%;
 }
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,46 +1,41 @@
 /*global GeoFire*/
 'use strict';
 angular.module('main')
-  .factory('ArenasService', function (Ref, $firebaseArray, $firebaseObject, $cordovaGeolocation, FilteredArray) {
+  .factory('ArenasService', function (Ref, $timeout, $firebaseArray, $firebaseObject) {
     var service = {
-      getRef: getRef,
-      getGeoQuery: getGeoQuery,
+      ref: Ref.child('arenas'),
+      arenas: [],
+      geoFire: new GeoFire(Ref.child('arenasLocalizacao')),
+      geoQuery: {},
+
       getArenas: getArenas,
       getArena: getArena,
-      getArenaNoSync: getArenaNoSync,
       getQuadrasArena: getQuadrasArena,
       getAlbum: getAlbum,
       getEstrutura: getEstrutura,
       arenaSelecionada: null
-      //createGeo: createGeo
     };
 
     return service;
 
-    function getRef() {
-      return Ref.child('arenas');
-    }
-
-    function getGeoQuery() {
-      var geoFire = new GeoFire(Ref.child('arenasLocalizacao'));
-      return $cordovaGeolocation.getCurrentPosition().then(function (position) {
-        return geoFire.query({
-          center: [position.coords.latitude, position.coords.longitude],
-          radius: 20
+    function getArenas() {
+      service.geoQuery.on('key_entered', function (key, location, distance) {
+        service.ref.child(key).once('value').then(function (snapshot) {
+          var arena = snapshot.val();
+          arena.distance = distance;
+          arena.id = key;
+          arena.latitude = location[0];
+          arena.longitude = location[1];
+          arena.icon = '/img/estrutura/quadra.png';
+          $timeout(function () {
+            service.arenas.push(arena);
+          });
         });
       });
     }
 
     function getArena(id) {
-      return $firebaseObject(getRef().child(id));
-    }
-
-    function getArenaNoSync(key) {
-      return getRef().child(key).once('value');
-    }
-
-    function getArenas() {
-      return $firebaseArray(getRef());
+      return $firebaseObject(service.ref.child(id));
     }
 
     function getQuadrasArena(arena) {
@@ -52,32 +47,44 @@ angular.module('main')
     }
 
     function getEstrutura(arena) {
-      var ref = Ref.child('arenasEstrutura/' + arena).orderByChild('ordem');
-      return new FilteredArray(ref, estruturaFilterFunc);
-    }
-
-    // function getEstrutura(arena) {
-    //   return $firebaseArray(Ref.child('arenasEstrutura/' + arena).orderByChild('ordem').startAt(true).endAt(true));
-    // }
-
-    function estruturaFilterFunc(rec) {
-      return rec.ativo;
+      return $firebaseArray(Ref.child('arenasEstrutura/' + arena).orderByChild('ativo').startAt(true).endAt(true));
     }
 
   })
 
-  .factory('FilteredArray', function ($firebaseArray) {
-   /*jshint -W004 */
-        function FilteredArray(ref, filterFn) {
-            this.filterFn = filterFn;
-            return $firebaseArray.call(this, ref);
-        }
-        FilteredArray.prototype.$$added = function (snap) {
-            var rec = $firebaseArray.prototype.$$added.call(this, snap);
-            if (!this.filterFn || this.filterFn(rec)) {
-                return rec;
-            }
-        };
-        return $firebaseArray.$extend(FilteredArray);
+  .factory('GeoService', function ($q, $cordovaGeolocation, ArenasService) {
+    var service = {
+      position: [],
+
+      getPosition: getPosition
+    };
+
+    return service;
+
+    function getPosition() {
+      var deferred = $q.defer();
+      var posOptions = { timeout: 10000, enableHighAccuracy: false };
+      var watchOptions = { timeout : 3000, enableHighAccuracy: false};
+      $cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
+        service.position = [position.coords.latitude, position.coords.longitude];
+        ArenasService.geoQuery = ArenasService.geoFire.query({
+          center: service.position,
+          radius: 20
+        });
+        deferred.resolve(service.position);
+      });
+
+      $cordovaGeolocation.watchPosition(watchOptions).then(function (position) {
+        service.position = [position.coords.latitude, position.coords.longitude];
+        ArenasService.geoQuery.updateCriteria({
+          center: [position[0], position[1]],
+          radius: 20
+        });
+      });
+
+      return deferred.promise;
+    }
 
   });
+
+

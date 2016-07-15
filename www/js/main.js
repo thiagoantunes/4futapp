@@ -88,12 +88,12 @@ angular.module('main', [
 
   .config(function ($stateProvider, $urlRouterProvider, tmhDynamicLocaleProvider, $ionicConfigProvider) {
     //$ionicConfigProvider.tabs.style('standard');
-    //$ionicConfigProvider.tabs.position('bottom');
+    //$ionicConfigProvider.tabs.position('top');
     tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-locale-pt-br/angular-locale_pt-br.js');
 
     // ROUTING with ui.router
     //$urlRouterProvider.otherwise('/login');
-    $urlRouterProvider.otherwise('/main/arenas');
+    $urlRouterProvider.otherwise('main/');
     $stateProvider
       // this state is placed in the <ion-nav-view> in the index.html
       .state('login', {
@@ -122,14 +122,30 @@ angular.module('main', [
       .state('main', {
         url: '/main',
         abstract: true,
-        templateUrl: 'templates/menu.html',
-        controller: 'MenuCtrl as menu'
+        templateUrl: 'templates/tabs.html',
+        controller: 'MenuCtrl as menu',
+        resolve: {
+          currentUser: ['UserService', function (UserService) {
+            return UserService.getCurrentUser();
+          }],
+          position: ['GeoService', function (GeoService) {
+            return GeoService.getPosition();
+          }]
+        }
+      })
+      .state('main.home', {
+        url: '/',
+        views: {
+          'tab-home': {
+            templateUrl: 'templates/home.html'
+          }
+        }
       })
       .state('main.arenas', {
         url: '/arenas',
         views: {
-          'pageContent': {
-            templateUrl: 'templates/arenas-list.html',
+          'tab-home': {
+            templateUrl: 'templates/arenas/arenas-list.html',
             controller: 'ArenasCtrl as actrl'
           }
         }
@@ -137,8 +153,8 @@ angular.module('main', [
       .state('main.arenas-detail', {
         url: '/arenas/:id',
         views: {
-          'pageContent': {
-            templateUrl: 'templates/arenas-detail.html',
+          'tab-home': {
+            templateUrl: 'templates/arenas/arenas-detail.html',
             controller: 'ArenaDetailsCtrl as vm',
           }
         }
@@ -147,52 +163,43 @@ angular.module('main', [
       .state('main.jogos', {
         url: '/jogos',
         views: {
-          'pageContent': {
+          'tab-home': {
             templateUrl: 'templates/jogos.html',
             controller: 'JogosCtrl as vm'
           }
         }
       })
 
-
-      .state('tab', {
-        url: '/tab',
-        abstract: true,
-        templateUrl: 'templates/tabs.html',
-        controller: 'ApplicationController'
-      })
-
-      .state('tab.arenas', {
-        url: '/arenas',
+      .state('main.meus-jogos', {
+        url: '/meus-jogos',
         views: {
-          'tab.arenas': {
-            templateUrl: 'templates/arenas-list.html',
-            controller: 'ArenasCtrl as actrl',
+          'tab-home': {
+            templateUrl: 'templates/meus-jogos.html',
+            controller: 'JogosCtrl as vm'
           }
         }
       })
 
-      .state('tab.arenas-detail', {
-        url: '/arenas/:id',
-        views: {
-          'tab.arenas': {
-            templateUrl: 'templates/arenas-detail.html',
-            controller: 'ArenaDetailsCtrl as vm',
-          }
-        }
-      })
-
-      .state('tab.jogos', {
-        url: '/jogos',
+      .state('main.reservas', {
+        url: '/reservas',
         views: {
           'tab-jogos': {
-            templateUrl: 'templates/jogos.html',
-            controller: 'JogosCtrl as vm'
+            templateUrl: 'templates/reservas.html',
+            controller: 'ReservasCtrl as vm',
           }
         }
       })
 
-      .state('tab.perfil', {
+      .state('main.grupos', {
+        url: '/grupos',
+        views: {
+          'tab-grupos': {
+            templateUrl: 'templates/grupos.html'
+          }
+        }
+      })
+
+      .state('main.perfil', {
         url: '/perfil',
         views: {
           'tab-perfil': {
@@ -203,12 +210,23 @@ angular.module('main', [
       });
   })
 
-  .controller('ApplicationController', function ($state, $rootScope) {
-    var hideTabsStates = ['tab.arenas-detail'];
-
+  .controller('MenuCtrl', function ($state, $rootScope, ArenasService, ReservasService, JogosService) {
+    var vm = this;
+    var hideTabsStates = ['main.arenas-detail', 'main.minhas-reservas', 'main.encontrar-jogos'];
+    ReservasService.getMinhasReservas();
+    JogosService.getMeusJogos();
+    ArenasService.getArenas();
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);
     });
+
+    vm.logOut = function () {
+      firebase.auth().signOut().then(function () {
+        $state.go('login');
+      }, function (error) {
+        console.log(error);
+      });
+    };
   })
 
   .config(function (uiGmapGoogleMapApiProvider) {

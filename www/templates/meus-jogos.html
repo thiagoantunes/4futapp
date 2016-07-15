@@ -1,0 +1,10 @@
+<ion-view view-title="Meus Jogos">
+  <ion-content class="padding">
+    <ion-list>
+      <ion-item class="item item-divider" ng-repeat="jogo in vm.jogos">
+        {{jogo | json}}
+      </ion-item>
+    </ion-list>
+    <pre>{{vm.jogos | json}}</pre>
+  </ion-content>
+</ion-view>

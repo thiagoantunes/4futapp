@@ -1,23 +1,44 @@
-<ion-modal-view>
-    <ion-header-bar class="bar bar-header bar-positive">
-        <h1 class="title">Criar Jogo</h1>
+<ion-modal-view class="modal-jogo">
+    <div class="header">
         <button class="button button-clear button-primary ion-close-round" ng-click="hideModal()"></button>
-    </ion-header-bar>
-    <ion-content>
-        <div class="list">
-            <label class="item item-input">
-            <input type="text" ng-model="novoJogo.nome" placeholder="Nome da Partida">
-        </label>
-            <label class="item item-input">
-            <input type="text" placeholder="Location" location-suggestion location="location" ng-model="location.formatted_address">
-        </label>
-            <h4>Número de jogadores</h4>
-            <rzslider rz-slider-model="novoJogo.minJogadores" rz-slider-high="novoJogo.maxJogadores" rz-slider-options="modalForm.jogadoresRange.options"></rzslider>
+        <div class="title">
+            <h2>Novo Jogo</h2>
         </div>
-        <h4>Dia</h4>
-        <a-carousel on-select="onDateSelect(item)" carousel-options="modalForm.dateSelectorConfig" array-provider="modalForm.dateSelector"></a-carousel>
-        <h4>Horário de início</h4>
-            <rzslider rz-slider-model="modalForm.horarioRange.value" rz-slider-options="modalForm.horarioRange.options"></rzslider>
+    </div>
+    <ion-content style="top:100px" class="padding-horizontal">
+        <div class="list">
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Nome da Partida</span>
+                <input ng-model="novoJogo.nome" placeholder="Informe o nome da partida..." type="text">
+            </label>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Endereço</span>
+                <input type="text" placeholder="Informe o endereço..." location-suggestion location="location" ng-model="location.formatted_address">
+  	        </label>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Número de jogadores</span>
+                <br/>
+                <rzslider rz-slider-model="novoJogo.minJogadores" rz-slider-high="novoJogo.maxJogadores" rz-slider-options="modalForm.jogadoresRange.options"></rzslider>
+  	        </label>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Dia</span>
+                <a-carousel on-select="onDateSelect(item)" carousel-options="modalForm.dateSelectorConfig" array-provider="modalForm.dateSelector"></a-carousel>
+            </label>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Horário de início</span>
+                <br/>
+                <rzslider rz-slider-model="modalForm.horarioRange.value" rz-slider-options="modalForm.horarioRange.options"></rzslider>
+            </label>
+            <!--<label class="item item-input item-select">
+                <div class="input-label">Visibilidade</div>
+                <select>
+                    <option>Público</option>
+                    <option>Amigos de amigos</option>
+                    <option>Amigos</option>
+                    <option selected>Convidados</option>
+                </select>
+            </label>-->
+        </div>
         <div class="button-bar padding">
             <a grouped-radio="1" ng-model="modalForm.visibilidade">Público</a>
             <a grouped-radio="2" ng-model="modalForm.visibilidade">Amigos de amigos</a>

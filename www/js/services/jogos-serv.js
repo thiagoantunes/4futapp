@@ -1,8 +1,13 @@
 /*global firebase GeoFire*/
 'use strict';
 angular.module('main')
-  .factory('JogosService', function (Ref, $firebaseArray, $cordovaGeolocation, $q) {
+  .factory('JogosService', function (Ref, $timeout, $firebaseArray, $cordovaGeolocation, $q, UserService) {
     var service = {
+      ref: Ref.child('jogos'),
+      refLocalizacao: Ref.child('jogosLocalizacao'),
+      refUserJogos: Ref.child('usersJogos').child(firebase.auth().currentUser.uid),
+
+      getMeusJogos: getMeusJogos,
       getUserJogos: getUserJogos,
       getGeoQuery: getGeoQuery,
       getJogoNoSync: getJogoNoSync,
@@ -11,17 +16,13 @@ angular.module('main')
 
     return service;
 
-    function getRef() {
-      return Ref.child('jogos');
-    }
-
     function getUserJogos(user) {
       var ref = Ref.child('usersJogos/' + user);
       return $firebaseArray(ref);
     }
 
     function getJogoNoSync(key) {
-      return getRef().child(key).once('value');
+      return service.ref.child(key).once('value');
     }
 
     function getGeoQuery() {
@@ -37,7 +38,7 @@ angular.module('main')
     function criarJogo(novoJogo, coords) {
       var deferred = $q.defer();
 
-      var jogoId = getRef().push().key;
+      var jogoId = service.ref.push().key;
       var jogoData = {};
       jogoData['usersJogos/' + firebase.auth().currentUser.uid + '/' + jogoId] = true;
       jogoData['jogos/' + jogoId] = novoJogo;
@@ -54,6 +55,21 @@ angular.module('main')
       });
 
       return deferred.promise;
+    }
+
+    function getMeusJogos() {
+      service.refUserJogos.on('child_added', function (snap) {
+        service.ref.child(snap.key).on('value', function (snapJogo) {
+          service.refLocalizacao.child(snap.key).on('value', function (snapLocalizacao) {
+            var data = snapJogo.val();
+            data.id = snap.key;
+            data.l = snapLocalizacao.val().l;
+            $timeout(function () {
+              UserService.jogos.push(data);
+            });
+          });
+        });
+      });
     }
 
   });

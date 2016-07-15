@@ -1,7 +1,10 @@
-<ion-view view-title="ARENAS" class="cards-view">
+<ion-view view-title="ARENAS" id="arenas-view" class="cards-view">
   <ion-nav-buttons side="right">
     <button ng-click="actrl.mapView = !actrl.mapView" ng-class="actrl.mapView ? 'ion-ios-list-outline' : 'ion-map'" class="button button-icon button-clear icon"></button>
   </ion-nav-buttons>
+  <!--<button id="fab" class="button button-assertive button-fab button-fab-bottom-right">
+    <i class="icon ion-android-funnel"></i>
+  </button>-->
   <ion-content>
     <div class="padding-horizontal" ng-if="!actrl.mapView">
       <div class="card-2" ng-repeat="arena in actrl.arenas | orderBy:'distance'">

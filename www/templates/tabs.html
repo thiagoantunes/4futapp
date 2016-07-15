@@ -1,37 +1,17 @@
-<!--<div class="tabs-striped tabs-top tabs-background-positive tabs-color-light">
-<ion-tabs class="tabs-icon-top tabs-color-active-positive" ng-class="{ 'tabs-item-hide': $root.hideTabs }" >
-
-  <ion-tab title="Arenas" icon-off="ion-ios-browsers-outline" icon-on="ion-ios-browsers" href="#/tab/arenas">
-    <ion-nav-view name="tab.arenas"></ion-nav-view>
+<ion-tabs class="tabs-icon-top tabs-background-positive tabs-color-light" ng-class="{ 'tabs-item-hide': $root.hideTabs }">
+  <ion-tab title="Início" icon-off="ion-ios-home-outline" icon-on="ion-ios-home" ui-sref="main.home">
+    <ion-nav-view name="tab-home"></ion-nav-view>
   </ion-tab>
 
-  <ion-tab title="Jogos" icon-off="ion-ios-football-outline" icon-on="ion-ios-football"" href="#/tab/jogos">
+  <ion-tab title="Reservas" icon-off="ion-android-calendar" icon-on="ion-android-calendar" ui-sref="main.reservas">
     <ion-nav-view name="tab-jogos"></ion-nav-view>
   </ion-tab>
 
-  <ion-tab title="Perfil" icon-off="ion-ios-person-outline" icon-on="ion-person" href="#/tab/perfil">
+  <ion-tab title="Grupos" icon-off="ion-ios-people-outline" icon-on="ion-ios-people" ui-sref="main.grupos">
+    <ion-nav-view name="tab-grupos"></ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="Perfil" icon-off="ion-ios-person-outline " icon-on="ion-person " ui-sref="main.perfil">
     <ion-nav-view name="tab-perfil"></ion-nav-view>
   </ion-tab>
-
-
 </ion-tabs>
- </div>-->
-
-<div class="tabs-striped tabs-background-positive tabs-color-light">
-  <ion-tabs class="tabs-icon-only tabs-color-active-positive" ng-class="{ 'tabs-item-hide': $root.hideTabs }">
-
-    <ion-tab title="Arenas" icon-off="ion-ios-browsers-outline" icon-on="ion-ios-browsers" href="#/tab/arenas">
-      <ion-nav-view name="tab.arenas"></ion-nav-view>
-    </ion-tab>
-
-    <ion-tab title="Jogos" icon-off="ion-ios-football-outline" icon-on="ion-ios-football" " href="#/tab/jogos ">
-    <ion-nav-view name="tab-jogos "></ion-nav-view>
-  </ion-tab>
-
-  <ion-tab title="Perfil " icon-off="ion-ios-person-outline " icon-on="ion-person " href="#/tab/perfil ">
-    <ion-nav-view name="tab-perfil "></ion-nav-view>
-  </ion-tab>
-
-
-  </ion-tabs>
-</div>

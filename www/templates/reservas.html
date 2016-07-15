@@ -1,0 +1,10 @@
+<ion-view view-title="Minhas Reservas">
+  <ion-content class="padding">
+    <ion-list>
+      <ion-item class="item item-divider" ng-repeat="reserva in vm.minhasReservas">
+        {{reserva | json}}
+      </ion-item>
+    </ion-list>
+    <pre>{{vm.minhasReservas | json}}</pre>
+  </ion-content>
+</ion-view>

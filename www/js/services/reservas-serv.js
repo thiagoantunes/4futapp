@@ -1,22 +1,25 @@
 /*global _ moment firebase GeoFire*/
 'use strict';
 angular.module('main')
-  .factory('ReservasService', function (Ref, $firebaseArray, $q) {
+  .factory('ReservasService', function (Ref, $timeout, $firebaseArray, $q, $rootScope, UserService) {
     var service = {
-      getRef: getRef,
+      ref: Ref.child('reservas'),
+      refUserReservas: Ref.child('usersReservas').child(firebase.auth().currentUser.uid),
+
       getReservasDia: getReservasDia,
-      criarReservaAvulsa: criarReservaAvulsa
+      getMinhasReservas: getMinhasReservas,
+      criarReservaAvulsa: criarReservaAvulsa,
       //createGeo: createGeo
     };
 
     return service;
 
-    function getRef() {
-      return Ref.child('reservas');
+    function getReserva(arenaId, reservaId) {
+      return service.ref.child(arenaId + '/' + reservaId);
     }
 
     function getReservasDia(arena, start, end) {
-      var ref = getRef().child(arena).orderByChild('start').startAt(start).endAt(end);
+      var ref = service.ref.child(arena).orderByChild('start').startAt(start).endAt(end);
       return $firebaseArray(ref);
     }
 
@@ -26,7 +29,7 @@ angular.module('main')
       verificaHorarioPeriodo(novaReserva, arena).then(function (horarioValido) {
 
         if (horarioValido) {
-          var reservaId = getRef().child(arena).push().key;
+          var reservaId = service.ref.child(arena).push().key;
           var jogoId = Ref.child('jogos').push().key;
           var notificacaoId = Ref.child('arenasNotificacoes/' + arena).push().key;
           var reservaData = {};
@@ -45,7 +48,7 @@ angular.module('main')
           };
           reservaData['arenasContatos/' + arena + '/' + firebase.auth().currentUser.uid] = true;
           reservaData['arenasNotificacoes/' + arena + '/' + notificacaoId] = notificacao;
-          reservaData['usersReservas/' + firebase.auth().currentUser.uid + '/' + arena + '/' + reservaId] = true;
+          reservaData['usersReservas/' + firebase.auth().currentUser.uid + '/' + reservaId] = arena;
           reservaData['usersJogos/' + firebase.auth().currentUser.uid + '/' + jogoId] = true;
           reservaData['jogos/' + jogoId] = jogo;
           reservaData['reservas/' + arena + '/' + reservaId] = novaReserva;
@@ -78,7 +81,7 @@ angular.module('main')
       var deferred = $q.defer();
 
       var result = true;
-      var ref = getRef().child(arena)
+      var ref = service.ref.child(arena)
         .orderByChild('start').startAt(moment(moment(reserva.start).format('MMDDYYYY'), 'MMDDYYYY') / 1).endAt(reserva.end);
 
       ref.once('value', function (data) {
@@ -94,6 +97,19 @@ angular.module('main')
         deferred.resolve(result);
       });
       return deferred.promise;
+    }
+
+    function getMinhasReservas() {
+      service.refUserReservas.on('child_added', function (snap) {
+        getReserva(snap.val(), snap.key).on('value', function (snapReservaData) {
+          var data = snapReservaData.val();
+          data.id = snap.key;
+          data.arena = snap.val();
+          $timeout(function () {
+            UserService.reservas.push(data);
+          });
+        });
+      });
     }
 
   });

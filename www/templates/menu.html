@@ -15,6 +15,25 @@
       </ion-nav-buttons>
     </ion-nav-bar>
 
+
+    <ion-tabs class="tabs-icon-top tabs-background-positive tabs-color-light" ng-class="{ 'tabs-item-hide': $root.hideTabs }">
+      <ion-tab title="Arenas" icon-off="ion-ios-browsers-outline" icon-on="ion-ios-browsers" href="#/main/arenas">
+        <ion-nav-view name="tab.arenas"></ion-nav-view>
+      </ion-tab>
+
+      <ion-tab title="Jogos" icon-off="ion-ios-football-outline" icon-on="ion-ios-football" href="#/main/jogos ">
+        <ion-nav-view name="tab-jogos"></ion-nav-view>
+      </ion-tab>
+
+      <ion-tab title="Perfil" icon-off="ion-ios-person-outline " icon-on="ion-person " href="#/tab/perfil ">
+        <ion-nav-view name="tab-perfil"></ion-nav-view>
+      </ion-tab>
+
+      <ion-tab title="Perfil" hidden="true" icon-off="ion-ios-person-outline " icon-on="ion-person " href="#/tab/perfil ">
+        <ion-nav-view name="tab-perfil"></ion-nav-view>
+      </ion-tab>
+    </ion-tabs>
+
     <!-- ROUTING INJECTED HERE: pageContent -->
     <ion-nav-view name="pageContent"></ion-nav-view>
 
@@ -41,7 +60,7 @@
           <i class="ion-ios-football"></i>
           <b class="padding"> JOGOS </b>
         </ion-item>
-        <ion-item menu-close ui-sref="main.jogos">
+        <ion-item menu-close ui-sref="main.perfil">
           <i class="ion-person"></i>
           <b class="padding"> PERFIL </b>
         </ion-item>

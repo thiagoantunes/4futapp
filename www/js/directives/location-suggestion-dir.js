@@ -41,7 +41,7 @@ angular.module('main')
         $scope.search = {};
         $scope.search.suggestions = [];
         $scope.search.query = '';
-        $ionicModal.fromTemplateUrl('templates/criar-local.html', {
+        $ionicModal.fromTemplateUrl('templates/modal/criar-local.html', {
           scope: $scope,
           focusFirstInput: true
         }).then(function (modal) {

@@ -1,23 +1,11 @@
-<ion-view view-title="main module">
+<ion-view view-title="ENCONTRE JOGOS" id="jogos-view">
   <!-- do you want padding? -->
-  <ion-content class="padding">
-
-    <button ng-click="vm.openNovoJogoModal();" class="button button-block button-positive">
-      Criar Jogo
-    </button>
-    <!-- content goes here -->
-    <h1>Meus Jogos</h1>
-    <ion-list>
-      <ion-item class="item item-divider" ng-repeat="jogo in vm.meusJogos">
-        {{jogo | json}}
-      </ion-item>
-    </ion-list>
-
-    <h1>Jogos por perto</h1>
-    <ion-list>
-      <ion-item class="item item-divider" ng-repeat="jogo in vm.jogosRegiao">
-        {{jogo | json}}
-      </ion-item>
-    </ion-list>
+  <ion-content>
+    <ui-gmap-google-map center='vm.map.center' options='vm.map.options' zoom='vm.map.zoom'>
+      <!--<ui-gmap-window templateurl="'/templates/misc/arena-map-window.html'" templateParameter="vm.arenaService.arenaSelecionada" show="vm.map.window.show" coords="vm.arenaService.arenaSelecionada" options="vm.map.window.options" closeclick="vm.map.window.closeClick()">
+      </ui-gmap-window>-->
+      <ui-gmap-markers events="vm.map.markersEvents" models="vm.jogosRegiao" icon="'icon'"  coords="'self'"'>
+      </ui-gmap-markers>
+    </ui-gmap-google-map>
   </ion-content>
 </ion-view>

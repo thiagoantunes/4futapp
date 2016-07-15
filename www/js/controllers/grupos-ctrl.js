@@ -1,7 +1,8 @@
 /*global firebase*/
 'use strict';
 angular.module('main')
-  .controller('MenuCtrl', function ($state) {
+  .controller('PerfilCtrl', function ($state) {
+
     var vm = this;
 
     vm.logOut = function () {
@@ -11,5 +12,5 @@ angular.module('main')
         console.log(error);
       });
     };
-
   });
+
