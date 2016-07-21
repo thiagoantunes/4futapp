@@ -1,38 +1,42 @@
 /*global firebase GeoFire*/
 'use strict';
 angular.module('main')
-  .factory('JogosService', function (Ref, $timeout, $firebaseArray, $cordovaGeolocation, $q, UserService) {
+  .factory('JogosService', function (Ref, $timeout, $firebaseArray, $q, UserService) {
     var service = {
+      jogosRegiao: [],
       ref: Ref.child('jogos'),
       refLocalizacao: Ref.child('jogosLocalizacao'),
-      refUserJogos: Ref.child('usersJogos').child(firebase.auth().currentUser.uid),
+      refUserJogos: Ref.child('usersJogos'),
+      geoFire: new GeoFire(Ref.child('jogosLocalizacao')),
+      geoQuery: {},
 
+      getJogosRegiao: getJogosRegiao,
       getMeusJogos: getMeusJogos,
       getUserJogos: getUserJogos,
-      getGeoQuery: getGeoQuery,
-      getJogoNoSync: getJogoNoSync,
       criarJogo: criarJogo
     };
 
     return service;
 
+    function getJogosRegiao() {
+      service.geoQuery.on('key_entered', function (key, location, distance) {
+        service.ref.child(key).once('value').then(function (snapshot) {
+          var jogo = snapshot.val();
+          jogo.distance = distance;
+          jogo.id = key;
+          jogo.latitude = location[0];
+          jogo.longitude = location[1];
+          jogo.icon = '/img/estrutura/quadra.png';
+          $timeout(function () {
+            service.jogosRegiao.push(jogo);
+          });
+        });
+      });
+    }
+
     function getUserJogos(user) {
       var ref = Ref.child('usersJogos/' + user);
       return $firebaseArray(ref);
-    }
-
-    function getJogoNoSync(key) {
-      return service.ref.child(key).once('value');
-    }
-
-    function getGeoQuery() {
-      var geoFire = new GeoFire(Ref.child('jogosLocalizacao'));
-      return $cordovaGeolocation.getCurrentPosition().then(function (position) {
-        return geoFire.query({
-          center: [position.coords.latitude, position.coords.longitude],
-          radius: 20
-        });
-      });
     }
 
     function criarJogo(novoJogo, coords) {
@@ -58,7 +62,7 @@ angular.module('main')
     }
 
     function getMeusJogos() {
-      service.refUserJogos.on('child_added', function (snap) {
+      service.refUserJogos.child(firebase.auth().currentUser.uid).on('child_added', function (snap) {
         service.ref.child(snap.key).on('value', function (snapJogo) {
           service.refLocalizacao.child(snap.key).on('value', function (snapLocalizacao) {
             var data = snapJogo.val();

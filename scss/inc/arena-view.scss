@@ -28,9 +28,9 @@
   }
 
   .info{
-      background-color: #333;
+      background-color: $dark;
       .row{
-          border-bottom: 1px solid #444;
+          border-bottom: 1px solid $stable;
           .col{
               i{
                   font-size: 24px;
@@ -49,7 +49,7 @@
         button{
             height:40px; 
             line-height: 15px ; 
-            border: solid 1px #777;
+            border: solid 1px $button-positive-text;
             box-shadow:none; 
             padding:0px; 
             span{
@@ -71,8 +71,16 @@
   }
 }
 
+.platform-ios.platform-cordova:not(.fullscreen){
+    .modal-arena{
+        .header{
+             margin-top: 20px;
+        }
+    }
+}
+
 .modal-arena{
-      background-color: rgba(40,40,40, 0.9);
+      background-color: rgba($dark, 0.9);
 
       h1,h2,h3,h4,h5,h6{
           color:#efefef;
@@ -84,11 +92,16 @@
         height: 165px;
         position: relative;
         background: $positive;
-        color: white;
+        color: $button-positive-text;
         button{
-            color: white;
+            color: $button-positive-text;
             float: right;
             font-size: 1.5em;
+        }
+
+        h1,h2,h3,h4,h5,h6{
+          color:$button-positive-text;
+          margin:0px 5px;
         }
 
         .title{

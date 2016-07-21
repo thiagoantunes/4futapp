@@ -15,12 +15,17 @@ angular.module('main', [
   'rzModule',
   'ionic-material',
   'ionMdInput',
-  'ion-gallery'
+  'ion-gallery',
+  'ngCordovaOauth',
+  'ngFacebook'
   // TODO: load other modules selected during generation
 ])
 
-  .run(function ($ionicPlatform) {
+  .run(function ($ionicPlatform, $ionicAnalytics, $state, Ref) {
+    firebase.auth().onAuthStateChanged(checkLogin);
+
     $ionicPlatform.ready(function () {
+      $ionicAnalytics.register();
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
       if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -29,7 +34,9 @@ angular.module('main', [
 
       }
       if (window.StatusBar) {
-        StatusBar.styleDefault();
+        StatusBar.overlaysWebView(true);
+        StatusBar.styleLightContent();
+        //StatusBar.styleDefault();
       }
 
       var deploy = new Ionic.Deploy();
@@ -38,9 +45,9 @@ angular.module('main', [
         },
         function noop() {
         },
-        function hasUpdate(hasUpdate) {
-          console.log('Has Update ', hasUpdate);
-          if (hasUpdate) {
+        function hasUpdate(has) {
+          console.log('Has Update ', has);
+          if (has) {
             console.log('Calling ionicDeploy.update()');
             deploy.update().then(function (deployResult) {
               console.log(deployResult);
@@ -58,48 +65,85 @@ angular.module('main', [
             });
           }
         });
-    });
-  })
 
-  .run(function ($ionicPlatform, $ionicAnalytics) {
-    $ionicPlatform.ready(function () {
-      $ionicAnalytics.register();
+    }).then(function () {
+      if (window.cordova) {
+        navigator.splashscreen.hide();
+      }
     });
-  })
 
-  .run(function ($state, $rootScope) {
-    $rootScope.$on('$stateChangeStart', function (evt, toState) {
-      var auth = firebase.auth();
-      auth.onAuthStateChanged(function (user) {
-        if (user) {
-          // User is signed in.
-          if (toState.name === 'login') {
-            $state.go('main.arenas');
+    // Load the facebook SDK asynchronously
+    (function () {
+      // If we've already installed the SDK, we're done
+      if (document.getElementById('facebook-jssdk')) { return; }
+
+      // Get the first script element, which we'll use to find the parent node
+      var firstScriptElement = document.getElementsByTagName('script')[0];
+
+      // Create a new script element and set its id
+      var facebookJS = document.createElement('script');
+      facebookJS.id = 'facebook-jssdk';
+
+      // Set the new script's source to the source of the Facebook JS SDK
+      facebookJS.src = '//connect.facebook.net/en_US/all.js';
+
+      // Insert the Facebook JS SDK into the DOM
+      firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
+    } ());
+
+    function checkLogin(currentUser) {
+      if (!currentUser) {
+        $state.go('login');
+      }
+      else {
+        $state.go('main.home');
+        var providerData = {};
+        Ref.child('users/' + currentUser.uid).once('value', function (snap) {
+          if (snap.val() === null) {
+            providerData = _.find(currentUser.providerData, { 'providerId': 'facebook.com' });
+            Ref.child('users/' + currentUser.uid).set({
+              nome: providerData.displayName,
+              fotoPerfil: providerData.photoURL,
+              email: providerData.email
+            });
+            currentUser.updateProfile({
+              displayName: providerData.displayName,
+              photoURL: providerData.photoURL
+            });
+            $state.go('wizard.intro');
           }
-        } else if (toState.name !== 'login') {
-          // User is signed out.
-          $state.go('login');
-        }
-      }, function (error) {
-        console.log(error);
-      });
-    });
+          else {
+            providerData = _.find(currentUser.providerData, { 'providerId': 'facebook.com' });
+            var user = snap.val();
+            user.fotoPerfil = providerData.photoURL;
+            Ref.child('users/' + currentUser.uid).set(user);
+            currentUser.updateProfile({
+              displayName: providerData.displayName,
+              photoURL: providerData.photoURL
+            });
+          }
+        }, function (errorObject) {
+          console.log('The read failed: ' + errorObject.code);
+        });
+      }
+    }
   })
 
-  .config(function ($stateProvider, $urlRouterProvider, tmhDynamicLocaleProvider, $ionicConfigProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, tmhDynamicLocaleProvider, $ionicConfigProvider, $facebookProvider) {
     //$ionicConfigProvider.tabs.style('standard');
     //$ionicConfigProvider.tabs.position('top');
+    $facebookProvider.setAppId('908423235912952');
     tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-locale-pt-br/angular-locale_pt-br.js');
 
     // ROUTING with ui.router
     //$urlRouterProvider.otherwise('/login');
-    $urlRouterProvider.otherwise('main/');
+    $urlRouterProvider.otherwise('main.home');
     $stateProvider
       // this state is placed in the <ion-nav-view> in the index.html
       .state('login', {
         url: '/login',
         templateUrl: 'templates/login.html',
-        controller: 'LoginCtrl'
+        controller: 'LoginCtrl as vm'
       })
 
       .state('wizard', {
@@ -175,7 +219,7 @@ angular.module('main', [
         views: {
           'tab-home': {
             templateUrl: 'templates/meus-jogos.html',
-            controller: 'JogosCtrl as vm'
+            controller: 'MeusJogosCtrl as vm'
           }
         }
       })
@@ -212,13 +256,15 @@ angular.module('main', [
 
   .controller('MenuCtrl', function ($state, $rootScope, ArenasService, ReservasService, JogosService) {
     var vm = this;
-    var hideTabsStates = ['main.arenas-detail', 'main.minhas-reservas', 'main.encontrar-jogos'];
-    ReservasService.getMinhasReservas();
-    JogosService.getMeusJogos();
-    ArenasService.getArenas();
+    var hideTabsStates = ['main.arenas', 'main.arenas-detail', 'main.minhas-reservas', 'main.encontrar-jogos'];
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);
     });
+
+    ReservasService.getMinhasReservas();
+    JogosService.getMeusJogos();
+    JogosService.getJogosRegiao();
+    ArenasService.getArenas();
 
     vm.logOut = function () {
       firebase.auth().signOut().then(function () {

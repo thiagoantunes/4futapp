@@ -7,7 +7,7 @@
     width: 55px;
     height: 50px;
     border-radius: 5px;
-    background: #555;
+    background: $stable;
     margin-right: 5px;
 }
 
@@ -29,7 +29,7 @@
 }
 
 .a-carousel li .carousel-item.demo-1 .circle  > span {
-    color: #efefef;
+    color: $light;
     //font-size: 14px;
 }
 
@@ -38,7 +38,7 @@
     background: $positive;
 }
 .a-carousel li.active .carousel-item.demo-1 .circle  > span {
-    color: #efefef;
+    color: $button-positive-text;
 }
 
 

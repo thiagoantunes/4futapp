@@ -1,24 +1,55 @@
+// $light:                           #fff !default;
+// $stable:                          #555 !default;
+// $positive:                        #009688 !default;
+// $calm:                            #00BCD4 !default;
+// $balanced:                        #03b7a5 !default;
+// $energized:                       #FFC107 !default;
+// $assertive:                       #F34235 !default;
+// $royal:                           #8a6de9 !default;
+// $dark:                            #2e2f31 !default;
+// $base-background-color:           #282828 !default;
+
+// $base-color:                      #efefef !default;
+// $card-header-bg:                  #444 !default;
+// $card-body-bg:                    #333 !default;
+// $card-footer-bg:                  #444 !default;
+
+// $button-stable-bg:                $stable !default;
+// $button-stable-text:              #efefef !default;
+// $button-stable-border:            #444 !default;
+// $button-stable-active-bg:         #444 !default;
+// $button-stable-active-border:     #333 !default;
+
+
+
 $light:                           #fff !default;
-$stable:                          #555 !default;
-$positive:                        #009688 !default;
+$stable:                          #46687E !default;
+$positive:                        #00D466 !default;
 $calm:                            #00BCD4 !default;
 $balanced:                        #03b7a5 !default;
 $energized:                       #FFC107 !default;
 $assertive:                       #F34235 !default;
 $royal:                           #8a6de9 !default;
-$dark:                            #2e2f31 !default;
-$base-background-color:           #282828 !default;
+$dark:                            #1E394C !default;
+$base-background-color:           #0C2633 !default;
 
 $base-color:                      #efefef !default;
-$card-header-bg:                  #444 !default;
-$card-body-bg:                    #333 !default;
-$card-footer-bg:                  #444 !default;
+$card-header-bg:                  #0C2633 !default;
+$card-body-bg:                    #1E394C !default;
+$card-footer-bg:                  #0C2633 !default;
 
 $button-stable-bg:                $stable !default;
 $button-stable-text:              #efefef !default;
-$button-stable-border:            #444 !default;
-$button-stable-active-bg:         #444 !default;
-$button-stable-active-border:     #333 !default;
+$button-stable-border:            #0C2633 !default;
+$button-stable-active-bg:         #0C2633 !default;
+$button-stable-active-border:     #1E394C !default;
+
+$button-positive-bg:              $positive !default;
+$button-positive-text:            $dark !default;
+$button-positive-border:          darken($positive, 10%) !default;
+$button-positive-active-bg:       darken($positive, 10%) !default;
+$button-positive-active-border:   darken($positive, 10%) !default;
+
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
@@ -43,6 +74,54 @@ $RobotoDraftFontVersion: "1.0.0";
     "scss/inc/jogos-view",
     "scss/inc/list-view"; 
 
+
+.title-center{
+    text-align: center!important;
+}
+
+.platform-ios {
+    .bar-positive{
+        background: $dark;
+    }
+
+    .tabs-background-positive .tabs, .tabs-background-positive > .tabs{
+        background: $dark !important;
+    }  
+
+    .bar.bar-positive .title{
+        color: $positive !important;
+    }
+
+    .tabs-color-dark .tab-item{
+        color: rgba(255, 255, 255, 0.4)
+    }
+
+    a.tab-item.tab-item-active{
+        color: $positive;
+    }
+
+    .bar-positive .button.button-clear{
+        color: $positive !important;
+    }
+}
+
+.platform-android{
+    .bar-custom{
+        background: $positive;
+    }
+
+    .tabs-background-custom{
+        background: $positive;
+    }
+
+    .bar.bar-positive{
+        border:none;
+    }
+
+    .bar-positive .button.button-clear{
+        color: $button-positive-text !important;
+    }
+}
 
 .bar{
     box-shadow: none;

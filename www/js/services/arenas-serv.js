@@ -52,7 +52,7 @@ angular.module('main')
 
   })
 
-  .factory('GeoService', function ($q, $cordovaGeolocation, ArenasService) {
+  .factory('GeoService', function ($q, $ionicPlatform, $cordovaGeolocation, ArenasService, JogosService) {
     var service = {
       position: [],
 
@@ -64,21 +64,37 @@ angular.module('main')
     function getPosition() {
       var deferred = $q.defer();
       var posOptions = { timeout: 10000, enableHighAccuracy: false };
-      var watchOptions = { timeout : 3000, enableHighAccuracy: false};
-      $cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
-        service.position = [position.coords.latitude, position.coords.longitude];
-        ArenasService.geoQuery = ArenasService.geoFire.query({
-          center: service.position,
-          radius: 20
-        });
-        deferred.resolve(service.position);
-      });
+      var watchOptions = { timeout: 3000, enableHighAccuracy: false };
+      $ionicPlatform.ready(function () {
+        $cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
+          service.position = [position.coords.latitude, position.coords.longitude];
 
-      $cordovaGeolocation.watchPosition(watchOptions).then(function (position) {
-        service.position = [position.coords.latitude, position.coords.longitude];
-        ArenasService.geoQuery.updateCriteria({
-          center: [position[0], position[1]],
-          radius: 20
+          ArenasService.geoQuery = ArenasService.geoFire.query({
+            center: service.position,
+            radius: 20
+          });
+
+          JogosService.geoQuery = JogosService.geoFire.query({
+            center: service.position,
+            radius: 20
+          });
+
+          deferred.resolve(service.position);
+        });
+
+        $cordovaGeolocation.watchPosition(watchOptions).then(function (position) {
+          service.position = [position.coords.latitude, position.coords.longitude];
+
+          ArenasService.geoQuery.updateCriteria({
+            center: [position[0], position[1]],
+            radius: 20
+          });
+
+          JogosService.geoQuery.updateCriteria({
+            center: [position[0], position[1]],
+            radius: 20
+          });
+
         });
       });
 
