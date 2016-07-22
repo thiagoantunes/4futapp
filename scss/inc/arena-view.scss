@@ -124,7 +124,7 @@
                 border-radius: 4px !important;
             }
             .button:not(.button-positive) {
-                background-color: #555;
+                background-color: $stable;
                 color: #fff;
             }
             .button:last-child{
@@ -137,12 +137,7 @@
   }
 
 .modal-jogo{
-      background-color: rgb(40,40,40);
-
-      h1,h2,h3,h4,h5,h6{
-          color:#efefef;
-          margin:0px 5px;
-      }
+      background-color: $base-background-color;
 
       .item-md-label{
           .input-label{
@@ -210,11 +205,15 @@
         height: 100px;
         position: relative;
         background: $positive;
-        color: white;
+        color:$button-positive-text;
         button{
-            color: white;
+            color:$button-positive-text;
             float: right;
             font-size: 1.5em;
+        }
+
+        h1,h2,h3,h4,h5,h6{
+          color:$button-positive-text;
         }
 
         .title{

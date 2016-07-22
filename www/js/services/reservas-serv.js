@@ -42,6 +42,7 @@ angular.module('main')
           };
           var jogo = {
             arena: arena,
+            inicio: novaReserva.start,
             responsavel: firebase.auth().currentUser.uid,
             reserva: reservaId,
             status: 'agendado'
@@ -102,11 +103,14 @@ angular.module('main')
     function getMinhasReservas() {
       service.refUserReservas.on('child_added', function (snap) {
         getReserva(snap.val(), snap.key).on('value', function (snapReservaData) {
-          var data = snapReservaData.val();
-          data.id = snap.key;
-          data.arena = snap.val();
-          $timeout(function () {
-            UserService.reservas.push(data);
+          Ref.child('arenas/' + snap.val() + '/nome').on('value', function (snapNomeArena) {
+            var data = snapReservaData.val();
+            data.id = snap.key;
+            data.arenaId = snap.val();
+            data.arenaNome = snapNomeArena.val();
+            $timeout(function () {
+              UserService.reservas.push(data);
+            });
           });
         });
       });

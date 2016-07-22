@@ -1,10 +1,31 @@
 <ion-view view-title="Meus Jogos">
+  <ion-nav-buttons side="right">
+    <button ng-click="vm.openNovoJogoModal();" class="button button-icon button-clear ion-android-add icon"></button>
+  </ion-nav-buttons>
   <ion-content class="padding">
-    <ion-list>
-      <ion-item class="item item-divider" ng-repeat="jogo in vm.jogos">
-        {{jogo | json}}
-      </ion-item>
-    </ion-list>
+    <div ng-if="vm.jogos.length == 0" class="lista-vazia text-center">
+      <i class="icon ion-ios-football-outline"></i>
+      <h5>Você ainda não jogos.</h5>
+      <div style="padding:20px">
+        <button ng-click="vm.openNovoJogoModal();" class="button button-full button-positive">Criar Jogo</button>
+      </div>
+    </div>
+    <div ng-if="vm.jogos.length > 0">
+      <div class="button-bar padding">
+        <a grouped-radio="false" ng-model="vm.mostrarHistorico">Atuais</a>
+        <a grouped-radio="true" ng-model="vm.mostrarHistorico">Passadas</a>
+      </div>
+      <ion-list>
+        <a ng-repeat="jogo in vm.jogos | filter: vm.filtroJogos()" ng-click="vm.jogosService.jogoSelecionado = jogo;" href="#/main/jogos/{{jogo.id}}">
+          <div class="card">
+            <div class="item item-avatar">
+              <h2>{{jogo.nome}}</h2>
+              <p>{{jogo.inicio | date :"dd/MM/yyyy 'as' H:mm"}}</p>
+            </div>
+          </div>
+        </a>
+      </ion-list>
+    </div>
     <pre>{{vm.jogos | json}}</pre>
   </ion-content>
 </ion-view>

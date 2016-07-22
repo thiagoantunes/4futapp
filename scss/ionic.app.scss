@@ -22,7 +22,7 @@
 
 
 
-$light:                           #fff !default;
+$light:                           #1E394C !default;
 $stable:                          #46687E !default;
 $positive:                        #00D466 !default;
 $calm:                            #00BCD4 !default;
@@ -50,6 +50,14 @@ $button-positive-border:          darken($positive, 10%) !default;
 $button-positive-active-bg:       darken($positive, 10%) !default;
 $button-positive-active-border:   darken($positive, 10%) !default;
 
+$button-light-bg:                 $light !default;
+$button-light-text:               $base-color !default;
+$button-light-border:             $base-background-color !default;
+
+.item{
+    font-size: 16px !important;
+    color: $base-color;
+}
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
@@ -57,6 +65,8 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 $RobotoDraftFontPath: "../fonts"; // REMINDER: edit as appropriate!
 $RobotoDraftFontName: "RobotoDraft";
 $RobotoDraftFontVersion: "1.0.0";
+
+$input-color: #fff;
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic",
@@ -77,6 +87,10 @@ $RobotoDraftFontVersion: "1.0.0";
 
 .title-center{
     text-align: center!important;
+}
+
+.bar.bar-header .button + .title{
+    left: 0px!important;
 }
 
 .platform-ios {
@@ -144,6 +158,14 @@ $RobotoDraftFontVersion: "1.0.0";
     padding-top: 15px;
 }
 
+.list{
+    .item{
+        img{
+            border:solid 3px $base-background-color;
+        }
+    }
+}
+
 .profile-picture {
     max-height: 150px
 }
@@ -153,11 +175,18 @@ $RobotoDraftFontVersion: "1.0.0";
     top: 179px;
 }
 
+.lista-vazia{
+    padding: 50px 0px;
+    i{
+        font-size:80px;
+    }
+}
+
 hr{
    display: block;
     height: 1px;
     border: 0;
-    border-top: 1px solid #555;
+    border-top: 1px solid $stable;
     margin: 1em 0;
     padding: 0; 
 }
@@ -174,6 +203,10 @@ hr{
 }
 
 .item-icon-small { font-size:large !important; color: #666 }
+
+.button-bar .button{
+    line-height: 48px;
+}
 
 .button-bar > .button:last-child {
   border-radius: 0px 20px 20px 0px !important;

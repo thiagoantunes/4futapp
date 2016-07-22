@@ -214,6 +214,16 @@ angular.module('main', [
         }
       })
 
+      .state('main.jogos-detail', {
+        url: '/jogos/:id',
+        views: {
+          'tab-home': {
+            templateUrl: 'templates/jogos-detail.html',
+            controller: 'JogosDetailCtrl as vm',
+          }
+        }
+      })
+
       .state('main.meus-jogos', {
         url: '/meus-jogos',
         views: {
@@ -254,9 +264,17 @@ angular.module('main', [
       });
   })
 
-  .controller('MenuCtrl', function ($state, $rootScope, ArenasService, ReservasService, JogosService) {
+  .controller('MenuCtrl', function ($state, $rootScope, ArenasService, ReservasService, JogosService, $ionicHistory) {
     var vm = this;
-    var hideTabsStates = ['main.arenas', 'main.arenas-detail', 'main.minhas-reservas', 'main.encontrar-jogos'];
+    var hideTabsStates = [
+      'main.arenas',
+      'main.arenas-detail',
+      'main.minhas-reservas',
+      'main.encontrar-jogos',
+      'main.meus-jogos',
+      'main.jogos-detail',
+      'main.jogos'
+    ];
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);
     });
@@ -287,4 +305,15 @@ angular.module('main', [
     GoogleMapApiProviders.configure({
       brazil: true
     });
-  }]);
+  }])
+
+
+
+  .filter('defaultImage', function () {
+    return function (input, param) {
+      if (!input) {
+        return 'img/avatar_placeholder.jpg';
+      }
+      return input;
+    };
+  });

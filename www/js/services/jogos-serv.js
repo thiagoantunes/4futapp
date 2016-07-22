@@ -1,16 +1,19 @@
 /*global firebase GeoFire*/
 'use strict';
 angular.module('main')
-  .factory('JogosService', function (Ref, $timeout, $firebaseArray, $q, UserService) {
+  .factory('JogosService', function (Ref, $timeout, $firebaseObject, $firebaseArray, $q, UserService) {
     var service = {
+      jogoSelecionado: null,
       jogosRegiao: [],
       ref: Ref.child('jogos'),
       refLocalizacao: Ref.child('jogosLocalizacao'),
       refUserJogos: Ref.child('usersJogos'),
+      refJogadoresJogo: Ref.child('jogosJogadores'),
       geoFire: new GeoFire(Ref.child('jogosLocalizacao')),
       geoQuery: {},
 
       getJogosRegiao: getJogosRegiao,
+      getJogadoresJogo: getJogadoresJogo,
       getMeusJogos: getMeusJogos,
       getUserJogos: getUserJogos,
       criarJogo: criarJogo
@@ -39,6 +42,10 @@ angular.module('main')
       return $firebaseArray(ref);
     }
 
+    function getJogadoresJogo(jogoId) {
+      return $firebaseArray(service.refJogadoresJogo.child(jogoId));
+    }
+
     function criarJogo(novoJogo, coords) {
       var deferred = $q.defer();
 
@@ -46,6 +53,11 @@ angular.module('main')
       var jogoData = {};
       jogoData['usersJogos/' + firebase.auth().currentUser.uid + '/' + jogoId] = true;
       jogoData['jogos/' + jogoId] = novoJogo;
+      jogoData['jogosJogadores/' + jogoId + '/' + firebase.auth().currentUser.uid] = {
+        nome: firebase.auth().currentUser.displayName,
+        fotoPerfil: firebase.auth().currentUser.photoURL,
+        confirmado: true
+      };
 
       Ref.update(jogoData, function (error) {
         if (error) {
@@ -69,6 +81,7 @@ angular.module('main')
             data.id = snap.key;
             data.l = snapLocalizacao.val().l;
             $timeout(function () {
+              _.remove(UserService.jogos, { 'id': snap.key });
               UserService.jogos.push(data);
             });
           });

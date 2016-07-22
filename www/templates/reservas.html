@@ -1,10 +1,26 @@
 <ion-view view-title="Minhas Reservas">
   <ion-content class="padding">
-    <ion-list>
-      <ion-item class="item item-divider" ng-repeat="reserva in vm.minhasReservas">
-        {{reserva | json}}
-      </ion-item>
-    </ion-list>
-    <pre>{{vm.minhasReservas | json}}</pre>
+    <div ng-if="vm.minhasReservas.length == 0" class="lista-vazia text-center">
+      <i class="icon ion-ios-calendar-outline"></i>
+      <h5>Você ainda não tem reservas.</h5>
+      <div style="padding:20px">
+        <button class="button button-full button-positive">Reservas</button>
+      </div>
+    </div>
+    <div ng-if="vm.minhasReservas.length > 0">
+      <div class="button-bar padding">
+        <a grouped-radio="false" ng-model="vm.mostrarHistorico">Atuais</a>
+        <a grouped-radio="true" ng-model="vm.mostrarHistorico">Passadas</a>
+      </div>
+      <ion-list>
+        <div class="card" ng-repeat="reserva in vm.minhasReservas | filter: vm.filtroReservas()">
+          <div class="item item-avatar">
+            <h2>{{reserva.arenaNome}}</h2>
+            <p>{{reserva.start | date :"dd/MM/yyyy 'as' H:mm"}}</p>
+          </div>
+        </div>
+      </ion-list>
+    </div>
+    <!--<pre>{{vm.minhasReservas | json}}</pre>-->
   </ion-content>
 </ion-view>
