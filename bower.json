@@ -26,7 +26,10 @@
     "ion-md-input": "^1.0.4",
     "ion-gallery": "^0.1.14",
     "ng-cordova-oauth": "^0.2.9",
-    "ng-facebook": "^0.1.6"
+    "ng-facebook": "^0.1.6",
+    "ionic-numberpicker": "^1.1.4",
+    "ionic-timepicker": "^0.5.1",
+    "ionic-datepicker": "^1.2.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.5.0",

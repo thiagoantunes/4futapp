@@ -1,7 +1,7 @@
 /*global firebase moment*/
 'use strict';
 angular.module('main')
-  .controller('MeusJogosCtrl', function ($scope, JogosService, UserService, $ionicModal) {
+  .controller('MeusJogosCtrl', function ($scope, JogosService, UserService, $ionicModal, ionicTimePicker, ionicDatePicker) {
     var vm = this;
     vm.jogosService = JogosService;
     vm.jogos = UserService.jogos;
@@ -14,10 +14,45 @@ angular.module('main')
     vm.salvarJogo = salvarJogo;
     vm.placeChanged = placeChanged;
     vm.openNovoJogoModal = openNovoJogoModal;
+    vm.openTimePicker = openTimePicker;
+    vm.openDatePicker = openDatePicker;
 
     activate();
 
     function activate() {
+
+      vm.numberPickerMin = {
+        inputValue: 10,
+        minValue: 0,
+        maxValue: 22,
+        titleLabel: 'Mínimo de jogadores',
+        setLabel: 'Ok',  //Optional
+        format: 'WHOLE',
+        closeLabel: 'Fechar',  //Optional
+        setButtonType: 'button-positive',  //Optional
+        closeButtonType: 'button-stable',  //Optional
+        callback: function (val) {    //Mandatory
+          if (!(typeof (val) === 'undefined')) {
+            $scope.novoJogo.minJogadores = val;
+          }
+        }
+      };
+      vm.numberPickerMax = {
+        inputValue: 20,
+        minValue: 0,
+        maxValue: 50,
+        titleLabel: 'Máximo de jogadores',
+        setLabel: 'Ok',  //Optional
+        format: 'WHOLE',
+        closeLabel: 'Fechar',  //Optional
+        setButtonType: 'button-positive',  //Optional
+        closeButtonType: 'button-stable',  //Optional
+        callback: function (val) {    //Mandatory
+          if (!(typeof (val) === 'undefined')) {
+            $scope.novoJogo.maxJogadores = val;
+          }
+        }
+      };
     }
 
     function filtroJogos() {
@@ -34,8 +69,31 @@ angular.module('main')
 
     function salvarJogo(location) {
       $scope.novoJogo.endereco = location.formatted_address;
-      $scope.novoJogo.inicio = $scope.novoJogo.inicio.add($scope.modalForm.horarioRange.value, 'ms')._d.getTime();
+      //$scope.novoJogo.inicio = $scope.novoJogo.inicio.add($scope.modalForm.horarioRange.value, 'ms')._d.getTime();
       vm.jogosService.criarJogo($scope.novoJogo, [location.geometry.location.lat(), location.geometry.location.lng()]);
+    }
+
+    function openTimePicker() {
+      var tpObj = {
+        callback: function (val) {
+          if (!(typeof (val) === 'undefined')) {
+            var selectedTime = new Date(val * 1000);
+            $scope.novoJogo.inicio = selectedTime.getUTCHours() + ':' + selectedTime.getUTCMinutes();
+          }
+        }
+      };
+      ionicTimePicker.openTimePicker(tpObj);
+    }
+
+    function openDatePicker() {
+      var ipObj1 = {
+        callback: function (val) {  //Mandatory
+          $scope.novoJogo.dia = moment(val).format('DD/MM/YYYY');
+        },
+        inputDate: new Date(),
+        mondayFirst: true,
+      };
+      ionicDatePicker.openDatePicker(ipObj1);
     }
 
     function placeChanged() {
@@ -97,15 +155,13 @@ angular.module('main')
         $scope.novoJogoModal.hide();
       };
 
-      $scope.onDateSelect = function (item) {
-        $scope.novoJogo.inicio = moment(item.val);
-      };
+      // $scope.onDateSelect = function (item) {
+      //   $scope.novoJogo.inicio = moment(item.val);
+      // };
 
       $scope.salvarJogo = salvarJogo;
 
       $scope.novoJogo = {
-        minJogadores: 10,
-        maxJogadores: 20,
         responsavel: firebase.auth().currentUser.uid,
         status: 'agendado'
       };

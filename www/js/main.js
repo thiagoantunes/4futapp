@@ -17,7 +17,10 @@ angular.module('main', [
   'ionMdInput',
   'ion-gallery',
   'ngCordovaOauth',
-  'ngFacebook'
+  'ngFacebook',
+  'ionic-timepicker',
+  'ionic-numberpicker',
+  'ionic-datepicker'
   // TODO: load other modules selected during generation
 ])
 
@@ -129,11 +132,37 @@ angular.module('main', [
     }
   })
 
-  .config(function ($stateProvider, $urlRouterProvider, tmhDynamicLocaleProvider, $ionicConfigProvider, $facebookProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, tmhDynamicLocaleProvider, $ionicConfigProvider, $facebookProvider, ionicTimePickerProvider, ionicDatePickerProvider) {
     //$ionicConfigProvider.tabs.style('standard');
     //$ionicConfigProvider.tabs.position('top');
     $facebookProvider.setAppId('908423235912952');
     tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-locale-pt-br/angular-locale_pt-br.js');
+
+    var timePickerObj = {
+      inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60)),
+      format: 24,
+      step: 15,
+      setLabel: 'Ok',
+      closeLabel: 'Fechar'
+    };
+    ionicTimePickerProvider.configTimePicker(timePickerObj);
+
+    var datePickerObj = {
+      inputDate: new Date(),
+      setLabel: 'Set',
+      todayLabel: 'Hoje',
+      closeLabel: 'Fechar',
+      mondayFirst: false,
+      weeksList: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+      monthsList: ["Jan", "Fev", "Mar", "Abr", "Mai", "Junh", "Julh", "Ago", "Set", "Out", "Nov", "Dez"],
+      templateType: 'modal',
+      from: new Date(),
+      to: new Date(2018, 8, 1),
+      showTodayButton: true,
+      dateFormat: 'dd/MM/yyyy',
+      closeOnSelect: true
+    };
+    ionicDatePickerProvider.configDatePicker(datePickerObj);
 
     // ROUTING with ui.router
     //$urlRouterProvider.otherwise('/login');

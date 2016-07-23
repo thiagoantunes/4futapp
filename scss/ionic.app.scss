@@ -73,6 +73,10 @@ $RobotoDraftFontVersion: "1.0.0";
 
 $input-color: #fff;
 
+.list .item.item-floating-label, .item-floating-label{
+        border-bottom: solid 1px #46687E !important;
+}
+
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic",
         "www/lib/ionic-material/src/scss/index";
@@ -84,6 +88,7 @@ $input-color: #fff;
 @import 
     "scss/inc/cards",
     "scss/inc/carousel",
+    "scss/inc/timepicker",
     
     "scss/inc/arena-view",
     "scss/inc/jogos-view",
