@@ -3,6 +3,9 @@
   font-size: 16px !important;
   color: #efefef; }
 
+.placeholder-icon {
+  color: #70a3c6 !important; }
+
 /*!
   Ionicons, v2.0.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/
@@ -12239,7 +12242,7 @@ ion-spinner.spinner-on-load {
   border: none !important; }
 
 .modal-convidar-amigos {
-  background-color: #0C2633; }
+  background-color: #1E394C; }
   .modal-convidar-amigos .header {
     height: 200px;
     position: relative;

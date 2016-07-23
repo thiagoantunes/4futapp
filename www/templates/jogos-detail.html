@@ -49,7 +49,29 @@
       <ion-tab title="MENSAGENS" href="#/tab/tab2">
         <ion-nav-view name="tab-tab2">
           <div class="header">
-            <pre>{{vm.jogo}}</pre>
+            <div class="row">
+              <div class="col-50">
+                <span style="font-size:2.5em; font-weight: 200" class="positive">{{vm.jogo.inicio | date: 'dd/MM'}}</span>
+              </div>
+              <div class="col-50" style="text-align:right">
+                <span style="font-size:2.5em;font-weight: 100">{{vm.jogo.inicio | date: 'HH:mm'}}</span>
+              </div>
+            </div>
+            <hr/>
+            <h4>Arena Castelão FC</h4>
+            <h5 style="font-weight: 300; margin-bottom:0px">
+              <i class="icon ion-ios-location" style="margin-right:5px"></i> {{vm.jogo.endereco}}
+            </h5>
+            <div class="confirmacao">
+              <div class="row">
+                <div class="col-50 vou" ng-click="vm.atualizaPresenca(true);" ng-class="{'vou-checked' : vm.minhaPresenca.confirmado}">
+                  <i class="icon ion-checkmark-round"></i> VOU
+                </div>
+                <div class="col-50 nao-vou" ng-click="vm.atualizaPresenca(false);" ng-class="{'nao-vou-checked' : vm.minhaPresenca.confirmado!== undefined &&  !vm.minhaPresenca.confirmado}">
+                  <i class="icon ion-close"></i> NÃO VOU
+                </div>
+              </div>
+            </div>
           </div>
           <ion-content>
             Tab 2 content
