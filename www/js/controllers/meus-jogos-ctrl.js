@@ -120,19 +120,25 @@ angular.module('main')
 
   })
 
-  .controller('JogosDetailCtrl', function ($scope, JogosService, $ionicModal) {
+  .controller('JogosDetailCtrl', function ($scope, JogosService, UserService, $ionicModal) {
     var vm = this;
     vm.jogo = JogosService.jogoSelecionado;
     vm.jogadores = JogosService.getJogadoresJogo(vm.jogo.id);
+    vm.amigos = UserService.amigos;
 
     vm.atualizaPresenca = atualizaPresenca;
     vm.getPresencaClass = getPresencaClass;
+    vm.checkPresencaAmigo = checkPresencaAmigo;
+    vm.convidarAmigo = convidarAmigo;
+    vm.desconvidarAmigo = desconvidarAmigo;
 
     activate();
 
     function activate() {
-      vm.jogadores.$loaded(function (val){
-        vm.minhaPresenca = _.find(val, {'$id' : firebase.auth().currentUser.uid});
+      UserService.getAmigos();
+
+      vm.jogadores.$loaded(function (val) {
+        vm.minhaPresenca = _.find(val, { '$id': firebase.auth().currentUser.uid });
       });
 
       $ionicModal.fromTemplateUrl('templates/modal/convidar-amigos.html', {
@@ -165,6 +171,18 @@ angular.module('main')
         }
       }
       return val;
+    }
+
+    function checkPresencaAmigo(amigo) {
+      return _.some(vm.jogadores, { '$id': amigo.id });
+    }
+
+    function convidarAmigo(amigo) {
+      JogosService.convidarAmigo(amigo, vm.jogo.id);
+    }
+
+    function desconvidarAmigo(amigo) {
+      JogosService.desconvidarAmigo(amigo, vm.jogo.id);
     }
 
   });

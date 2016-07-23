@@ -16,7 +16,9 @@ angular.module('main')
       getJogadoresJogo: getJogadoresJogo,
       getMeusJogos: getMeusJogos,
       getUserJogos: getUserJogos,
-      criarJogo: criarJogo
+      criarJogo: criarJogo,
+      convidarAmigo: convidarAmigo,
+      desconvidarAmigo: desconvidarAmigo
     };
 
     return service;
@@ -87,6 +89,26 @@ angular.module('main')
           });
         });
       });
+    }
+
+    function convidarAmigo(amigo, jogoId) {
+      var conviteData = {};
+      conviteData['jogosJogadores/' + jogoId + '/' + amigo.id] = {
+        nome: amigo.nome,
+        fotoPerfil: amigo.fotoPerfil,
+        confirmado: false
+      };
+      conviteData['usersJogos/' + amigo.id + '/' + jogoId] = true;
+
+      Ref.update(conviteData);
+    }
+
+    function desconvidarAmigo(amigo, jogoId) {
+      var conviteData = {};
+      conviteData['jogosJogadores/' + jogoId + '/' + amigo.id] = null;
+      conviteData['usersJogos/' + amigo.id + '/' + jogoId] = null;
+
+      Ref.update(conviteData);
     }
 
   });
