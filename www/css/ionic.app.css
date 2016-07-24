@@ -6,6 +6,12 @@
 .placeholder-icon {
   color: #70a3c6 !important; }
 
+input[readonly] {
+  background-color: #0C2633 !important; }
+
+.input-label {
+  color: #ccc !important; }
+
 .list .item.item-floating-label, .item-floating-label {
   border-bottom: solid 1px #46687E !important; }
 
@@ -12362,13 +12368,31 @@ For example, you might change some of the default colors:
 .platform-ios.platform-cordova:not(.fullscreen) .modal-arena .header {
   margin-top: 20px; }
 
+.platform-ios .modal-arena .header {
+  margin-top: 20px;
+  background: #0C2633;
+  color: #efefef; }
+  .platform-ios .modal-arena .header button {
+    float: left;
+    color: #efefef;
+    padding-left: 20px; }
+  .platform-ios .modal-arena .header h1, .platform-ios .modal-arena .header h2, .platform-ios .modal-arena .header h3, .platform-ios .modal-arena .header h4, .platform-ios .modal-arena .header h5, .platform-ios .modal-arena .header h6 {
+    color: #efefef;
+    margin: 0px 5px; }
+
+.platform-ios .modal-arena ion-content {
+  top: 205px; }
+
 .modal-arena {
-  background-color: rgba(30, 57, 76, 0.9); }
+  background-color: #0C2633; }
   .modal-arena h1, .modal-arena h2, .modal-arena h3, .modal-arena h4, .modal-arena h5, .modal-arena h6 {
     color: #efefef;
     margin: 0px 5px; }
+  .modal-arena ion-content {
+    background-color: #1E394C;
+    top: 185px; }
   .modal-arena .header {
-    height: 165px;
+    height: 185px;
     position: relative;
     background: #00D466;
     color: #1E394C; }
@@ -12399,80 +12423,27 @@ For example, you might change some of the default colors:
       border-radius: 4px !important; }
     .modal-arena .button-bar .button:first-child {
       border-radius: 4px !important; }
-
-.modal-jogo {
-  background-color: #0C2633; }
-  .modal-jogo .item-md-label .input-label {
-    letter-spacing: 0px; }
-  .modal-jogo .item-md-label input {
-    letter-spacing: 0px; }
-  .modal-jogo .input-label {
-    color: #efefef; }
-  .modal-jogo label {
-    color: #888;
-    font-size: 16px;
-    padding: 30px 0 0 10px;
-    background: transparent; }
-    .modal-jogo label .rzslider {
-      margin-top: 50px; }
-      .modal-jogo label .rzslider .rz-bubble {
-        color: #00D466;
-        font-weight: bold; }
-        .modal-jogo label .rzslider .rz-bubble .rz-limit {
-          color: #ccc; }
-      .modal-jogo label .rzslider .rz-bubble.rz-limit {
-        color: #888; }
-      .modal-jogo label .rzslider .rz-pointer {
-        background-color: #00D466; }
-      .modal-jogo label .rzslider .rz-pointer.rz-active:after {
-        background: #F34235; }
-      .modal-jogo label .rzslider .rz-bar {
-        background: #888; }
-      .modal-jogo label .rzslider .rz-bar.rz-selection {
-        background: #555; }
-    .modal-jogo label .a-carousel {
-      margin-top: 10px; }
-  .modal-jogo .item-md-label {
-    margin: 0px;
-    border-bottom: solid 1px #555; }
-    .modal-jogo .item-md-label input {
-      background: transparent; }
-    .modal-jogo .item-md-label .highlight-calm {
-      background: #00D466 !important; }
-  .modal-jogo .header {
-    height: 100px;
-    position: relative;
-    background: #00D466;
-    color: #1E394C; }
-    .modal-jogo .header button {
-      color: #1E394C;
-      float: right;
-      font-size: 1.5em; }
-    .modal-jogo .header h1, .modal-jogo .header h2, .modal-jogo .header h3, .modal-jogo .header h4, .modal-jogo .header h5, .modal-jogo .header h6 {
-      color: #1E394C; }
-    .modal-jogo .header .title {
-      padding: 55px 30px 20px 10px; }
-    .modal-jogo .header .content {
-      padding: 60px 30px 20px 30px; }
-      .modal-jogo .header .content i {
-        font-size: 1.6em;
-        margin-right: 10px; }
-  .modal-jogo .button-bar {
-    margin-top: 10px;
-    box-shadow: none; }
-    .modal-jogo .button-bar .button {
-      margin: 0px 5px;
-      border-radius: 4px !important; }
-    .modal-jogo .button-bar .button:not(.button-positive) {
-      background-color: #555;
-      color: #fff; }
-    .modal-jogo .button-bar .button:last-child {
-      border-radius: 4px !important; }
-    .modal-jogo .button-bar .button:first-child {
-      border-radius: 4px !important; }
+  .modal-arena .estrutura-item {
+    border: solid 1px #46687E;
+    padding: 10px; }
+    .modal-arena .estrutura-item img {
+      box-shadow: none;
+      display: block;
+      margin: 0 auto;
+      height: 90px;
+      width: 90px; }
 
 #jogos-view .angular-google-map-container {
   height: 100vh; }
+
+.platform-ios #jogos-detail .header {
+  margin-top: 63px; }
+
+.platform-ios #jogos-detail .tab-nav {
+  margin-top: 220px; }
+
+.platform-ios #jogos-detail ion-content {
+  margin-top: 220px; }
 
 #jogos-detail .header {
   background: #0C2633;
@@ -12537,8 +12508,27 @@ For example, you might change some of the default colors:
 .platform-android #jogos-detail .tab-nav {
   border: none !important; }
 
+.platform-ios .modal-convidar-amigos {
+  background: #0C2633; }
+  .platform-ios .modal-convidar-amigos .header {
+    margin-top: 20px;
+    height: 220px;
+    background: #0C2633;
+    color: #efefef; }
+    .platform-ios .modal-convidar-amigos .header button {
+      float: left;
+      color: #efefef;
+      padding-left: 20px; }
+  .platform-ios .modal-convidar-amigos ion-content {
+    top: 240px;
+    background: #1E394C; }
+  .platform-ios .modal-convidar-amigos .item {
+    background-color: #1E394C; }
+
 .modal-convidar-amigos {
   background-color: #1E394C; }
+  .modal-convidar-amigos ion-content {
+    top: 200px; }
   .modal-convidar-amigos .header {
     height: 200px;
     position: relative;
@@ -12562,6 +12552,58 @@ For example, you might change some of the default colors:
     .modal-convidar-amigos .button-bar .button:last-child {
       border-radius: 4px !important; }
     .modal-convidar-amigos .button-bar .button:first-child {
+      border-radius: 4px !important; }
+
+.platform-ios .modal-jogo .header {
+  margin-top: 20px;
+  background: #0C2633;
+  color: #efefef; }
+  .platform-ios .modal-jogo .header button {
+    float: left;
+    color: #efefef;
+    padding-left: 20px; }
+  .platform-ios .modal-jogo .header h1, .platform-ios .modal-jogo .header h2, .platform-ios .modal-jogo .header h3, .platform-ios .modal-jogo .header h4, .platform-ios .modal-jogo .header h5, .platform-ios .modal-jogo .header h6 {
+    color: #efefef; }
+  .platform-ios .modal-jogo .header .title {
+    padding: 35px 30px 20px 10px; }
+
+.platform-ios .modal-jogo ion-content {
+  top: 120px; }
+
+.modal-jogo {
+  background-color: #0C2633; }
+  .modal-jogo ion-content {
+    top: 100px; }
+  .modal-jogo .header {
+    height: 100px;
+    position: relative;
+    background: #00D466;
+    color: #1E394C; }
+    .modal-jogo .header button {
+      color: #1E394C;
+      float: right;
+      font-size: 1.5em; }
+    .modal-jogo .header h1, .modal-jogo .header h2, .modal-jogo .header h3, .modal-jogo .header h4, .modal-jogo .header h5, .modal-jogo .header h6 {
+      color: #1E394C; }
+    .modal-jogo .header .title {
+      padding: 55px 30px 20px 10px; }
+    .modal-jogo .header .content {
+      padding: 60px 30px 20px 30px; }
+      .modal-jogo .header .content i {
+        font-size: 1.6em;
+        margin-right: 10px; }
+  .modal-jogo .button-bar {
+    margin-top: 10px;
+    box-shadow: none; }
+    .modal-jogo .button-bar .button {
+      margin: 0px 5px;
+      border-radius: 4px !important; }
+    .modal-jogo .button-bar .button:not(.button-positive) {
+      background-color: #555;
+      color: #fff; }
+    .modal-jogo .button-bar .button:last-child {
+      border-radius: 4px !important; }
+    .modal-jogo .button-bar .button:first-child {
       border-radius: 4px !important; }
 
 .cards-view .bar-header {
@@ -12620,7 +12662,11 @@ For example, you might change some of the default colors:
   background: #1E394C; }
 
 .platform-ios .tabs-background-positive .tabs, .platform-ios .tabs-background-positive > .tabs {
-  background: #1E394C !important; }
+  background: #1E394C !important;
+  border-top: 1px solid #00D466 !important; }
+
+.platform-ios .bar.bar-header {
+  border-bottom: 1px solid #00D466 !important; }
 
 .platform-ios .bar.bar-positive .title {
   color: #00D466 !important; }

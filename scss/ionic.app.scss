@@ -73,6 +73,14 @@ $RobotoDraftFontVersion: "1.0.0";
 
 $input-color: #fff;
 
+input[readonly]{
+    background-color: $base-background-color !important;
+}
+
+.input-label{
+    color: #ccc !important;
+}
+
 .list .item.item-floating-label, .item-floating-label{
         border-bottom: solid 1px #46687E !important;
 }
@@ -110,7 +118,12 @@ $input-color: #fff;
 
     .tabs-background-positive .tabs, .tabs-background-positive > .tabs{
         background: $dark !important;
+        border-top: 1px solid $positive !important;
     }  
+    
+    .bar.bar-header{
+        border-bottom: 1px solid $positive !important;
+    }
 
     .bar.bar-positive .title{
         color: $positive !important;

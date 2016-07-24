@@ -92,7 +92,7 @@ angular.module('main')
         },
         inputDate: new Date(),
         mondayFirst: true,
-      };
+      }; 
       ionicDatePicker.openDatePicker(ipObj1);
     }
 

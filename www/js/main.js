@@ -24,8 +24,18 @@ angular.module('main', [
   // TODO: load other modules selected during generation
 ])
 
-  .run(function ($ionicPlatform, $ionicAnalytics, $state, Ref) {
+  .run(function ($ionicPlatform, $ionicAnalytics, $state, Ref, $rootScope) {
     firebase.auth().onAuthStateChanged(checkLogin);
+
+    $rootScope.$on('$stateChangeStart', function (event, next) {
+      if(next.name == 'main.home'){
+        $rootScope.hideTabs = false;
+      }
+    });
+
+    $ionicPlatform.onHardwareBackButton(function () {
+      console.log('back button');
+    });
 
     $ionicPlatform.ready(function () {
       $ionicAnalytics.register();
@@ -139,7 +149,7 @@ angular.module('main', [
     tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-locale-pt-br/angular-locale_pt-br.js');
 
     var timePickerObj = {
-      inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60)),
+      inputTime: (((new Date()).getHours() * 60 * 60)),
       format: 24,
       step: 15,
       setLabel: 'Ok',

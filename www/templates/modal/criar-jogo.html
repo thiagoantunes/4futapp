@@ -5,7 +5,7 @@
             <h2>Novo Jogo</h2>
         </div>
     </div>
-    <ion-content style="top:100px">
+    <ion-content>
         <div class="list">
             <label class="item item-input item-floating-label">
                 <span class="input-label">None da partida</span>
@@ -13,59 +13,29 @@
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">Local da partida</span>
-                <input location-suggestion location="location" ng-model="location.formatted_address" type="text" placeholder="Local da partida">
+                <input location-suggestion location="location" ng-readonly="true" ng-model="location.formatted_address" type="text" placeholder="Local da partida">
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">Dia</span>
-                <input ng-model="novoJogo.dia" ng-focus="vm.openDatePicker();"  type="text" placeholder="Dia">
+                <input ng-model="novoJogo.dia" ng-focus="vm.openDatePicker();" ng-readonly="true" type="text" placeholder="Dia">
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">Horário de início</span>
-                <input ng-model="novoJogo.inicio" ng-focus="vm.openTimePicker();"  type="text" placeholder="Horário de início">
+                <input ng-model="novoJogo.inicio" ng-focus="vm.openTimePicker();" ng-readonly="true" type="text" placeholder="Horário de início">
             </label>
-            <!--<label class="item item-input item-floating-label">
+            <label class="item item-input item-floating-label">
                 <span class="input-label">Mínimo de jogadores</span>
-                <input ng-model="novoJogo.minJogadores" ionic-numberpicker input-obj="vm.numberPickerMin" type="text" placeholder="Mínimo de jogadores">
+                <input ng-model="novoJogo.minJogadores" ionic-numberpicker ng-readonly="true" input-obj="vm.numberPickerMin" type="text" placeholder="Mínimo de jogadores">
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">Máximo de jogadores</span>
-                <input ng-model="novoJogo.maxJogadores" ionic-numberpicker input-obj="vm.numberPickerMax"  type="text" placeholder="Máximo de jogadores">
-            </label>-->
+                <input ng-model="novoJogo.maxJogadores" ionic-numberpicker ng-readonly="true" input-obj="vm.numberPickerMax"  type="text" placeholder="Máximo de jogadores">
+            </label>
             <!--<label class="item item-input item-floating-label">
                 <span class="input-label">Quem pode ver?</span>
                 <input  type="text" placeholder="Quem pode ver">
             </label>-->
         </div>
-        <!--<div class="list">
-            <label class="item item-input item-stacked-label">
-                <span class="input-label">Nome da Partida</span>
-                <input ng-model="novoJogo.nome" placeholder="Informe o nome da partida..." type="text">
-            </label>
-            <label class="item item-input item-stacked-label">
-                <span class="input-label">Endereço</span>
-                <input type="text" placeholder="Informe o endereço..." location-suggestion location="location" ng-model="location.formatted_address">
-  	        </label>
-            <label class="item item-input item-stacked-label">
-                <span class="input-label">Número de jogadores</span>
-                <br/>
-                <rzslider rz-slider-model="novoJogo.minJogadores" rz-slider-high="novoJogo.maxJogadores" rz-slider-options="modalForm.jogadoresRange.options"></rzslider>
-  	        </label>
-            <label class="item item-input item-stacked-label">
-                <span class="input-label">Dia</span>
-                <a-carousel on-select="onDateSelect(item)" carousel-options="modalForm.dateSelectorConfig" array-provider="modalForm.dateSelector"></a-carousel>
-            </label>
-            <label class="item item-input item-stacked-label">
-                <span class="input-label">Horário de início</span>
-                <br/>
-                <rzslider rz-slider-model="modalForm.horarioRange.value" rz-slider-options="modalForm.horarioRange.options"></rzslider>
-            </label>
-        </div>
-        <div class="button-bar padding">
-            <a grouped-radio="1" ng-model="modalForm.visibilidade">Público</a>
-            <a grouped-radio="2" ng-model="modalForm.visibilidade">Amigos de amigos</a>
-            <a grouped-radio="3" ng-model="modalForm.visibilidade">Amigos</a>
-            <a grouped-radio="4" ng-model="modalForm.visibilidade">Convocados</a>
-        </div>-->
         <div class="padding">
             <button ng-click="salvarJogo(location);" class="button button-block button-positive">
                 Criar Partida
