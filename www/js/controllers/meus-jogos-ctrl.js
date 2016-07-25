@@ -1,58 +1,19 @@
 /*global firebase moment*/
 'use strict';
 angular.module('main')
-  .controller('MeusJogosCtrl', function ($scope, JogosService, UserService, $ionicModal, ionicTimePicker, ionicDatePicker) {
+  .controller('MeusJogosCtrl', function (JogosService, UserService, $ionicModal) {
     var vm = this;
     vm.jogosService = JogosService;
     vm.jogos = UserService.jogos;
     vm.filtroJogos = filtroJogos;
     vm.mostrarHistorico = false;
-    vm.modalNovoJogo = {};
-    vm.modalLocais = {};
-    vm.novoJogo = {};
 
-    vm.salvarJogo = salvarJogo;
-    vm.placeChanged = placeChanged;
     vm.openNovoJogoModal = openNovoJogoModal;
-    vm.openTimePicker = openTimePicker;
-    vm.openDatePicker = openDatePicker;
 
     activate();
 
     function activate() {
 
-      vm.numberPickerMin = {
-        inputValue: 10,
-        minValue: 0,
-        maxValue: 22,
-        titleLabel: 'Mínimo de jogadores',
-        setLabel: 'Ok',  //Optional
-        format: 'WHOLE',
-        closeLabel: 'Fechar',  //Optional
-        setButtonType: 'button-positive',  //Optional
-        closeButtonType: 'button-stable',  //Optional
-        callback: function (val) {    //Mandatory
-          if (!(typeof (val) === 'undefined')) {
-            $scope.novoJogo.minJogadores = val;
-          }
-        }
-      };
-      vm.numberPickerMax = {
-        inputValue: 20,
-        minValue: 0,
-        maxValue: 50,
-        titleLabel: 'Máximo de jogadores',
-        setLabel: 'Ok',  //Optional
-        format: 'WHOLE',
-        closeLabel: 'Fechar',  //Optional
-        setButtonType: 'button-positive',  //Optional
-        closeButtonType: 'button-stable',  //Optional
-        callback: function (val) {    //Mandatory
-          if (!(typeof (val) === 'undefined')) {
-            $scope.novoJogo.maxJogadores = val;
-          }
-        }
-      };
     }
 
     function filtroJogos() {
@@ -67,114 +28,137 @@ angular.module('main')
       }
     }
 
-    function salvarJogo(location) {
-      $scope.novoJogo.endereco = location.formatted_address;
-      //$scope.novoJogo.inicio = $scope.novoJogo.inicio.add($scope.modalForm.horarioRange.value, 'ms')._d.getTime();
-      vm.jogosService.criarJogo($scope.novoJogo, [location.geometry.location.lat(), location.geometry.location.lng()]);
-    }
-
-    function openTimePicker() {
-      var tpObj = {
-        callback: function (val) {
-          if (!(typeof (val) === 'undefined')) {
-            var selectedTime = new Date(val * 1000);
-            $scope.novoJogo.inicio = selectedTime.getUTCHours() + ':' + selectedTime.getUTCMinutes();
-          }
-        }
-      };
-      ionicTimePicker.openTimePicker(tpObj);
-    }
-
-    function openDatePicker() {
-      var ipObj1 = {
-        callback: function (val) {  //Mandatory
-          $scope.novoJogo.dia = moment(val).format('DD/MM/YYYY');
-        },
-        inputDate: new Date(),
-        mondayFirst: true,
-      }; 
-      ionicDatePicker.openDatePicker(ipObj1);
-    }
-
-    function placeChanged() {
-      vm.place = this.getPlace();
-      vm.map.setCenter(vm.place.geometry.location);
-      vm.event.location = vm.place.formatted_address;
-    }
-
-    function createArray() {
-      var arr = [];
-
-      for (var i = 0; i < 10; i++) {
-        var dat = new Date();
-        dat.setDate(dat.getDate() + i);
-
-        arr.push({
-          id: i,
-          display: moment(dat).format('ddd') + ' ' + dat.getDate(),
-          val: dat / 1
-        });
-      }
-
-      return arr;
-    }
-
-    vm.translate = function (value) {
-      var val = moment(value).utc().format('HH:mm');
-      return val;
-    };
-
     function openNovoJogoModal() {
-      $scope.modalForm = {
-        dateSelectorConfig: {
-          carouselId: 'carousel-1',
-          align: 'left',
-          selectFirst: true,
-          centerOnSelect: false,
-          template: 'templates/misc/carousel-template.html'
-        },
-        dateSelector: createArray(),
-        jogadoresRange: {
-          options: {
-            floor: 0,
-            ceil: 40,
-            step: 1
-          }
-        },
-        horarioRange: {
-          value: 43200000,
-          options: {
-            floor: 0,
-            step: 1800000,
-            ceil: 86400000,
-            translate: vm.translate,
-          }
-        }
-      };
-      $scope.hideModal = function () {
-        $scope.novoJogoModal.hide();
-      };
-
-      // $scope.onDateSelect = function (item) {
-      //   $scope.novoJogo.inicio = moment(item.val);
-      // };
-
-      $scope.salvarJogo = salvarJogo;
-
-      $scope.novoJogo = {
-        responsavel: firebase.auth().currentUser.uid,
-        status: 'agendado'
-      };
-
       $ionicModal.fromTemplateUrl('templates/modal/criar-jogo.html', {
-        scope: $scope
       }).then(function (modal) {
-        $scope.novoJogoModal = modal;
+        JogosService.novaPartidaModal = {
+          modal: modal,
+          params: undefined
+        };
         modal.show();
       });
     }
 
   })
+
+  .controller('NovaPartidaCtrl', function ($scope, JogosService, $ionicModal, ionicTimePicker, ionicDatePicker) {
+    var vm = this;
+    vm.openTimePicker = openTimePicker;
+    vm.openDatePicker = openDatePicker;
+    vm.salvarJogo = salvarJogo;
+    vm.hideModal = hideModal;
+
+    activate();
+
+    function activate() {
+      vm.novaPartida = {
+        minJogadores: 10,
+        maxJogadores: 20,
+        visibilidade: '4',
+        compartilharFacebook: true,
+        aprovacaoManual: false,
+        responsavel: firebase.auth().currentUser.uid,
+        status: 'agendado'
+      };
+
+      vm.numJogadoresRangeOptions = {
+        floor: 5,
+        ceil: 30,
+        step: 1,
+        hidePointerLabels: true,
+        hideLimitLabels: true,
+      };
+    }
+
+    function salvarJogo(location) {
+      vm.novaPartida.endereco = location.formatted_address;
+      vm.novaPartida.inicio = moment(vm.novaPartida.dia + vm.novaPartida.hora, 'DD/MM/YYYYHH:mm')._d.getTime();
+      vm.jogosService.criarJogo(vm.novaPartida, [location.geometry.location.lat(), location.geometry.location.lng()]);
+    }
+
+    function hideModal() {
+      JogosService.novaPartidaModal.modal.hide();
+    }
+
+    function openTimePicker() {
+      if (window.cordova) {
+        var options = {
+          date: new Date(),
+          mode: 'time',
+          locale: 'pt_br',
+          minuteInterval: 15,
+          doneButtonLabel: 'Ok',
+          cancelButtonLabel: 'Cancelar',
+          androidTheme: 4,
+          is24Hour: true,
+          okText: 'Ok',
+          cancelText: 'Cancelar',
+
+        };
+        datePicker.show(options, function (date) {
+          $scope.$apply(function () {
+            var activeElement = document.activeElement;
+            if (activeElement) {
+              activeElement.blur();
+            }
+            vm.novaPartida.hora = moment(date).format('HH:mm');
+          });
+        });
+      }
+      else {
+        var tpObj = {
+          callback: function (val) {
+            if (!(typeof (val) === 'undefined')) {
+              var selectedTime = new Date(val * 1000);
+              vm.novaPartida.hora = moment(new Date(val * 1000)).add(moment(new Date(val * 1000))._d.getTimezoneOffset(), 'm').format('HH:mm');
+            }
+          }
+        };
+        ionicTimePicker.openTimePicker(tpObj);
+      }
+
+    }
+
+    function openDatePicker() {
+      if (window.cordova) {
+        var options = {
+          date: new Date(),
+          mode: 'date',
+          locale: 'pt_br',
+          minuteInterval: 15,
+          doneButtonLabel: 'Ok',
+          cancelButtonLabel: 'Cancelar',
+          allowOldDates: false,
+          androidTheme: 4,
+          is24Hour: true,
+          okText: 'Ok',
+          cancelText: 'Cancelar',
+        };
+        datePicker.show(options, function (date) {
+          $scope.$apply(function () {
+            var activeElement = document.activeElement;
+            if (activeElement) {
+              activeElement.blur();
+            }
+            vm.novaPartida.dia = moment(date).format('DD/MM/YYYY');
+          });
+        });
+      }
+      else {
+        var ipObj1 = {
+          callback: function (val) {  //Mandatory
+            vm.novaPartida.dia = moment(val).format('DD/MM/YYYY');
+          },
+          inputDate: new Date(),
+          mondayFirst: true,
+        };
+        ionicDatePicker.openDatePicker(ipObj1);
+      }
+    }
+
+  })
+
+
 
   .controller('JogosDetailCtrl', function ($scope, JogosService, UserService, $ionicModal) {
     var vm = this;

@@ -24,7 +24,8 @@
     "ionic-plugin-deploy",
     "cordova-plugin-inappbrowser",
     "cordova-plugin-whitelist",
-    "cordova-plugin-transport-security"
+    "cordova-plugin-transport-security",
+    "cordova-plugin-datepicker"
   ],
   "cordovaPlatforms": [
     "ios",

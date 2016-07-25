@@ -54,6 +54,9 @@ $button-light-bg:                 $light !default;
 $button-light-text:               $base-color !default;
 $button-light-border:             $base-background-color !default;
 
+$toggle-off-bg-color:              $button-stable-bg !default;
+$toggle-off-border-color:          darken($button-stable-bg, 10%) !default;
+
 .item{
     font-size: 16px !important;
     color: $base-color;
@@ -82,7 +85,24 @@ input[readonly]{
 }
 
 .list .item.item-floating-label, .item-floating-label{
-        border-bottom: solid 1px #46687E !important;
+        border-bottom: solid 1px $stable !important;
+}
+
+.item-stacked-label{
+    border-bottom: solid 1px $stable !important;
+    input{
+        background-color: transparent !important;
+    }
+}
+
+.item-select{
+    select{
+        color: $base-color !important;
+    }
+}
+
+.modal{
+    background-color: $base-background-color !important;
 }
 
 // Include all of Ionic
@@ -97,6 +117,7 @@ input[readonly]{
     "scss/inc/cards",
     "scss/inc/carousel",
     "scss/inc/timepicker",
+    "scss/inc/slider",
     
     "scss/inc/arena-view",
     "scss/inc/jogos-view",

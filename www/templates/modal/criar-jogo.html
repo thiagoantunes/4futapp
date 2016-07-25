@@ -1,45 +1,78 @@
-<ion-modal-view class="modal-jogo">
-    <div class="header">
-        <button class="button button-clear button-primary ion-close-round" ng-click="hideModal()"></button>
-        <div class="title">
-            <h2>Novo Jogo</h2>
+<ion-modal-view class="modal-jogo" ng-controller="NovaPartidaCtrl as vm">
+    <ion-header-bar class="bar-positive">
+        <h1 class="title">Nova Partida</h1>
+        <div class="buttons">
+            <button class="button button-icon button-clear ion-android-close" ng-click="vm.hideModal()">
+        </button>
         </div>
-    </div>
+    </ion-header-bar>
     <ion-content>
         <div class="list">
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-stacked-label">
                 <span class="input-label">None da partida</span>
-                <input ng-model="novoJogo.nome" type="text" placeholder="Nome da partida">
+                <input ng-model="vm.novaPartida.nome" type="text" >
             </label>
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-stacked-label">
                 <span class="input-label">Local da partida</span>
-                <input location-suggestion location="location" ng-readonly="true" ng-model="location.formatted_address" type="text" placeholder="Local da partida">
+                <input location-suggestion location="location" ng-readonly="true" ng-model="location.formatted_address" type="text" >
             </label>
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-stacked-label">
                 <span class="input-label">Dia</span>
-                <input ng-model="novoJogo.dia" ng-focus="vm.openDatePicker();" ng-readonly="true" type="text" placeholder="Dia">
+                <input ng-model="vm.novaPartida.dia" ng-focus="vm.openDatePicker();" ng-readonly="true" type="text" >
             </label>
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-stacked-label">
                 <span class="input-label">Horário de início</span>
-                <input ng-model="novoJogo.inicio" ng-focus="vm.openTimePicker();" ng-readonly="true" type="text" placeholder="Horário de início">
+                <input ng-model="vm.novaPartida.hora" ng-focus="vm.openTimePicker();" ng-readonly="true" type="text" >
             </label>
-            <label class="item item-input item-floating-label">
-                <span class="input-label">Mínimo de jogadores</span>
-                <input ng-model="novoJogo.minJogadores" ionic-numberpicker ng-readonly="true" input-obj="vm.numberPickerMin" type="text" placeholder="Mínimo de jogadores">
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Mínimo e máximo de jogadores</span>
+                <br/>
+                <div class="row">
+                    <div class="col-10" style="padding-top:3px">
+                        {{vm.novaPartida.minJogadores}}
+                    </div>
+                    <div class="col-80" style="margin-left: -5px">
+                        <rzslider rz-slider-model="vm.novaPartida.minJogadores" rz-slider-high="vm.novaPartida.maxJogadores" rz-slider-options="vm.numJogadoresRangeOptions"></rzslider>
+                    </div>
+                    <div class="col-10"  style="padding:3px 0 0 15px">
+                        {{vm.novaPartida.maxJogadores}}
+                    </div>
+                </div>
+  	        </label>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Quem pode jogar?
+                </div>
+                <select ng-model="vm.novaPartida.visibilidade">
+                    <option value="1">Convidados</option>
+                    <option value="2">Amigos</option>
+                    <option value="3">Amigos de amigos</option>
+                    <option value="4">Público</option>
+                </select>
             </label>
-            <label class="item item-input item-floating-label">
-                <span class="input-label">Máximo de jogadores</span>
-                <input ng-model="novoJogo.maxJogadores" ionic-numberpicker ng-readonly="true" input-obj="vm.numberPickerMax"  type="text" placeholder="Máximo de jogadores">
-            </label>
-            <!--<label class="item item-input item-floating-label">
-                <span class="input-label">Quem pode ver?</span>
-                <input  type="text" placeholder="Quem pode ver">
-            </label>-->
+            <li class="item item-toggle">
+                Compartilhar no facebook
+                <label class="toggle toggle-positive">
+                    <input ng-model="vm.novaPartida.compartilharFacebook" type="checkbox">
+                    <div class="track">
+                      <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+            <li class="item item-toggle">
+                Aprovar jogadores manualmente
+                <label class="toggle toggle-positive">
+                    <input ng-model="vm.novaPartida.aprovacaoManual" type="checkbox">
+                    <div class="track">
+                      <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
         </div>
+
         <div class="padding">
-            <button ng-click="salvarJogo(location);" class="button button-block button-positive">
-                Criar Partida
-            </button>
+            <button  ng-click="vm.salvarJogo(location);" class="button button-block button-positive">Criar Partida</button>
         </div>
     </ion-content>
+
 </ion-modal-view>

@@ -4,6 +4,7 @@ angular.module('main')
   .factory('JogosService', function (Ref, $timeout, $firebaseObject, $firebaseArray, $q, UserService) {
     var service = {
       jogoSelecionado: null,
+      novaPartidaModal: {},
       jogosRegiao: [],
       ref: Ref.child('jogos'),
       refLocalizacao: Ref.child('jogosLocalizacao'),
