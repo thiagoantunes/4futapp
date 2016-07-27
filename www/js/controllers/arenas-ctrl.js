@@ -45,7 +45,7 @@ angular.module('main')
 
   })
 
-  .controller('ArenaDetailsCtrl', function (ArenasService, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk) {
+  .controller('ArenaDetailsCtrl', function (ArenasService, JogosService, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup) {
     var vm = this;
     vm.arena = ArenasService.arenaSelecionada;
     vm.album = ArenasService.getAlbum($stateParams.id);
@@ -261,17 +261,45 @@ angular.module('main')
         console.log('Reserva criada com sucesso!');
         getReservas(vm.diaSelecionado);
         $scope.modal.hide();
+        openModalCriacaoPartida(novaReserva);
       }, function (error) {
         console.log(error, novaReserva, 'Ops!');
       });
     }
 
-    // Set Header
-    // $scope.$parent.showHeader();
-    // $scope.$parent.clearFabs();
-    // $scope.isExpanded = false;
-    // $scope.$parent.setExpanded(false);
-    // $scope.$parent.setHeaderFab(false);
+    function openModalCriacaoPartida(novaReserva) {
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Reserva criada com sucesso!',
+        template: 'Crie uma partida para esta reserva e convide os seus amigos!',
+        buttons: [{ 
+          text: 'Cancelar',
+          type: 'button-default',
+          onTap: function (e) {
+            e.preventDefault();
+          }
+        }, {
+            text: 'Criar',
+            type: 'button-positive',
+            onTap: function (e) {
+              novaReserva.local= {
+                nome: vm.arena.nome,
+                endereco: vm.arena.endereco,
+                latitude: vm.arena.latitude,
+                longitude: vm.arena.longitude
+              };
+              JogosService.novaPartidaModal = {
+                  modal: {},
+                  data: novaReserva
+              };
+              $ionicModal.fromTemplateUrl('templates/modal/criar-jogo.html', {
+              }).then(function (modal) {
+                JogosService.novaPartidaModal.modal = modal;
+                modal.show();
+              });
+            }
+          }]
+      });
+    }
 
     // Set Motion
     $timeout(function () {

@@ -12,9 +12,13 @@
                 <span class="input-label">None da partida</span>
                 <input ng-model="vm.novaPartida.nome" type="text" >
             </label>
-            <label class="item item-input item-stacked-label">
+            <!--<label class="item item-input item-stacked-label">
                 <span class="input-label">Local da partida</span>
                 <input location-suggestion location="location" ng-readonly="true" ng-model="location.formatted_address" type="text" >
+            </label>-->
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Local da partida</span>
+                <input ng-model="vm.localSelecionado.endereco" ng-focus="vm.openLocalPicker();" ng-readonly="true" type="text" >
             </label>
             <label class="item item-input item-stacked-label">
                 <span class="input-label">Dia</span>
@@ -71,7 +75,7 @@
         </div>
 
         <div class="padding">
-            <button  ng-click="vm.salvarJogo(location);" class="button button-block button-positive">Criar Partida</button>
+            <button  ng-click="vm.salvarJogo();" class="button button-block button-positive">Criar Partida</button>
         </div>
     </ion-content>
 

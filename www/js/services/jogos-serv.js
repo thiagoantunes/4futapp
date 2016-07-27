@@ -69,7 +69,9 @@ angular.module('main')
         else {
           var geo = new GeoFire(Ref.child('jogosLocalizacao'));
           geo.set(jogoId, coords);
-          deferred.resolve();
+          novoJogo.id = jogoId;
+          novoJogo.l = coords;
+          deferred.resolve(novoJogo);
         }
       });
 
@@ -96,8 +98,7 @@ angular.module('main')
       var conviteData = {};
       conviteData['jogosJogadores/' + jogoId + '/' + amigo.id] = {
         nome: amigo.nome,
-        fotoPerfil: amigo.fotoPerfil,
-        confirmado: false
+        fotoPerfil: amigo.fotoPerfil
       };
       conviteData['usersJogos/' + amigo.id + '/' + jogoId] = true;
 

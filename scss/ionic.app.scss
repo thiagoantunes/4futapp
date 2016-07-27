@@ -101,8 +101,26 @@ input[readonly]{
     }
 }
 
+.item{
+    p{
+        color: darken($base-color, 20%) !important;
+    }
+}
+
+.item.item-divider{
+    background-color: $base-background-color !important;
+    color: $base-color !important;
+    line-height: 32px !important;
+}
+
 .modal{
     background-color: $base-background-color !important;
+}
+
+.popup-head{
+    h3{
+        font-size: 16px !important;
+    }
 }
 
 // Include all of Ionic

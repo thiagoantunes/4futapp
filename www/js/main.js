@@ -117,7 +117,8 @@ angular.module('main', [
             Ref.child('users/' + currentUser.uid).set({
               nome: providerData.displayName,
               fotoPerfil: providerData.photoURL,
-              email: providerData.email
+              email: providerData.email,
+              usuarioComum: true
             });
             currentUser.updateProfile({
               displayName: providerData.displayName,
@@ -132,7 +133,7 @@ angular.module('main', [
             Ref.child('users/' + currentUser.uid).set(user);
             currentUser.updateProfile({
               displayName: providerData.displayName,
-              photoURL: providerData.photoURL
+              photoURL: providerData.photoURL,
             });
           }
         }, function (errorObject) {
@@ -283,11 +284,12 @@ angular.module('main', [
         }
       })
 
-      .state('main.grupos', {
-        url: '/grupos',
+      .state('main.amigos', {
+        url: '/amigos',
         views: {
-          'tab-grupos': {
-            templateUrl: 'templates/grupos.html'
+          'tab-amigos': {
+            templateUrl: 'templates/amigos.html',
+            controller: 'AmigosCtrl as vm',
           }
         }
       })
@@ -303,7 +305,7 @@ angular.module('main', [
       });
   })
 
-  .controller('MenuCtrl', function ($state, $rootScope, ArenasService, ReservasService, JogosService, $ionicHistory) {
+  .controller('MenuCtrl', function ($state, $rootScope, ArenasService, UserService, ReservasService, JogosService, $ionicHistory) {
     var vm = this;
     var hideTabsStates = [
       'main.arenas',

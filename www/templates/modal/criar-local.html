@@ -1,19 +1,32 @@
 <ion-modal-view>
-  <ion-header-bar class="item-input-inset">
-    <label class="item-input-wrapper">
-          <i class="icon ion-ios7-search placeholder-icon"></i>
-          <input type="search" ng-model="search.query" placeholder="Search">
-        </label>
+  <ion-header-bar class="bar-positive">
+    <h1 class="title">CRIAR LOCAL</h1>
+    <div class="buttons">
+      <button class="button button-icon button-clear ion-android-close" ng-click="modalCriaLocal.hide()">
+        </button>
+    </div>
   </ion-header-bar>
   <ion-content>
-    <ion-list>
-      <ion-item ng-show="search.error">
-        {{search.error}}
-      </ion-item>
-      <ion-item ng-repeat="suggestion in search.suggestions" ng-click="choosePlace(suggestion)">
-        {{suggestion.description}}
-      </ion-item>
-    </ion-list>
-    <img src="https://developers.google.com/maps/documentation/places/images/powered-by-google-on-white.png" alt="" />
+    <div class="list">
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">None da partida</span>
+        <input ng-model="search.nome" type="text" >
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Endereço</span>
+        <input ng-model="search.query" ng-focus="search.query = ''; search.justSelected = false;" type="text" >
+      </label>
+      <ion-list>
+        <ion-item ng-show="search.error">
+          {{search.error}}
+        </ion-item>
+        <ion-item ng-repeat="suggestion in search.suggestions" ng-click="choosePlace(suggestion)">
+          {{suggestion.description}}
+        </ion-item>
+      </ion-list>
+    </div>
+    <div class="padding">
+      <button ng-click="salvarNovoLocal();" class="button button-block button-positive">Criar Local</button>
+    </div>
   </ion-content>
 </ion-modal-view>

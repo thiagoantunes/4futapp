@@ -1,6 +1,6 @@
 'use strict';
 angular.module('main')
-  .factory('UserService', function (Ref, $firebaseObject, $q, $timeout) {
+  .factory('UserService', function (Ref, $firebaseObject, $firebaseArray, $q, $timeout) {
     var service = {
       jogos: [],
       amigos: [],
@@ -10,7 +10,8 @@ angular.module('main')
 
       getUserProfile: getUserProfile,
       getCurrentUser: getCurrentUser,
-      getAmigos:getAmigos,
+      getAmigos: getAmigos,
+      getUsers: getUsers,
 
       adicionarAmigo: adicionarAmigo
     };
@@ -54,6 +55,10 @@ angular.module('main')
           });
         });
       });
+    }
+
+    function getUsers() {
+      return $firebaseArray(service.ref.orderByChild('usuarioComum').startAt(true).endAt(true));
     }
 
   });

@@ -75,6 +75,7 @@
         font-weight: bold;
         margin-top:200px;
         background: $base-background-color !important;
+        border-top: none !important;
     }
 
     .tab-title{
@@ -114,7 +115,7 @@
         background: $base-background-color;
         .header{
             margin-top:20px;
-            height: 220px;
+            height: 150px;
             background: $base-background-color;
             color:$base-color;
             button{
@@ -124,8 +125,7 @@
             }
         }
         ion-content{
-            top:240px;
-            background: $dark;
+            top:220px;
         }
 
         .item{
@@ -139,11 +139,13 @@
       background-color: $light;
 
       ion-content{
-        top:200px;
+        top:190px;
+        background: $dark;
       }
 
       .header{
-        height: 200px;
+        height: 150px;
+        top:43px;
         position: relative;
         background: $positive;
         color:$button-positive-text;
@@ -174,6 +176,12 @@
             .button:first-child{
                 border-radius: 4px !important;
             }
+      }
+
+      .bar-footer{
+          p{
+              text-align: center; width: 100%; font-size: 14px;margin-top: -5px;
+          }
       }
   }
 

@@ -1,7 +1,12 @@
 <ion-modal-view class="modal-convidar-amigos">
+    <ion-header-bar class="bar-positive">
+        <h1 class="title">CONVIDAR AMIGOS</h1>
+        <div class="buttons">
+            <button class="button button-icon button-clear ion-android-close" ng-click="modal.hide()">
+        </button>
+        </div>
+    </ion-header-bar>
     <div class="header">
-        <button class="button button-clear button-primary ion-close-round" ng-click="modal.hide()"></button>
-
         <div class="row">
             <div class="col text-center" style="border: solid 1px;
     border-radius: 10px;
@@ -39,7 +44,7 @@
                 <input type="text" placeholder="Buscar">
             </label>
             <a class="item item-avatar item-button-right" ng-repeat="amigo in vm.amigos" href="#">
-                <img src="{{amigo.fotoPerfil | defaultImage}}">
+                <img style="margin-top:-7px;" src="{{amigo.fotoPerfil | defaultImage}}">
                 <h2>{{amigo.nome}}</h2>
                 <button ng-if="!vm.checkPresencaAmigo(amigo);" ng-click="vm.convidarAmigo(amigo);" class="button button-small button-stable"
                     style="padding: 0px 5px; min-width: 28px; min-height: 30px; font-size: 12px; line-height: 26px">
@@ -52,6 +57,10 @@
             </a>
         </div>
     </ion-content>
+    <div ng-if="vm.jogo.novoJogo" class="bar bar-footer bar-assertive">
+        <p>
+            Sua partida foi criada com sucesso!
+            <br/> Convide seus amigos para jogar com você.
+        </p>
+    </div>
 </ion-modal-view>
-
-

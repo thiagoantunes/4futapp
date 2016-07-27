@@ -1,0 +1,16 @@
+<ion-view view-title="AMIGOS E GRUPOS">
+  <ion-content>
+    <button ng-click="vm.openModalAddAmigo();" class="button button-small button-full button-positive">ADD AMIGOS</button>
+    <button ng-click="vm.openModalCriarGrupo();" class="button button-small button-full button-positive">CRIAR GRUPO</button>
+    <div class="list">
+      <label class="item item-input" style="border: solid 1px #46687E">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="text" placeholder="Buscar">
+            </label>
+      <a class="item item-avatar item-button-right" ng-repeat="amigo in vm.amigos" href="#">
+        <img style="margin-top:-7px;" src="{{amigo.fotoPerfil | defaultImage}}">
+        <h2>{{amigo.nome}}</h2>
+      </a>
+    </div>
+  </ion-content>
+</ion-view>

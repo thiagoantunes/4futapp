@@ -1,0 +1,28 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-positive">
+        <h1 class="title">LOCAL</h1>
+        <div class="buttons">
+            <button class="button button-icon button-clear ion-android-close" ng-click="modalLocal.hide()">
+        </button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list">
+
+            <label class="item item-input" style="border: solid 1px #46687E">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="text" placeholder="Busque por nome ou endereço da quadra">
+            </label>
+            <div class="item item-divider item-button-right">
+                Cadastrar novo local
+                <button ng-click="vm.openCriaLocalModal();" class="button button-small button-positive">
+                    <i class="icon ion-android-add"></i>
+                </button>
+            </div>
+            <a class="item" ng-click="vm.selecionaArenaBasica(arenaBasica);" ng-repeat="arenaBasica in vm.arenasBasicas">
+                <h2>{{arenaBasica.nome}}</h2>
+                <p>{{arenaBasica.endereco}}</p>
+            </a>
+        </div>
+    </ion-content>
+</ion-modal-view>

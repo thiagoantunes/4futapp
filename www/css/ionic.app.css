@@ -23,8 +23,19 @@ input[readonly] {
 .item-select select {
   color: #efefef !important; }
 
+.item p {
+  color: #bcbcbc !important; }
+
+.item.item-divider {
+  background-color: #0C2633 !important;
+  color: #efefef !important;
+  line-height: 32px !important; }
+
 .modal {
   background-color: #0C2633 !important; }
+
+.popup-head h3 {
+  font-size: 16px !important; }
 
 /*!
   Ionicons, v2.0.1
@@ -12723,7 +12734,8 @@ For example, you might change some of the default colors:
 #jogos-detail .tab-nav {
   font-weight: bold;
   margin-top: 200px;
-  background: #0C2633 !important; }
+  background: #0C2633 !important;
+  border-top: none !important; }
 
 #jogos-detail .tab-title {
   font-weight: bold;
@@ -12750,7 +12762,7 @@ For example, you might change some of the default colors:
   background: #0C2633; }
   .platform-ios .modal-convidar-amigos .header {
     margin-top: 20px;
-    height: 220px;
+    height: 150px;
     background: #0C2633;
     color: #efefef; }
     .platform-ios .modal-convidar-amigos .header button {
@@ -12758,17 +12770,18 @@ For example, you might change some of the default colors:
       color: #efefef;
       padding-left: 20px; }
   .platform-ios .modal-convidar-amigos ion-content {
-    top: 240px;
-    background: #1E394C; }
+    top: 220px; }
   .platform-ios .modal-convidar-amigos .item {
     background-color: #1E394C; }
 
 .modal-convidar-amigos {
   background-color: #1E394C; }
   .modal-convidar-amigos ion-content {
-    top: 200px; }
+    top: 190px;
+    background: #1E394C; }
   .modal-convidar-amigos .header {
-    height: 200px;
+    height: 150px;
+    top: 43px;
     position: relative;
     background: #00D466;
     color: #1E394C; }
@@ -12791,6 +12804,11 @@ For example, you might change some of the default colors:
       border-radius: 4px !important; }
     .modal-convidar-amigos .button-bar .button:first-child {
       border-radius: 4px !important; }
+  .modal-convidar-amigos .bar-footer p {
+    text-align: center;
+    width: 100%;
+    font-size: 14px;
+    margin-top: -5px; }
 
 .cards-view .bar-header {
   background: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.5));

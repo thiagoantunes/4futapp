@@ -40,18 +40,9 @@ angular.module('main')
             img: firebase.auth().currentUser.photoURL,
             lida: false
           };
-          var jogo = {
-            arena: arena,
-            inicio: novaReserva.start,
-            responsavel: firebase.auth().currentUser.uid,
-            reserva: reservaId,
-            status: 'agendado'
-          };
           reservaData['arenasContatos/' + arena + '/' + firebase.auth().currentUser.uid] = true;
           reservaData['arenasNotificacoes/' + arena + '/' + notificacaoId] = notificacao;
           reservaData['usersReservas/' + firebase.auth().currentUser.uid + '/' + reservaId] = arena;
-          reservaData['usersJogos/' + firebase.auth().currentUser.uid + '/' + jogoId] = true;
-          reservaData['jogos/' + jogoId] = jogo;
           reservaData['reservas/' + arena + '/' + reservaId] = novaReserva;
 
           Ref.update(reservaData, function (error) {
@@ -59,12 +50,6 @@ angular.module('main')
               deferred.reject('Erro ao cadastrar nova turma');
             }
             else {
-              var ref = Ref.child('arenasLocalizacao/' + arena + '/l');
-              ref.once('value', function (data) {
-                var geo = new GeoFire(Ref.child('jogosLocalizacao'));
-                geo.set(jogoId, data.val());
-              });
-
               deferred.resolve();
             }
           });
