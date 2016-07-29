@@ -28,7 +28,7 @@ input[readonly] {
 
 .item.item-divider {
   background-color: #0C2633 !important;
-  color: #efefef !important;
+  color: #46687E !important;
   line-height: 32px !important; }
 
 .modal {
@@ -12809,6 +12809,25 @@ For example, you might change some of the default colors:
     width: 100%;
     font-size: 14px;
     margin-top: -5px; }
+
+#grupo-modal .info-grupo {
+  background: #1E394C;
+  padding: 30px 20px; }
+  #grupo-modal .info-grupo .add-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #46687E;
+    text-align: center; }
+    #grupo-modal .info-grupo .add-img i {
+      font-size: 30px;
+      color: #0C2633;
+      position: relative;
+      top: calc(50% - 15px); }
+  #grupo-modal .info-grupo label {
+    background: transparent; }
+    #grupo-modal .info-grupo label input {
+      border-bottom: 1px solid #46687E; }
 
 .cards-view .bar-header {
   background: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.5));

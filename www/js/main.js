@@ -28,7 +28,7 @@ angular.module('main', [
     firebase.auth().onAuthStateChanged(checkLogin);
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
-      if(next.name == 'main.home'){
+      if (next.name == 'main.home') {
         $rootScope.hideTabs = false;
       }
     });
@@ -294,12 +294,53 @@ angular.module('main', [
         }
       })
 
+      .state('main.user', {
+        url: '/amigos/:userId',
+        views: {
+          'tab-amigos': {
+            templateUrl: 'templates/perfil.html',
+            controller: 'PerfilCtrl as vm',
+            resolve: {
+              selectedUser: ['$stateParams', 'UserService', function ($stateParams, UserService) {
+                return UserService.getUserProfile($stateParams.userId).$loaded();
+              }
+              ]
+            }
+          }
+        }
+      })
+
+      .state('main.buscarJogadores', {
+        url: '/buscar-jogadores',
+        views: {
+          'tab-amigos': {
+            templateUrl: 'templates/buscar-jogadores.html',
+            controller: 'BuscarJogadores as vm',
+          }
+        }
+      })
+
+      .state('main.criarGrupo', {
+        url: '/criar-grupo',
+        views: {
+          'tab-amigos': {
+            templateUrl: 'templates/criar-grupo.html',
+            controller: 'CriarGrupoCtrl as vm',
+          }
+        }
+      })
+
       .state('main.perfil', {
         url: '/perfil',
         views: {
           'tab-perfil': {
-            templateUrl: 'templates/perfil.html',
-            controller: 'PerfilCtrl as vm'
+            templateUrl: 'templates/meu-perfil.html',
+            controller: 'PerfilCtrl as vm',
+            resolve: {
+              selectedUser: ['UserService', function (UserService) {
+                return UserService.getUserProfile(firebase.auth().currentUser.uid).$loaded();
+              }]
+            }
           }
         }
       });
@@ -314,7 +355,8 @@ angular.module('main', [
       'main.encontrar-jogos',
       'main.meus-jogos',
       'main.jogos-detail',
-      'main.jogos'
+      'main.jogos',
+      'main.perfilAmigo'
     ];
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);
@@ -324,6 +366,8 @@ angular.module('main', [
     JogosService.getMeusJogos();
     JogosService.getJogosRegiao();
     ArenasService.getArenas();
+    UserService.getMeusAmigos();
+    UserService.getGrupos();
 
     vm.logOut = function () {
       firebase.auth().signOut().then(function () {
@@ -347,8 +391,6 @@ angular.module('main', [
       brazil: true
     });
   }])
-
-
 
   .filter('defaultImage', function () {
     return function (input, param) {

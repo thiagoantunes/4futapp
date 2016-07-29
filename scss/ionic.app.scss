@@ -109,7 +109,7 @@ input[readonly]{
 
 .item.item-divider{
     background-color: $base-background-color !important;
-    color: $base-color !important;
+    color: $stable !important;
     line-height: 32px !important;
 }
 
@@ -139,6 +139,7 @@ input[readonly]{
     
     "scss/inc/arena-view",
     "scss/inc/jogos-view",
+    "scss/inc/amigos-view",
     "scss/inc/list-view"; 
 
 

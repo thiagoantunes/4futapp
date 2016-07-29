@@ -258,8 +258,6 @@ angular.module('main')
     activate();
 
     function activate() {
-      UserService.getAmigos();
-
       vm.jogadores.$loaded(function (val) {
         vm.minhaPresenca = _.find(val, { '$id': firebase.auth().currentUser.uid });
       });

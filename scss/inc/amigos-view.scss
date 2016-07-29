@@ -1,0 +1,26 @@
+#grupo-modal{
+    .info-grupo{
+        background: $dark;
+        padding: 30px 20px;
+        .add-img{
+            width:50px; 
+            height: 50px; 
+            border-radius:50%;
+            background-color: $stable;
+            text-align: center;
+
+            i{
+                font-size: 30px;
+                color: $base-background-color ;
+                position:relative;
+                top: calc(50% - 15px); 
+            }
+        }
+        label{
+            background: transparent;
+            input{
+                border-bottom: 1px solid $stable
+            }
+        }
+    }
+}

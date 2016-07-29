@@ -1,0 +1,44 @@
+<ion-view view-title="NOVO GRUPO" id="grupo-modal">
+    <ion-nav-buttons side="right">
+         <button ng-disabled="vm.validForm();" ng-click="vm.criarGrupo();" class="button button-clear button-positive">Criar</button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div class="row info-grupo">
+            <div class="col-20 text-center">
+                <div class="add-img">
+                    <i class="icon ion-image stable"></i>
+                </div>
+            </div>
+            <div class="col-80">
+                <div class="list">
+                    <label class="item item-input">
+                        <input ng-model="vm.novoGrupo.nome" type="text" placeholder="Nome do Grupo">
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="list">
+            <div class="item item-divider">
+                Membros
+            </div>
+            <div class="item" style="padding-right: 0;">
+                <ion-scroll zooming="false" direction="x">
+                    <div style="display: block; position:relative;">
+                        <div class="img" style="position:relative; display:inline-block; padding:5px;" ng-repeat="membro in vm.novoGrupo.membros">
+                            <img style="width: 60px; height: 60px; border-radius: 50%;" src="{{membro.fotoPerfil | defaultImage}}">
+                        </div>
+                    </div>
+                </ion-scroll>
+            </div>
+            <div class="item item-divider">
+                Amigos
+            </div>
+            <div class="item item-avatar item-icon-right" ng-click="vm.toggleMembroGrupo(amigo)" ng-repeat="amigo in vm.amigos" href="#">
+                <img style="margin-top:-7px;" src="{{amigo.fotoPerfil | defaultImage}}">
+                <h2>{{amigo.nome}}</h2>
+                <i ng-if="!vm.checkMembroGrupo(amigo);" class="icon ion-ios-circle-outline"></i>
+                <i ng-if="vm.checkMembroGrupo(amigo);" class="icon ion-ios-checkmark positive"></i>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
