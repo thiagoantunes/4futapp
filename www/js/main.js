@@ -218,10 +218,11 @@ angular.module('main', [
         }
       })
       .state('main.home', {
-        url: '/',
+        url: '/home?origem',
         views: {
           'tab-home': {
-            templateUrl: 'templates/home.html'
+            templateUrl: 'templates/home.html',
+            controller: 'HomeCtrl'
           }
         }
       })
@@ -343,6 +344,16 @@ angular.module('main', [
             }
           }
         }
+      })
+
+      .state('main.notificacoes', {
+        url: '/notificacoes',
+        views: {
+          'tab-notificacoes': {
+            templateUrl: 'templates/notificacoes.html',
+            controller: 'NotificacoesCtrl as vm'
+          }
+        }
       });
   })
 
@@ -361,6 +372,7 @@ angular.module('main', [
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);
     });
+    
 
     ReservasService.getMinhasReservas();
     JogosService.getMeusJogos();
@@ -368,6 +380,11 @@ angular.module('main', [
     ArenasService.getArenas();
     UserService.getMeusAmigos();
     UserService.getGrupos();
+    UserService.getNotificacoes();
+
+    UserService.notificacoes.$loaded().then(function(val){
+      vm.notificacoes = val;
+    });
 
     vm.logOut = function () {
       firebase.auth().signOut().then(function () {
@@ -376,6 +393,15 @@ angular.module('main', [
         console.log(error);
       });
     };
+  })
+
+
+  .controller('HomeCtrl', function ($scope, $stateParams, $state) {
+
+    if ($stateParams.origem == 'reservas') {
+      $state.go('main.arenas');
+    }
+
   })
 
   .config(function (uiGmapGoogleMapApiProvider) {

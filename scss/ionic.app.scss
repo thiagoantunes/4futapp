@@ -129,7 +129,8 @@ input[readonly]{
 
 @import 
     "www/lib/bourbon/app/assets/stylesheets/_bourbon",
-    "www/lib/robotodraft/sass/robotodraft.scss";
+    "www/lib/robotodraft/sass/robotodraft.scss",
+    "www/lib/material-design-iconic-font/scss/material-design-iconic-font.scss";
 
 @import 
     "scss/inc/cards",
@@ -142,14 +143,19 @@ input[readonly]{
     "scss/inc/amigos-view",
     "scss/inc/list-view"; 
 
-
-.title-center{
-    text-align: center!important;
+.bar{
+    .title{
+        font-size: 17px !important;
+    }
 }
 
-.bar.bar-header .button + .title{
-    left: 0px!important;
-}
+// .title-center{
+//     text-align: center!important;
+// }
+
+// .bar.bar-header .button + .title{
+//     left: 0px!important;
+// }
 
 .platform-ios {
     .bar-positive{
@@ -197,6 +203,14 @@ input[readonly]{
 
     .bar-positive .button.button-clear{
         color: $button-positive-text !important;
+    }
+
+    .action-sheet {
+        .button{
+            color: $base-background-color !important;
+            text-align: center !important;
+            box-shadow: none !important;
+        }
     }
 }
 

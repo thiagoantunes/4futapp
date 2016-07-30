@@ -6,10 +6,12 @@ angular.module('main')
       amigos: [],
       grupos: [],
       reservas: [],
+      notificacoes: [],
       usuarioSelecionado: null,
       ref: Ref.child('users'),
       refAmigos: Ref.child('usersAmigos'),
       refGrupos: Ref.child('grupos'),
+      refNotificacoes: Ref.child('usersNotificacoes'),
 
       getUserProfile: getUserProfile,
       getCurrentUser: getCurrentUser,
@@ -18,6 +20,7 @@ angular.module('main')
       getUsers: getUsers,
       getGrupos: getGrupos,
       criarGrupo: criarGrupo,
+      getNotificacoes: getNotificacoes,
 
       adicionarAmigo: adicionarAmigo,
       removerAmigo: removerAmigo
@@ -39,14 +42,23 @@ angular.module('main')
       return deferred.promise;
     }
 
+    function getNotificacoes() {
+      service.notificacoes = $firebaseArray(service.refNotificacoes.child(firebase.auth().currentUser.uid));
+    }
+
     function getUserProfile(id) {
       return $firebaseObject(service.ref.child(id));
     }
 
     function adicionarAmigo(id) {
       var amigoData = {};
+      var notificacaoId = service.refNotificacoes.push().key;
       amigoData['users/' + firebase.auth().currentUser.uid + '/amigos/' + id] = true;
       amigoData['users/' + id + '/amigos/' + firebase.auth().currentUser.uid] = false;
+      amigoData['usersNotificacoes/' + id + '/' + notificacaoId] = {
+        titulo: firebase.auth().currentUser.displayName  + 'te adicionou',
+        mensagem: 'Teste'
+      };
 
       Ref.update(amigoData);
     }

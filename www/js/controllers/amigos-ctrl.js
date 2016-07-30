@@ -38,6 +38,7 @@ angular.module('main')
       $timeout(function () {
         hideSheet();
       }, 4000);
+
     }
 
 

@@ -4,7 +4,7 @@
       <i class="icon ion-ios-calendar-outline"></i>
       <h5>Você ainda não tem reservas.</h5>
       <div style="padding:20px">
-        <button class="button button-full button-positive">Reservas</button>
+        <button ui-sref="main.home({'origem': 'reservas'})" class="button button-full button-positive">Reservas</button>
       </div>
     </div>
     <div ng-if="vm.minhasReservas.length > 0">
