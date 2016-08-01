@@ -372,7 +372,7 @@ angular.module('main', [
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);
     });
-    
+
 
     ReservasService.getMinhasReservas();
     JogosService.getMeusJogos();
@@ -382,8 +382,8 @@ angular.module('main', [
     UserService.getGrupos();
     UserService.getNotificacoes();
 
-    UserService.notificacoes.$loaded().then(function(val){
-      vm.notificacoes = val;
+    UserService.notificacoesNaoLidas.$loaded().then(function (val) {
+      vm.notificacoes = UserService.notificacoesNaoLidas;
     });
 
     vm.logOut = function () {

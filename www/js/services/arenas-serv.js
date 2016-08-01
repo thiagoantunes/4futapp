@@ -104,7 +104,7 @@ angular.module('main')
       var deferred = $q.defer();
       var posOptions = { timeout: 10000, enableHighAccuracy: false };
       var watchOptions = { timeout: 3000, enableHighAccuracy: false };
-      $ionicPlatform.ready(function () {
+      //$ionicPlatform.ready(function () {
         $cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
           service.position = [position.coords.latitude, position.coords.longitude];
 
@@ -140,7 +140,7 @@ angular.module('main')
           });
 
         });
-      });
+      //});
 
       return deferred.promise;
     }

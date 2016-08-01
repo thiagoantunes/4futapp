@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>HelloCordova</name>
+<widget id="com.thantunes.reidaquadra" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>Rei da Quadra</name>
   <description>
-        An Ionic Framework and Cordova project.
+        Encontre arenas e organize jogos de futebol.
     </description>
-  <author email="you@example.com" href="http://example.com.com/">
-      Your Name Here
+  <author email="thiago.antunes@outlook.com" href="http://reidaquadra.com/">
+      Thiago Antunes Henriques
     </author>
   <content src="index.html"/>
   <access origin="*"/>

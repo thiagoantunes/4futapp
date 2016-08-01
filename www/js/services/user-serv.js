@@ -43,7 +43,8 @@ angular.module('main')
     }
 
     function getNotificacoes() {
-      service.notificacoes = $firebaseArray(service.refNotificacoes.child(firebase.auth().currentUser.uid));
+      service.notificacoesNaoLidas = $firebaseArray(service.refNotificacoes.child(firebase.auth().currentUser.uid).orderByChild('lida').startAt(false).endAt(false));
+      service.notificacoes = $firebaseArray(service.refNotificacoes.child(firebase.auth().currentUser.uid).orderByChild('dateTime').limitToLast(20));
     }
 
     function getUserProfile(id) {
@@ -56,8 +57,11 @@ angular.module('main')
       amigoData['users/' + firebase.auth().currentUser.uid + '/amigos/' + id] = true;
       amigoData['users/' + id + '/amigos/' + firebase.auth().currentUser.uid] = false;
       amigoData['usersNotificacoes/' + id + '/' + notificacaoId] = {
-        titulo: firebase.auth().currentUser.displayName  + 'te adicionou',
-        mensagem: 'Teste'
+        mensagem: '<b>' + firebase.auth().currentUser.displayName  + '</b> começou a te seguir',
+        img: firebase.auth().currentUser.photoURL,
+        tipo: 'solicitacaoAmizade',
+        lida: false,
+        dateTime: new Date().getTime()
       };
 
       Ref.update(amigoData);
