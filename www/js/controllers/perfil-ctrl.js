@@ -13,7 +13,7 @@ angular.module('main')
     activate();
 
     function activate() {
-      if ($stateParams.userId) {
+      if ($stateParams.userId && vm.user.amigos) {
         UserService.getAmigosUsuario(vm.user.amigos);
       }
     }

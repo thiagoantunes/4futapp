@@ -1,7 +1,7 @@
 /*global */
 'use strict';
 angular.module('main')
-  .controller('ArenasCtrl', function (GeoService, $scope, ArenasService, ionicMaterialMotion, ionicMaterialInk) {
+  .controller('ArenasCtrl', function (GeoService, $scope, $timeout, ArenasService) {
     var vm = this;
     vm.arenaService = ArenasService;
     vm.arenas = ArenasService.arenas;
@@ -11,36 +11,41 @@ angular.module('main')
 
     function activate() {
       setMap();
-      ionicMaterialInk.displayEffect();
     }
 
     function setMap() {
+      vm.showDetails = false;
       vm.map = {
         center: {
           latitude: GeoService.position[0],
           longitude: GeoService.position[1]
         },
-        zoom: 12,
+        zoom: 14,
         options: {
           disableDefaultUI: true,
-          // styles: [{ 'stylers': [{ 'hue': '#ff1a00' }, { 'invert_lightness': true }, { 'saturation': -100 }, { 'lightness': 33 }, { 'gamma': 0.5 }] }, { 'featureType': 'water', 'elementType': 'geometry', 'stylers': [{ 'color': '#2D333C' }] }]
-          styles: [{ 'featureType': 'administrative.country', 'elementType': 'geometry.stroke', 'stylers': [{ 'visibility': 'on' }, { 'color': '#1c99ed' }] }, { 'featureType': 'administrative.country', 'elementType': 'labels.text.fill', 'stylers': [{ 'color': '#1f79b5' }] }, { 'featureType': 'administrative.province', 'elementType': 'labels.text.fill', 'stylers': [{ 'color': '#6d6d6d' }, { 'visibility': 'on' }] }, { 'featureType': 'administrative.locality', 'elementType': 'labels.text.fill', 'stylers': [{ 'color': '#555555' }] }, { 'featureType': 'administrative.neighborhood', 'elementType': 'labels.text.fill', 'stylers': [{ 'color': '#999999' }] }, { 'featureType': 'landscape', 'elementType': 'all', 'stylers': [{ 'color': '#f2f2f2' }] }, { 'featureType': 'landscape.natural', 'elementType': 'geometry.fill', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'landscape.natural.landcover', 'elementType': 'geometry.fill', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'poi.attraction', 'elementType': 'all', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'poi.business', 'elementType': 'all', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'poi.government', 'elementType': 'all', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'poi.medical', 'elementType': 'all', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'poi.park', 'elementType': 'geometry.fill', 'stylers': [{ 'color': '#e1eddd' }] }, { 'featureType': 'poi.place_of_worship', 'elementType': 'all', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'poi.school', 'elementType': 'all', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'poi.sports_complex', 'elementType': 'all', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'road', 'elementType': 'all', 'stylers': [{ 'saturation': '-100' }, { 'lightness': '45' }] }, { 'featureType': 'road.highway', 'elementType': 'all', 'stylers': [{ 'visibility': 'simplified' }] }, { 'featureType': 'road.highway', 'elementType': 'geometry.fill', 'stylers': [{ 'color': '#009688' }] }, { 'featureType': 'road.highway', 'elementType': 'labels.icon', 'stylers': [{ 'visibility': 'on' }, { 'hue': '#009aff' }, { 'saturation': '100' }, { 'lightness': '5' }] }, { 'featureType': 'road.highway.controlled_access', 'elementType': 'all', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'road.highway.controlled_access', 'elementType': 'geometry.fill', 'stylers': [{ 'color': '#009688' }] }, { 'featureType': 'road.highway.controlled_access', 'elementType': 'geometry.stroke', 'stylers': [{ 'visibility': 'off' }] }, { 'featureType': 'road.highway.controlled_access', 'elementType': 'labels.icon', 'stylers': [{ 'lightness': '1' }, { 'saturation': '100' }, { 'hue': '#009aff' }] }, { 'featureType': 'road.arterial', 'elementType': 'geometry.fill', 'stylers': [{ 'color': '#ffffff' }] }, { 'featureType': 'road.arterial', 'elementType': 'labels.text.fill', 'stylers': [{ 'color': '#8a8a8a' }] }, { 'featureType': 'road.arterial', 'elementType': 'labels.icon', 'stylers': [{ 'visibility': 'off' }] }, { 'featureType': 'road.local', 'elementType': 'geometry.fill', 'stylers': [{ 'color': '#ffffff' }] }, { 'featureType': 'transit', 'elementType': 'all', 'stylers': [{ 'visibility': 'off' }] }, { 'featureType': 'transit.station.airport', 'elementType': 'all', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'transit.station.airport', 'elementType': 'geometry.fill', 'stylers': [{ 'lightness': '33' }, { 'saturation': '-100' }, { 'visibility': 'on' }] }, { 'featureType': 'transit.station.bus', 'elementType': 'all', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'transit.station.rail', 'elementType': 'all', 'stylers': [{ 'visibility': 'on' }] }, { 'featureType': 'water', 'elementType': 'all', 'stylers': [{ 'color': '#46bcec' }, { 'visibility': 'on' }] }, { 'featureType': 'water', 'elementType': 'geometry.fill', 'stylers': [{ 'color': '#4db4f8' }] }, { 'featureType': 'water', 'elementType': 'labels.text.fill', 'stylers': [{ 'color': '#ffffff' }] }, { 'featureType': 'water', 'elementType': 'labels.text.stroke', 'stylers': [{ 'visibility': 'off' }] }]
         },
-        markersEvents: {
-          click: function (marker, eventName, model) {
-            vm.arenaService.arenaSelecionada = _.find(vm.arenas, { id: model.id });
-            vm.map.window.show = true;
+        
+        mapEvents: {
+          click: function () {
+            $scope.$apply(function () {
+              vm.showDetails = false;
+            });
           }
         },
-        window: {
-          marker: {},
-          show: false,
-          closeClick: function () {
-            this.show = false;
-          },
-          options: {} // define when map is ready
+
+        markersEvents: {
+          click: selecionaQuadraMapa
         }
       };
+    }
+
+    function selecionaQuadraMapa(marker, eventName, model) {
+        vm.arenaService.arenaSelecionada = _.find(vm.arenas, { id: model.id });
+        vm.map.center = {
+          latitude: vm.arenaService.arenaSelecionada.latitude,
+          longitude: vm.arenaService.arenaSelecionada.longitude
+        };
+        vm.showDetails = true;
     }
 
   })
@@ -74,12 +79,6 @@ angular.module('main')
         template: 'templates/misc/carousel-template.html'
       };
       vm.carouselData1 = createArray();
-      $ionicModal.fromTemplateUrl('templates/modal/confirma-reserva.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-      }).then(function (modal) {
-        $scope.modal = modal;
-      });
     }
 
     function openEstruturaModal() {
@@ -218,6 +217,7 @@ angular.module('main')
     }
 
     function openConfirmacaoModal(horario, index) {
+
       vm.horarioSelecionado = horario.horarios[index];
 
       $scope.modalData = {
@@ -230,7 +230,14 @@ angular.module('main')
       $scope.SalvarReserva = function () {
         salvarNovaReserva();
       };
-      $scope.modal.show();
+
+      $ionicModal.fromTemplateUrl('templates/modal/confirma-reserva.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function (modal) {
+        $scope.modal = modal;
+        $scope.modal.show();
+      });
     }
 
     function getHorarioExtraDisponivel() {

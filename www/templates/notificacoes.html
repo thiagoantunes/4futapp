@@ -3,7 +3,7 @@
     <div class="list ">
       <a class="item  item-avatar item-text-wrap item-button-right" ng-repeat="notificacao in vm.notificacoes" href="# ">
         <img style="margin-top:-7px;" src="{{notificacao.img | defaultImage}}">
-        <div ng-bind-html="notificacao.mensagem"></div>
+        <div ng-bind-html="notificacao.msg"></div>
         <button class="button button-positive">
           <i class="icon ion-android-person-add"></i>
         </button>

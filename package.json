@@ -25,10 +25,17 @@
     "cordova-plugin-inappbrowser",
     "cordova-plugin-whitelist",
     "cordova-plugin-transport-security",
-    "cordova-plugin-datepicker"
+    "cordova-plugin-datepicker",
+    {
+      "variables": {
+        "SENDER_ID": "276187195050"
+      },
+      "locator": "phonegap-plugin-push",
+      "id": "phonegap-plugin-push"
+    }
   ],
   "cordovaPlatforms": [
-    "ios",
-    "android"
+    "android",
+    "ios"
   ]
 }

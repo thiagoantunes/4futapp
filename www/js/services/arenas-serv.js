@@ -32,7 +32,7 @@ angular.module('main')
           arena.id = key;
           arena.latitude = location[0];
           arena.longitude = location[1];
-          arena.icon = '/img/estrutura/quadra.png';
+          arena.icon = 'img/pin.png';
           $timeout(function () {
             service.arenas.push(arena);
           });

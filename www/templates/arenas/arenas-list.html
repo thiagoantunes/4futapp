@@ -1,4 +1,4 @@
-<ion-view view-title="ARENAS" id="arenas-view" class="cards-view">
+<ion-view view-title="ARENAS {{actrl.showDetails}}" id="arenas-view" class="cards-view">
   <ion-nav-buttons side="right">
     <button ng-click="actrl.mapView = !actrl.mapView" ng-class="actrl.mapView ? 'ion-ios-list-outline' : 'ion-map'" class="button button-icon button-clear icon"></button>
   </ion-nav-buttons>
@@ -31,11 +31,35 @@
       </div>
       <br/><br/>
     </div>
-    <ui-gmap-google-map ng-if="actrl.mapView" center='actrl.map.center' options='actrl.map.options' zoom='actrl.map.zoom'>
-      <ui-gmap-window templateurl="'/templates/misc/arena-map-window.html'" templateParameter="actrl.arenaService.arenaSelecionada" show="actrl.map.window.show" coords="actrl.arenaService.arenaSelecionada" options="actrl.map.window.options" closeclick="actrl.map.window.closeClick()">
-      </ui-gmap-window>
-      <ui-gmap-markers events="actrl.map.markersEvents" models="actrl.arenas" icon="'icon'"  coords="'self'"'>
-      </ui-gmap-markers>
-    </ui-gmap-google-map>
+    <div ng-if="actrl.mapView" class="map-container" data-tap-disabled="true">
+      <ui-gmap-google-map center='actrl.map.center' pan="true" events="actrl.map.mapEvents" options='actrl.map.options' zoom='actrl.map.zoom'>
+        <ui-gmap-markers events="actrl.map.markersEvents" models="actrl.arenas" icon="'icon'" coords="'self'" '>
+        </ui-gmap-markers>
+      </ui-gmap-google-map>
+      <div class="item-animate" ng-show="actrl.showDetails">
+        <div class="card-2" style="width:100%">
+          <a  href="#/main/arenas/{{actrl.arenaService.arenaSelecionada.id}}">
+            <div class="list card">
+              <div class="row card-outer">
+                <div class="col col-50 card-image">
+                  <pre-img ratio="_1_2" helper-class="main-image">
+                    <img ng-src="{{actrl.arenaService.arenaSelecionada.fotoPerfil}}" spinner-on-load>
+                  </pre-img>
+                </div>
+                <div class="col card-content">
+                  <h2 class="card-title">{{actrl.arenaService.arenaSelecionada.nome}}</h2>
+                  <div class="card-description-outer">
+                    <p class="card-description"><b>Teste</b> Reviews</p>
+                    <p class="card-description">{{actrl.arenaService.arenaSelecionada.distance | number : 2}} km</p>
+                    <p class="card-description">Teste</p>
+                  </div>
+                </div>
+              
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

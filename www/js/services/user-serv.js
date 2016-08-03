@@ -1,6 +1,6 @@
 'use strict';
 angular.module('main')
-  .factory('UserService', function (Ref, $firebaseObject, $firebaseArray, $q, $timeout) {
+  .factory('UserService', function (Ref, $firebaseObject, $firebaseArray, $q, $timeout, $http) {
     var service = {
       jogos: [],
       amigos: [],
@@ -23,7 +23,8 @@ angular.module('main')
       getNotificacoes: getNotificacoes,
 
       adicionarAmigo: adicionarAmigo,
-      removerAmigo: removerAmigo
+      removerAmigo: removerAmigo,
+      enviaNotificacao: enviaNotificacao
     };
 
     return service;
@@ -53,18 +54,26 @@ angular.module('main')
 
     function adicionarAmigo(id) {
       var amigoData = {};
-      var notificacaoId = service.refNotificacoes.push().key;
       amigoData['users/' + firebase.auth().currentUser.uid + '/amigos/' + id] = true;
       amigoData['users/' + id + '/amigos/' + firebase.auth().currentUser.uid] = false;
-      amigoData['usersNotificacoes/' + id + '/' + notificacaoId] = {
-        mensagem: '<b>' + firebase.auth().currentUser.displayName  + '</b> começou a te seguir',
-        img: firebase.auth().currentUser.photoURL,
-        tipo: 'solicitacaoAmizade',
-        lida: false,
-        dateTime: new Date().getTime()
-      };
 
-      Ref.update(amigoData);
+      Ref.update(amigoData, function(){
+        enviaNotificacao({
+          msg: '<b>' + firebase.auth().currentUser.displayName + '</b> começou a te seguir',
+          img: firebase.auth().currentUser.photoURL,
+          tipo: 'solicitacaoAmizade',
+          lida: false,
+          dateTime: new Date().getTime()
+        }, id);
+      });
+    }
+
+    function enviaNotificacao(data, userId){
+      var notificacaoId = service.refNotificacoes.push().key;
+      var notificacaoData = {};
+      notificacaoData['usersNotificacoes/' + userId + '/' + notificacaoId] = data;
+
+      Ref.update(notificacaoData);
     }
 
     function removerAmigo(id) {

@@ -85,6 +85,14 @@ angular.module('main', [
       }
     });
 
+    var push = new Ionic.Push({
+      "debug": true
+    });
+
+    push.register(function(token) {
+      console.log("Device token:",token.token);
+    });
+
     // Load the facebook SDK asynchronously
     (function () {
       // If we've already installed the SDK, we're done

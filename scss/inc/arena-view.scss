@@ -1,5 +1,65 @@
-#arenas-view{
-    .angular-google-map-container { height: 100vh; }
+.platform-ios {
+    #arenas-view{
+        .angular-google-map-container { height: calc(100vh - 63px); }
+    }
+}
+
+.platform-android{
+    #arenas-view{
+        .angular-google-map-container { height: calc(100vh - 43px); }
+    }
+}
+
+.map-container {
+    .card-2 {
+        .card {
+            margin: 0px !important;
+        }
+    }
+    
+    .card{
+        margin: 0px !important;   
+    }
+
+    .item-animate {
+    position: fixed; width:100%; bottom: 0px;
+     }
+
+    .item-animate.ng-hide-add,
+    .item-animate.ng-hide-remove {
+      display: block !important;
+      bottom: 0;
+    }
+
+    .item-animate.ng-hide-add {
+      -webkit-animation:1s hide;
+      animation:1s hide;
+    }
+
+    @keyframes hide {
+      from { bottom: 0; }
+      to { bottom: -100%; }
+    }
+
+    @-webkit-keyframes hide {
+      from { bottom: 0; }
+      to { bottom: -100%; }
+    }
+
+    .item-animate.ng-hide-remove {
+      -webkit-animation:.5s show;
+      animation:.5s show;
+    }
+
+    @keyframes show {
+      from { bottom: -100%; }
+      to { bottom: 0; }
+    }
+
+    @-webkit-keyframes show {
+      from { bottom: -100%; }
+      to { bottom: 0; }
+    }
 }
 
 .profile-view{

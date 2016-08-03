@@ -9,6 +9,7 @@ angular.module('main')
     vm.mostrarHistorico = false;
 
     vm.openNovoJogoModal = openNovoJogoModal;
+    vm.getNumJogadores = getNumJogadores;
 
     activate();
 
@@ -37,6 +38,10 @@ angular.module('main')
         JogosService.novaPartidaModal.modal = modal;
         modal.show();
       });
+    }
+
+    function getNumJogadores(jogadores){
+      return Object.keys(jogadores).length;
     }
 
   })

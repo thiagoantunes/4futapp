@@ -6,6 +6,16 @@
 .placeholder-icon {
   color: #70a3c6 !important; }
 
+.small_button {
+  height: 30px !important;
+  line-height: 30px !important;
+  min-height: 30px !important;
+  border: solid 1px #00D466 !important; }
+
+.small_button:not(.button-positive) {
+  background: transparent !important;
+  color: #00D466 !important; }
+
 input[readonly] {
   background-color: #0C2633 !important; }
 
@@ -16,7 +26,7 @@ input[readonly] {
   border-bottom: solid 1px #46687E !important; }
 
 .item-stacked-label {
-  border-bottom: solid 1px #46687E !important; }
+  border-bottom: solid 3px #46687E !important; }
   .item-stacked-label input {
     background-color: transparent !important; }
 
@@ -17029,6 +17039,7 @@ For example, you might change some of the default colors:
  https://github.com/angular-slider/angularjs-slider - 
  2016-06-30 */
 .rzslider {
+  background-color: #efefef;
   position: relative;
   display: inline-block;
   width: 100%;
@@ -17251,8 +17262,59 @@ For example, you might change some of the default colors:
   bottom: initial;
   left: initial; }
 
-#arenas-view .angular-google-map-container {
-  height: 100vh; }
+.platform-ios #arenas-view .angular-google-map-container {
+  height: calc(100vh - 63px); }
+
+.platform-android #arenas-view .angular-google-map-container {
+  height: calc(100vh - 43px); }
+
+.map-container .card-2 .card {
+  margin: 0px !important; }
+
+.map-container .card {
+  margin: 0px !important; }
+
+.map-container .item-animate {
+  position: fixed;
+  width: 100%;
+  bottom: 0px; }
+
+.map-container .item-animate.ng-hide-add,
+.map-container .item-animate.ng-hide-remove {
+  display: block !important;
+  bottom: 0; }
+
+.map-container .item-animate.ng-hide-add {
+  -webkit-animation: 1s hide;
+  animation: 1s hide; }
+
+@keyframes hide {
+  from {
+    bottom: 0; }
+  to {
+    bottom: -100%; } }
+
+@-webkit-keyframes hide {
+  from {
+    bottom: 0; }
+  to {
+    bottom: -100%; } }
+
+.map-container .item-animate.ng-hide-remove {
+  -webkit-animation: .5s show;
+  animation: .5s show; }
+
+@keyframes show {
+  from {
+    bottom: -100%; }
+  to {
+    bottom: 0; } }
+
+@-webkit-keyframes show {
+  from {
+    bottom: -100%; }
+  to {
+    bottom: 0; } }
 
 .profile-view .hero {
   box-shadow: none; }
@@ -17673,11 +17735,3 @@ hr {
 
 .button-bar > .button:first-child {
   border-radius: 20px 0px 0px 20px !important; }
-
-#gmap {
-  width: 100%;
-  height: 100% !important; }
-
-.scroll,
-.mapWrap {
-  height: 100%; }

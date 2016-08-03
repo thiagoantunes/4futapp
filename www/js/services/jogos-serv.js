@@ -32,7 +32,7 @@ angular.module('main')
           jogo.id = key;
           jogo.latitude = location[0];
           jogo.longitude = location[1];
-          jogo.icon = '/img/estrutura/quadra.png';
+          jogo.icon = 'img/pin-jogos.png';
           $timeout(function () {
             service.jogosRegiao.push(jogo);
           });
@@ -81,13 +81,16 @@ angular.module('main')
     function getMeusJogos() {
       service.refUserJogos.child(firebase.auth().currentUser.uid).on('child_added', function (snap) {
         service.ref.child(snap.key).on('value', function (snapJogo) {
-          service.refLocalizacao.child(snap.key).on('value', function (snapLocalizacao) {
-            var data = snapJogo.val();
-            data.id = snap.key;
-            data.l = snapLocalizacao.val().l;
-            $timeout(function () {
-              _.remove(UserService.jogos, { 'id': snap.key });
-              UserService.jogos.push(data);
+          service.refJogadoresJogo.child(snap.key).orderByChild('confirmado').startAt(true).endAt(true).once('value', function(snapJogoJogadores){
+            service.refLocalizacao.child(snap.key).on('value', function (snapLocalizacao) {
+              var data = snapJogo.val();
+              data.id = snap.key;
+              data.l = snapLocalizacao.val().l;
+              data.jogadores = snapJogoJogadores.val();
+              $timeout(function () {
+                _.remove(UserService.jogos, { 'id': snap.key });
+                UserService.jogos.push(data);
+              });
             });
           });
         });
@@ -102,7 +105,15 @@ angular.module('main')
       };
       conviteData['usersJogos/' + amigo.id + '/' + jogoId] = true;
 
-      Ref.update(conviteData);
+      Ref.update(conviteData, function(){
+        UserService.enviaNotificacao({
+          msg: '<b>' + firebase.auth().currentUser.displayName + '</b> te convidou para uma partida',
+          img: firebase.auth().currentUser.photoURL,
+          tipo: 'convitePartida',
+          lida: false,
+          dateTime: new Date().getTime()
+        }, amigo.id);
+      });
     }
 
     function desconvidarAmigo(amigo, jogoId) {
