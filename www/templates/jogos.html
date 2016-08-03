@@ -5,38 +5,31 @@
       <ui-gmap-markers events="vm.map.markersEvents" models="vm.jogosRegiao" icon="'icon'" coords="'self'" '>
       </ui-gmap-markers>
     </ui-gmap-google-map>
-    <div class="item-animate" ng-show="vm.showDetails">
-        <a style="text-decoration: none; color: #efefef;" ng-click="vm.jogosService.jogoSelecionado = jogo;" href="#/main/jogos/{{vm.jogosService.jogoSelecionado.id}}">
+    <div class="item-animate jogo-card" ng-show="vm.showDetails">
+        <a href="#/main/jogos/{{vm.jogosService.jogoSelecionado.id}}">
           <div class="card">
-            <div class="row" >
-              <div class="col" style="font-weight: bold; font-size: 1.4em;">
-                {{vm.jogosService.jogoSelecionado.nome}}
-              </div>
-              <div class="col" style="color:#00D466;font-size: 1.4em; text-align: right">
-                <p>{{vm.jogosService.jogoSelecionado.inicio | date :"dd/MM 'as ' H:mm"}}
-              </div>
+            <div class="row">
+              <div class="col col-nome">{{vm.jogosService.jogoSelecionado.nome}}</div>
+              <div class="col col-data">{{vm.jogosService.jogoSelecionado.inicio | date :"dd/MM 'às' H:mm"}}</div>
             </div>
-            <div class="row" style="border-bottom: solid 1px #0C2633; font-size: 0.9em; margin-top: -15px;">
-              <div class="col">
-                <i class="icon ion-ios-location"></i>
-                {{vm.jogosService.jogoSelecionado.endereco}}
-              </div>
-            </div>
-            <div class="row" style="padding-top:15px">
-              <div class="col-75" >
-                <div style="display: block; position:relative;">
-                  <div ng-repeat="jogador in vm.jogosService.jogoSelecionado.jogadores" ng-if="$index < 4" style="position:relative; display:inline-block; padding:5px;">
-                    <img style="width: 30px; height: 30px; border-radius: 50%;" src="{{jogador.fotoPerfil | defaultImage}}">
+            <div class="row">
+              <div class="col-75">
+                <div class="jogadores">
+                  <div class="jogador" ng-repeat="jogador in vm.jogosService.jogoSelecionado.jogadores | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
+                    <img ng-class="{confirmado: jogador.confirmado}" src="{{jogador.fotoPerfil | defaultImage}}">
                   </div>
-                  <div ng-if="vm.getNumJogadores(vm.jogosService.jogoSelecionado.jogadores) > 4" style="top:-15px; position:relative; display:inline-block; padding:5px;">
-                    <div style="font-weight: bold; line-height: 35px; text-align:center; width: 35px; height: 35px; border-radius: 50%; background: #0C2633"> 
-                       + {{vm.getNumJogadores(vm.jogosService.jogoSelecionado.jogadores) - 4}}
-                    </div>
+                  <div ng-if="vm.jogosService.jogoSelecionado.jogadores.length > 4" class="plus">
+                    <div class="value"> + {{vm.jogosService.jogoSelecionado.jogadores.length - 4}}</div>
                   </div>
                 </div>
               </div>
-              <div class="col" style="font-size:1.5em; text-align: right; padding-top: 10px">
-                <b>{{vm.getNumJogadores(vm.jogosService.jogoSelecionado.jogadores)}}</b> / {{vm.jogosService.jogoSelecionado.maxJogadores}} 
+              <div class="col resumo">
+                <b>{{vm.jogosService.jogoSelecionado.jogadores.length}}</b> / {{vm.jogosService.jogoSelecionado.maxJogadores}}
+              </div>
+            </div>
+            <div class="row row-end">
+              <div class="col">
+                <i class="icon ion-ios-location"></i> {{vm.jogosService.jogoSelecionado.endereco}}
               </div>
             </div>
           </div>

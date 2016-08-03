@@ -17446,6 +17446,53 @@ For example, you might change some of the default colors:
 .platform-ios #jogos-detail ion-content {
   margin-top: 220px; }
 
+.jogo-card a {
+  text-decoration: none;
+  color: #efefef; }
+  .jogo-card a .col-nome {
+    font-weight: bold;
+    font-size: 1.4em; }
+  .jogo-card a .col-data {
+    font-weight: 300;
+    font-size: 1.5em;
+    text-align: right; }
+  .jogo-card a .row-end {
+    border-top: solid 1px #0C2633;
+    font-size: 0.9em; }
+  .jogo-card a .jogadores {
+    padding-top: 15px; }
+    .jogo-card a .jogadores .jogador {
+      position: relative;
+      display: inline-block;
+      padding: 5px; }
+      .jogo-card a .jogadores .jogador img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%; }
+      .jogo-card a .jogadores .jogador .confirmado {
+        border: 2px solid #00D466; }
+    .jogo-card a .jogadores .plus {
+      top: -15px;
+      position: relative;
+      display: inline-block;
+      padding: 5px; }
+      .jogo-card a .jogadores .plus .value {
+        font-weight: bold;
+        line-height: 35px;
+        text-align: center;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: #0C2633; }
+  .jogo-card a .resumo {
+    font-size: 1.5em;
+    font-weight: 300;
+    text-align: right;
+    padding-top: 25px; }
+
+.platform-ios .map-container .card {
+  top: -60px; }
+
 #jogos-detail .header {
   background: #0C2633;
   width: 100%;

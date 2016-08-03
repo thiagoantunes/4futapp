@@ -2,7 +2,7 @@
   <ion-nav-buttons side="right">
     <button ng-click="vm.openNovoJogoModal();" class="button button-icon button-clear ion-android-add icon"></button>
   </ion-nav-buttons>
-  <ion-content class="padding">
+  <ion-content>
     <div ng-if="vm.jogos.length == 0" class="lista-vazia text-center">
       <i class="icon ion-ios-football-outline"></i>
       <h5>Você ainda não tem uma partida.</h5>
@@ -11,42 +11,37 @@
       </div>
     </div>
     <div ng-if="vm.jogos.length > 0">
-      <div class="button-bar" style="margin: 10px 0;">
-        <a class="small_button" style="border-radius: 5px 0px 0px 5px !important;" grouped-radio="false" ng-model="vm.mostrarHistorico">Atuais</a>
-        <a class="small_button" style="border-radius: 0px 5px 5px 0px !important;" grouped-radio="true" ng-model="vm.mostrarHistorico">Passadas</a>
+      <div class="padding">
+        <div class="button-bar">
+          <a class="small_button" style="border-radius: 5px 0px 0px 5px !important;" grouped-radio="false" ng-model="vm.mostrarHistorico">Atuais</a>
+          <a class="small_button" style="border-radius: 0px 5px 5px 0px !important;" grouped-radio="true" ng-model="vm.mostrarHistorico">Passadas</a>
+        </div>
       </div>
-      <ion-list>
-        <a style="text-decoration: none; color: #efefef;" ng-repeat="jogo in vm.jogos | filter: vm.filtroJogos()" ng-click="vm.jogosService.jogoSelecionado = jogo;" href="#/main/jogos/{{jogo.id}}">
-          <div class="card">
-            <div class="row" >
-              <div class="col" style="font-weight: bold; font-size: 1.4em;">
-                {{jogo.nome}}
-              </div>
-              <div class="col" style="color:#00D466;font-size: 1.4em; text-align: right">
-                <p>{{jogo.inicio | date :"dd/MM 'as' H:mm"}}
-              </div>
+      <ion-list class="jogo-card">
+        <a ng-repeat="jogo in vm.jogos | filter: vm.filtroJogos()" ng-click="vm.jogosService.jogoSelecionado = jogo;" href="#/main/jogos/{{jogo.id}}">
+          <div class="card" style="margin: 12px 0px;">
+            <div class="row">
+              <div class="col col-nome">{{jogo.nome}}</div>
+              <div class="col col-data">{{jogo.inicio | date :"dd/MM 'às' H:mm"}}</div>
             </div>
-            <div class="row" style="border-bottom: solid 1px #0C2633; font-size: 0.9em; margin-top: -15px;">
-              <div class="col">
-                <i class="icon ion-ios-location"></i>
-                {{jogo.endereco}}
-              </div>
-            </div>
-            <div class="row" style="padding-top:15px">
-              <div class="col-75" >
-                <div style="display: block; position:relative;">
-                  <div ng-repeat="jogador in jogo.jogadores" ng-if="$index < 4" style="position:relative; display:inline-block; padding:5px;">
-                    <img style="width: 30px; height: 30px; border-radius: 50%;" src="{{jogador.fotoPerfil | defaultImage}}">
+            <div class="row">
+              <div class="col-75">
+                <div class="jogadores">
+                  <div class="jogador" ng-repeat="jogador in jogo.jogadores | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
+                    <img ng-class="{confirmado: jogador.confirmado}" src="{{jogador.fotoPerfil | defaultImage}}">
                   </div>
-                  <div ng-if="vm.getNumJogadores(jogo.jogadores) > 4" style="top:-15px; position:relative; display:inline-block; padding:5px;">
-                    <div style="font-weight: bold; line-height: 35px; text-align:center; width: 35px; height: 35px; border-radius: 50%; background: #0C2633"> 
-                       + {{vm.getNumJogadores(jogo.jogadores) - 4}}
-                    </div>
+                  <div ng-if="jogo.jogadores.length > 4" class="plus">
+                    <div class="value"> + {{jogo.jogadores.length - 4}}</div>
                   </div>
                 </div>
               </div>
-              <div class="col" style="font-size:1.5em; text-align: right; padding-top: 10px">
-                <b>{{vm.getNumJogadores(jogo.jogadores)}}</b> / {{jogo.maxJogadores}} 
+              <div class="col resumo">
+                <b>{{jogo.jogadores.length}}</b> / {{jogo.maxJogadores}}
+              </div>
+            </div>
+            <div class="row row-end">
+              <div class="col">
+                <i class="icon ion-ios-location"></i> {{jogo.endereco}}
               </div>
             </div>
           </div>

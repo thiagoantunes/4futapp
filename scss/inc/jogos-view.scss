@@ -18,6 +18,56 @@
     }
 }
 
+.jogo-card{
+    a{
+        text-decoration: none; color: #efefef;
+
+        .col-nome{
+            font-weight: bold; font-size: 1.4em;
+        }
+
+        .col-data{
+            font-weight: 300; font-size: 1.5em; text-align: right
+        }
+        
+        .row-end{
+            border-top: solid 1px #0C2633; font-size: 0.9em;
+        }
+
+        .jogadores{
+            padding-top:15px;
+            .jogador{
+                position:relative; display:inline-block; padding:5px;
+                img{
+                    width: 30px; height: 30px; border-radius: 50%;
+                }
+
+                .confirmado{
+                     border: 2px solid $positive;
+                }
+            }
+
+            .plus{
+                top:-15px; position:relative; display:inline-block; padding:5px;
+                .value{
+                    font-weight: bold; line-height: 35px; text-align:center; width: 35px; height: 35px; border-radius: 50%; background: #0C2633
+                }
+            }
+        }
+        .resumo{
+            font-size:1.5em; font-weight: 300; text-align: right; padding-top: 25px
+        }
+    }
+}
+
+.platform-ios {
+    .map-container {
+        .card{
+            top: -60px;
+        }
+    }
+}
+
 #jogos-detail{
 
     .header{

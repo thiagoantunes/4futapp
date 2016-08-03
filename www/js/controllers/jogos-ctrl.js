@@ -5,13 +5,10 @@ angular.module('main')
     var vm = this;
     vm.jogosRegiao = JogosService.jogosRegiao;
     vm.jogosService = JogosService;
-    vm.getNumJogadores = getNumJogadores;
     activate();
 
     function activate() {
       setMap();
-      console.log(vm.jogosRegiao);
-      console.log('vm.jogosRegiao');
     }
 
     function setMap() {
@@ -46,12 +43,6 @@ angular.module('main')
           longitude: vm.jogosService.jogoSelecionado.longitude
         };
         vm.showDetails = true;
-    }
-
-    function getNumJogadores(jogadores){
-      if(jogadores){
-        return Object.keys(jogadores).length;
-      }
     }
 
   });

@@ -1,5 +1,5 @@
 <ion-view view-title="Minhas Reservas">
-  <ion-content class="padding">
+  <ion-content>
     <div ng-if="vm.minhasReservas.length == 0" class="lista-vazia text-center">
       <i class="icon ion-ios-calendar-outline"></i>
       <h5>Você ainda não tem reservas.</h5>
@@ -8,17 +8,33 @@
       </div>
     </div>
     <div ng-if="vm.minhasReservas.length > 0">
-      <div class="button-bar padding">
-        <a grouped-radio="false" ng-model="vm.mostrarHistorico">Atuais</a>
-        <a grouped-radio="true" ng-model="vm.mostrarHistorico">Passadas</a>
+      <div class="padding">
+        <div class="button-bar" style="margin: 10px 0;">
+          <a class="small_button" style="border-radius: 5px 0px 0px 5px !important;" grouped-radio="false" ng-model="vm.mostrarHistorico">Atuais</a>
+          <a class="small_button" style="border-radius: 0px 5px 5px 0px !important;" grouped-radio="true" ng-model="vm.mostrarHistorico">Passadas</a>
+        </div>
       </div>
       <ion-list>
-        <div class="card" ng-repeat="reserva in vm.minhasReservas | filter: vm.filtroReservas()">
-          <div class="item item-avatar">
-            <h2>{{reserva.arenaNome}}</h2>
-            <p>{{reserva.start | date :"dd/MM/yyyy 'as' H:mm"}}</p>
+        <ion-item class="item-icon-right item-thumbnail-left" ng-repeat="reserva in vm.minhasReservas | filter: vm.filtroReservas()">
+          <div style="position: absolute;
+    top: 10px;
+    left: 10px;
+    max-width: 80px;
+    max-height: 80px;
+    width: 100%;
+    height: 100%;
+    text-align:center;
+    padding-top:10px">
+            <span style="font-size:2.5em">{{reserva.start | date :"dd"}}</span>
+            <br/>
+            <span >{{reserva.start | date :"MMM"}}</span>
+            <br/>
+            <span >{{reserva.start | date :"H:mm"}}</span>
           </div>
-        </div>
+          <h2>{{reserva.arenaNome}}</h2>
+          <p>{{reserva.start | date :"dd/MM/yyyy 'as' H:mm"}}</p>
+          <i class="icon ion-ios-arrow-right"></i>
+        </ion-item>
       </ion-list>
     </div>
     <!--<pre>{{vm.minhasReservas | json}}</pre>-->

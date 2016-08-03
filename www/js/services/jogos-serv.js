@@ -81,12 +81,12 @@ angular.module('main')
     function getMeusJogos() {
       service.refUserJogos.child(firebase.auth().currentUser.uid).on('child_added', function (snap) {
         service.ref.child(snap.key).on('value', function (snapJogo) {
-          service.refJogadoresJogo.child(snap.key).orderByChild('confirmado').startAt(true).endAt(true).once('value', function(snapJogoJogadores){
-            service.refLocalizacao.child(snap.key).on('value', function (snapLocalizacao) {
+          service.refLocalizacao.child(snap.key).on('value', function (snapLocalizacao) {
+            getJogadoresJogo(snap.key).$loaded().then(function (val) {
               var data = snapJogo.val();
               data.id = snap.key;
               data.l = snapLocalizacao.val().l;
-              data.jogadores = snapJogoJogadores.val();
+              data.jogadores = val;
               $timeout(function () {
                 _.remove(UserService.jogos, { 'id': snap.key });
                 UserService.jogos.push(data);
@@ -105,7 +105,7 @@ angular.module('main')
       };
       conviteData['usersJogos/' + amigo.id + '/' + jogoId] = true;
 
-      Ref.update(conviteData, function(){
+      Ref.update(conviteData, function () {
         UserService.enviaNotificacao({
           msg: '<b>' + firebase.auth().currentUser.displayName + '</b> te convidou para uma partida',
           img: firebase.auth().currentUser.photoURL,

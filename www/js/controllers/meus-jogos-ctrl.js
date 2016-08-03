@@ -9,7 +9,7 @@ angular.module('main')
     vm.mostrarHistorico = false;
 
     vm.openNovoJogoModal = openNovoJogoModal;
-    vm.getNumJogadores = getNumJogadores;
+    vm.orderByConfirmacao = orderByConfirmacao;
 
     activate();
 
@@ -40,8 +40,16 @@ angular.module('main')
       });
     }
 
-    function getNumJogadores(jogadores){
-      return Object.keys(jogadores).length;
+    function orderByConfirmacao(jogador) {
+      if(jogador.confirmado == true){
+        return 1;
+      }
+      else if(jogador.confirmado == undefined){
+        return 2;
+      }
+      else if(jogador.confirmado == false){
+        return 3;
+      }
     }
 
   })

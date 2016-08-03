@@ -6,7 +6,7 @@
     <i class="icon ion-android-funnel"></i>
   </button>-->
   <ion-content>
-    <div class="padding-horizontal" ng-if="!actrl.mapView">
+    <div ng-if="!actrl.mapView">
       <div class="card-2" ng-repeat="arena in actrl.arenas | orderBy:'distance'">
         <a ng-click="actrl.arenaService.arenaSelecionada = arena;" href="#/main/arenas/{{arena.id}}">
           <div class="list card">
