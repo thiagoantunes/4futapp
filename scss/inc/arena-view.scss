@@ -139,71 +139,44 @@
     }
 }
 
-.platform-ios{
+
+.platform-ios {
     .modal-arena{
-        .header{
-            margin-top:20px;
-            background: $base-background-color;
-            color:$base-color;
+        .bar.bar-header{
+            border-bottom: 0px !important;
+
             button{
-                float: left;
-                color:$base-color;
-                padding-left: 20px;
-            }
-            h1,h2,h3,h4,h5,h6{
-                color: $base-color;
-                margin:0px 5px;
+                color:$base-color !important;
             }
         }
 
-      ion-content{
-          top : 205px;
-      }
+        .subheader{
+            background-color: $dark;
+
+            h1,h2,h3,h4,h5,h6{
+                color:$base-color;
+            }
+        }
     }
-}
+} 
+
 
 .modal-arena{
         background-color: $base-background-color;
 
-      h1,h2,h3,h4,h5,h6{
-          color:#efefef;
-          margin:0px 5px;
-      }
-
-      ion-content{
-          background-color: $dark;
-          top : 185px;
-      }
-
-      .header{
-        //box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
-        height: 185px;
-        position: relative;
-        background: $positive;
-        color: $button-positive-text;
-        button{
-            color: $button-positive-text;
-            float: right;
-            font-size: 1.5em;
-        }
-
-        h1,h2,h3,h4,h5,h6{
-          color:$button-positive-text;
-          margin:0px 5px;
-        }
-
-        .title{
-            padding: 90px 30px 20px 10px;
-        }
-
-        .content{
-            padding: 60px 30px 20px 30px;
-
+        .subheader{
+            background-color: $positive;
+            padding: 20px 30px 10px 20px;
             i{
                 font-size: 1.6em; margin-right: 10px;
             }
+
+            h1,h2,h3,h4,h5,h6{
+                color:$dark;
+                margin:0px 5px;
+            }
         }
-      }
+
       .button-bar{
           margin-top:10px;
           box-shadow:none;
@@ -233,4 +206,8 @@
                   width:90px
               }
       }
+  }
+
+  .modal-reserva{
+      .angular-google-map-container { height: 150px; }
   }

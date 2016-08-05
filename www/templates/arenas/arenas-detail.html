@@ -1,8 +1,8 @@
 <ion-view view-title="{{vm.arena.nome}}" class="profile-view">
   <ion-content ng-class="{expanded:$scope.isExpanded}">
-    <div class="hero has-mask slide-up" style="background-image: url('{{vm.album[0].thumb}}');">
+    <div class="hero has-mask slide-up" style="min-height:200px; background-image: url('{{vm.album[0].thumb}}');">
       <div class="content">
-        <div class="avatar" style="background-image: url('{{vm.arena.fotoPerfil}}');"></div>
+        <img class="avatar" cache-src="{{vm.arena.fotoPerfil}}">
         <h4>{{vm.arena.nome}}
           <br/>
           <small><i class="icon ion-navigate"></i> {{vm.arena.distance | number : 2}} km</small>

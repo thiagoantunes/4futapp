@@ -17369,48 +17369,27 @@ For example, you might change some of the default colors:
 .platform-ios.platform-cordova:not(.fullscreen) .modal-arena .header {
   margin-top: 20px; }
 
-.platform-ios .modal-arena .header {
-  margin-top: 20px;
-  background: #0C2633;
-  color: #efefef; }
-  .platform-ios .modal-arena .header button {
-    float: left;
-    color: #efefef;
-    padding-left: 20px; }
-  .platform-ios .modal-arena .header h1, .platform-ios .modal-arena .header h2, .platform-ios .modal-arena .header h3, .platform-ios .modal-arena .header h4, .platform-ios .modal-arena .header h5, .platform-ios .modal-arena .header h6 {
-    color: #efefef;
-    margin: 0px 5px; }
+.platform-ios .modal-arena .bar.bar-header {
+  border-bottom: 0px !important; }
+  .platform-ios .modal-arena .bar.bar-header button {
+    color: #efefef !important; }
 
-.platform-ios .modal-arena ion-content {
-  top: 205px; }
+.platform-ios .modal-arena .subheader {
+  background-color: #1E394C; }
+  .platform-ios .modal-arena .subheader h1, .platform-ios .modal-arena .subheader h2, .platform-ios .modal-arena .subheader h3, .platform-ios .modal-arena .subheader h4, .platform-ios .modal-arena .subheader h5, .platform-ios .modal-arena .subheader h6 {
+    color: #efefef; }
 
 .modal-arena {
   background-color: #0C2633; }
-  .modal-arena h1, .modal-arena h2, .modal-arena h3, .modal-arena h4, .modal-arena h5, .modal-arena h6 {
-    color: #efefef;
-    margin: 0px 5px; }
-  .modal-arena ion-content {
-    background-color: #1E394C;
-    top: 185px; }
-  .modal-arena .header {
-    height: 185px;
-    position: relative;
-    background: #00D466;
-    color: #1E394C; }
-    .modal-arena .header button {
-      color: #1E394C;
-      float: right;
-      font-size: 1.5em; }
-    .modal-arena .header h1, .modal-arena .header h2, .modal-arena .header h3, .modal-arena .header h4, .modal-arena .header h5, .modal-arena .header h6 {
+  .modal-arena .subheader {
+    background-color: #00D466;
+    padding: 20px 30px 10px 20px; }
+    .modal-arena .subheader i {
+      font-size: 1.6em;
+      margin-right: 10px; }
+    .modal-arena .subheader h1, .modal-arena .subheader h2, .modal-arena .subheader h3, .modal-arena .subheader h4, .modal-arena .subheader h5, .modal-arena .subheader h6 {
       color: #1E394C;
       margin: 0px 5px; }
-    .modal-arena .header .title {
-      padding: 90px 30px 20px 10px; }
-    .modal-arena .header .content {
-      padding: 60px 30px 20px 30px; }
-      .modal-arena .header .content i {
-        font-size: 1.6em;
-        margin-right: 10px; }
   .modal-arena .button-bar {
     margin-top: 10px;
     box-shadow: none; }
@@ -17433,6 +17412,9 @@ For example, you might change some of the default colors:
       margin: 0 auto;
       height: 90px;
       width: 90px; }
+
+.modal-reserva .angular-google-map-container {
+  height: 150px; }
 
 #jogos-view .angular-google-map-container {
   height: 100vh; }

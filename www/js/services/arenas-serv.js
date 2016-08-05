@@ -19,6 +19,8 @@ angular.module('main')
       getEstrutura: getEstrutura,
       getArenasBasicas: getArenasBasicas,
       criaArenaBasica: criaArenaBasica,
+      getQuadraArena: getQuadraArena,
+      getArenaLocation: getArenaLocation,
       arenaSelecionada: null
     };
 
@@ -46,6 +48,14 @@ angular.module('main')
 
     function getQuadrasArena(arena) {
       return $firebaseArray(Ref.child('arenasQuadras/' + arena));
+    }
+
+    function getQuadraArena(arenaId, quadraId) {
+      return $firebaseObject(Ref.child('arenasQuadras/' + arenaId + '/' + quadraId));
+    }
+
+    function getArenaLocation(arenaId) {
+      return $firebaseObject(Ref.child('arenasLocalizacao/' + arenaId));
     }
 
     function getAlbum(arena) {

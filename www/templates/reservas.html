@@ -15,28 +15,21 @@
         </div>
       </div>
       <ion-list>
-        <ion-item class="item-icon-right item-thumbnail-left" ng-repeat="reserva in vm.minhasReservas | filter: vm.filtroReservas()">
-          <div style="position: absolute;
-    top: 10px;
-    left: 10px;
-    max-width: 80px;
-    max-height: 80px;
-    width: 100%;
-    height: 100%;
-    text-align:center;
-    padding-top:10px">
+        <ion-item ng-click="vm.openReservamodal(reserva);" class="item-icon-right item-thumbnail-left" ng-repeat="reserva in vm.minhasReservas | filter: vm.filtroReservas()">
+          <div style="position: absolute; top: 10px; left: 10px; max-width: 80px; max-height: 80px; width: 100%; height: 100%; text-align:center; padding-top:10px">
             <span style="font-size:2.5em">{{reserva.start | date :"dd"}}</span>
             <br/>
             <span >{{reserva.start | date :"MMM"}}</span>
             <br/>
             <span >{{reserva.start | date :"H:mm"}}</span>
           </div>
-          <h2>{{reserva.arenaNome}}</h2>
-          <p>{{reserva.start | date :"dd/MM/yyyy 'as' H:mm"}}</p>
-          <i class="icon ion-ios-arrow-right"></i>
+          <h2 style="margin-bottom: 10px">{{reserva.arenaNome}}</h2>
+          <p>{{vm.getStatusReserva(reserva.status);}}</p>
+          <i ng-if="reserva.status == 'agendado'" class="icon ion-ios-checkmark positive"></i>
+          <i ng-if="reserva.status == 'aguardando-confirmacao'" class="icon ion-ios-circle-outline calm"></i>
+          <i ng-if="reserva.status == 'cancelado'" class="icon ion-android-cancel assertive"></i>
         </ion-item>
       </ion-list>
     </div>
-    <!--<pre>{{vm.minhasReservas | json}}</pre>-->
   </ion-content>
 </ion-view>

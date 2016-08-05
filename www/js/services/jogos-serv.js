@@ -48,7 +48,7 @@ angular.module('main')
     function getJogadoresJogo(jogoId) {
       return $firebaseArray(service.refJogadoresJogo.child(jogoId));
     }
-
+ 
     function criarJogo(novoJogo, coords) {
       var deferred = $q.defer();
 

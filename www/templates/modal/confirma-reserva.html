@@ -1,15 +1,23 @@
 <ion-modal-view class="modal-arena">
-  <div class="header">
-    <button class="button button-clear button-primary ion-close-round" ng-click="modal.hide()"></button>
-    <div class="content">
+  <ion-header-bar class="bar-positive">
+    <div ng-if="!vm.isAndroid();" class="buttons">
+      <button class="button button-icon button-clear ion-android-close" ng-click="modal.hide()">
+      </button>
+    </div>
+    <div class="h1 title"></div>
+    <div ng-if="vm.isAndroid();" class="buttons">
+      <button class="button button-icon button-clear ion-android-close" ng-click="modal.hide()">
+      </button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <div class="subheader">
       <h3>{{modalData.arena}}</h3>
       <h5><i class="icon ion-navicon"></i> {{modalData.quadra.nome}} - {{modalData.quadra.tipo}} ({{modalData.quadra.capacidade}}
         vs {{modalData.quadra.capacidade}})</h5>
       <h5><i class="icon ion-android-time"></i>{{modalData.horario.start | date :'EEEE'}}, dia {{modalData.horario.start | date
         :'d'}} às {{modalData.horario.start | date :'HH:mm'}}</h5>
     </div>
-  </div>
-  <ion-content>
     <div class="list padding double-padding-x">
       <div class="content padding text-center">
         <h5>DURAÇÃO</h5>

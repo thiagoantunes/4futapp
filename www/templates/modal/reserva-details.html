@@ -1,0 +1,49 @@
+<ion-modal-view class="modal-reserva">
+    <ion-header-bar class="bar-positive">
+        <div ng-if="!vm.isAndroid();" class="buttons">
+            <button class="button button-icon button-clear ion-android-close" ng-click="vm.modal.hide()">
+                </button>
+        </div>
+        <div class="h1 title">DADOS DA RESERVA</div>
+        <div ng-if="vm.isAndroid();" class="buttons">
+            <button class="button button-icon button-clear ion-android-close" ng-click="vm.modal.hide()">
+            </button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list">
+            <a style="background: transparent" class="item item-icon-left" href="#">
+                <i class="icon ion-navicon"></i> {{vm.reservaSelecionada.arena.nome}}
+            </a>
+            <a style="background: transparent" class="item item-icon-left" href="#">
+                <i class="icon ion-android-time"></i> {{vm.reservaSelecionada.start | date :'EEEE'}}, dia {{vm.reservaSelecionada.start
+                | date :'d'}} às {{vm.reservaSelecionada.start | date :'HH:mm'}}
+            </a>
+            <a ng-if="vm.reservaSelecionada.saldoQuitado > 0" style="background: transparent" class="item item-icon-left" href="#">
+                <i class="icon ion-card"></i> {{vm.reservaSelecionada.saldoQuitado | currency:'R$'}} (Valor pago)
+            </a>
+            <a ng-if="vm.reservaSelecionada.saldoDevedor > 0" style="background: transparent" class="item item-icon-left" href="#">
+                <i class="icon ion-ios-pricetag"></i> {{vm.reservaSelecionada.saldoDevedor | currency:'R$'}} (Pagar na arena)
+            </a>
+
+            <a style="background: transparent" ng-if="vm.reservaSelecionada.arena.telefone" class="item item-icon-left" href="#">
+                <i class="icon ion-ios-telephone"></i> {{vm.reservaSelecionada.arena.telefone | tel}}
+            </a>
+
+            <a style="background: transparent" class="item item-icon-left" href="#">
+                <i class="icon ion-navigate"></i> {{vm.reservaSelecionada.arena.endereco}}
+            </a>
+        </div>
+
+        <ui-gmap-google-map center='vm.map.center' pan="true" options='vm.map.options' zoom='vm.map.zoom'>
+            <ui-gmap-marker idKey="0" coords='vm.map.center'>
+            </ui-gmap-marker>
+        </ui-gmap-google-map>
+        <button class="button button-outline button-full button-positive">
+            AGENDAR NOVAMENTE
+        </button>
+        <button ng-if="vm.reservaSelecionada.status !== 'cancelado'" ng-click="vm.cancelarReserva();" class="button button-outline button-full button-assertive">
+            CANCELAR
+        </button>
+    </ion-content>
+</ion-modal-view>

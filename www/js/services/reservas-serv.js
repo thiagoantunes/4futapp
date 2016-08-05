@@ -9,6 +9,7 @@ angular.module('main')
       getReservasDia: getReservasDia,
       getMinhasReservas: getMinhasReservas,
       criarReservaAvulsa: criarReservaAvulsa,
+      cancelarReserva: cancelarReserva
       //createGeo: createGeo
     };
 
@@ -94,11 +95,18 @@ angular.module('main')
             data.arenaId = snap.val();
             data.arenaNome = snapNomeArena.val();
             $timeout(function () {
+              _.remove(UserService.reservas, { 'id': snap.key });
               UserService.reservas.push(data);
             });
           });
         });
       });
+    }
+
+    function cancelarReserva(arenaId, reservaId) {
+      var reservaData = {};
+      reservaData['reservas/' + arenaId + '/' + reservaId + '/status'] = 'cancelado';
+      Ref.update(reservaData);
     }
 
   });

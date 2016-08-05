@@ -64,6 +64,7 @@ angular.module('main')
     vm.openAlbumModal = openAlbumModal;
     vm.openQuadrasModal = openQuadrasModal;
     vm.openEstruturaModal = openEstruturaModal;
+    vm.isAndroid = isAndroid;
 
     activate();
 
@@ -262,7 +263,8 @@ angular.module('main')
         end: moment(vm.horarioSelecionado.start).add($scope.modalData.duracao, 'h') / 1,
         saldoDevedor: $scope.modalData.horario.preco * $scope.modalData.duracao,
         saldoQuitado: 0,
-        title: firebase.auth().currentUser.displayName
+        title: firebase.auth().currentUser.displayName,
+        status: 'agendado'
       };
       ReservasService.criarReservaAvulsa(novaReserva, vm.arena.id).then(function () {
         console.log('Reserva criada com sucesso!');
@@ -283,6 +285,7 @@ angular.module('main')
           type: 'button-default',
           onTap: function (e) {
             e.preventDefault();
+            confirmPopup.close();
           }
         }, {
             text: 'Criar',
@@ -306,6 +309,10 @@ angular.module('main')
             }
           }]
       });
+    }
+
+    function isAndroid() {
+      return ionic.Platform.isAndroid();
     }
 
     // Set Motion
