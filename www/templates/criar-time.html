@@ -1,0 +1,83 @@
+<ion-view view-title="">
+    <ion-nav-buttons side="left">
+        <button ion-wizard-previous class="button button-icon button-clear icon ion-android-arrow-back"></button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button button-clear button-light" ion-wizard-next>
+            Próximo
+        </button>
+        <button class="button button-clear button-light" ion-wizard-start="vm.criarTime()">
+            Criar time
+        </button>
+    </ion-nav-buttons>
+    <ion-slides options="swiperOptions" slider="swiper" ion-wizard>
+        <ion-slide-page ion-wizard-step next-condition="vm.novoTime.nome && vm.novoTime.regiao">
+            <ion-content id="grupo-modal" class="has-header">
+                <div class="row info-time">
+                    <div class="col-20 text-center">
+                        <div class="add-img">
+                            <i class="icon ion-image stable"></i>
+                        </div>
+                    </div>
+                    <div class="col-80">
+                        <div class="list">
+                            <label style="border-color:transparent;" class="item item-input">
+                        <input ng-model="vm.novoTime.nome" type="text" placeholder="Escolha um nome para o seu time">
+                    </label>
+                        </div>
+                    </div>
+                </div>
+                <label style="border-color:transparent;" class="item item-input">
+                    <input ng-model="search.query" ng-focus="search.query = ''; search.justSelected = false;"  type="text" placeholder="Digite o nome do bairro e a cidade">
+                </label>
+                <ion-list>
+                    <ion-item ng-show="search.error">
+                        {{search.error}}
+                    </ion-item>
+                    <ion-item ng-repeat="suggestion in search.suggestions" ng-click="choosePlace(suggestion)">
+                        {{suggestion.description}}
+                    </ion-item>
+                </ion-list>
+
+            </ion-content>
+        </ion-slide-page>
+        <ion-slide-page ion-wizard-step>
+            <ion-content class="has-header">
+                <ion-list>
+                    <ion-checkbox ng-model="vm.novoTime.modalidades.society">Society</ion-checkbox>
+                    <ion-checkbox ng-model="vm.novoTime.modalidades.salao">Salão</ion-checkbox>
+                    <ion-checkbox ng-model="vm.novoTime.modalidades.campo">Campo</ion-checkbox>
+                    <ion-checkbox ng-model="vm.novoTime.modalidades.areia">Areia</ion-checkbox>
+                </ion-list>
+            </ion-content>
+        </ion-slide-page>
+        <ion-slide-page class="swiper-no-swiping" ion-wizard-step >
+            <ion-content class="has-header">
+                <div class="list">
+                    <div class="item item-divider">
+                        jogadores
+                    </div>
+                    <div class="item" style="padding-right: 0;">
+                        <ion-scroll zooming="false" direction="x">
+                            <div style="display: block; position:relative;">
+                                <div class="img" style="position:relative; display:inline-block; padding:5px;" ng-repeat="membro in vm.novoTime.jogadores">
+                                    <img style="width: 60px; height: 60px; border-radius: 50%;" src="{{membro.fotoPerfil | defaultImage}}">
+                                </div>
+                            </div>
+                        </ion-scroll>
+                    </div>
+                    <div class="item item-divider">
+                        Amigos
+                    </div>
+                    <div class="item item-avatar item-icon-right" ng-click="vm.toggleMembroTime(amigo)" ng-repeat="amigo in vm.amigos" href="#">
+                        <img style="margin-top:-7px;" src="{{amigo.fotoPerfil | defaultImage}}">
+                        <h2>{{amigo.nome}}</h2>
+                        <i ng-if="!vm.checkMembroTime(amigo);" class="icon ion-ios-circle-outline"></i>
+                        <i ng-if="vm.checkMembroTime(amigo);" class="icon ion-ios-checkmark positive"></i>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-slide-page>
+    </ion-slides>
+
+</ion-view>

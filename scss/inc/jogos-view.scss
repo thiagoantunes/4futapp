@@ -23,7 +23,7 @@
         text-decoration: none; color: #efefef;
 
         .col-nome{
-            font-weight: bold; font-size: 1.4em;
+            font-weight: bold; 
         }
 
         .col-data{
@@ -60,13 +60,15 @@
     }
 }
 
-.platform-ios {
-    .map-container {
-        .card{
-            top: -60px;
-        }
-    }
-}
+// .platform-ios {
+//     #jogos-view{
+//         .map-container {
+//             .card{
+//                 top: -60px;
+//             }
+//         }
+//     }   
+// }
 
 #jogos-detail{
 

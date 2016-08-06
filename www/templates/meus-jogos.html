@@ -3,51 +3,90 @@
     <button ng-click="vm.openNovoJogoModal();" class="button button-icon button-clear ion-android-add icon"></button>
   </ion-nav-buttons>
   <ion-content>
-    <div ng-if="vm.jogos.length == 0" class="lista-vazia text-center">
-      <i class="icon ion-ios-football-outline"></i>
-      <h5>Você ainda não tem uma partida.</h5>
-      <div style="padding:20px">
-        <button ng-click="vm.openNovoJogoModal();" class="button button-full button-positive">Criar Partida</button>
+    <div class="padding">
+      <div class="button-bar">
+        <a class="small_button" style="border-radius: 5px 0px 0px 5px !important;" grouped-radio="true" ng-model="vm.verPartidas"> PARTIDAS</a>
+        <a class="small_button" style="border-radius: 0px 5px 5px 0px !important;" grouped-radio="false" ng-model="vm.verPartidas"> RESERVAS</a>
       </div>
     </div>
-    <div ng-if="vm.jogos.length > 0">
-      <div class="padding">
-        <div class="button-bar">
-          <a class="small_button" style="border-radius: 5px 0px 0px 5px !important;" grouped-radio="false" ng-model="vm.mostrarHistorico">Atuais</a>
-          <a class="small_button" style="border-radius: 0px 5px 5px 0px !important;" grouped-radio="true" ng-model="vm.mostrarHistorico">Passadas</a>
+    <div ng-if="vm.verPartidas">
+      <div ng-if="vm.jogos.length == 0" class="lista-vazia text-center">
+        <i class="icon ion-ios-football-outline"></i>
+        <h5>Você ainda não tem uma partida.</h5>
+        <div style="padding:20px">
+          <button ng-click="vm.openNovoJogoModal();" class="button button-full button-positive">Criar Partida</button>
         </div>
       </div>
-      <ion-list class="jogo-card">
-        <a ng-repeat="jogo in vm.jogos | filter: vm.filtroJogos()" ng-click="vm.jogosService.jogoSelecionado = jogo;" href="#/main/jogos/{{jogo.id}}">
-          <div class="card" style="margin: 12px 0px;">
-            <div class="row">
-              <div class="col col-nome">{{jogo.nome}}</div>
-              <div class="col col-data">{{jogo.inicio | date :"dd/MM 'às' H:mm"}}</div>
-            </div>
-            <div class="row">
-              <div class="col-75">
-                <div class="jogadores">
-                  <div class="jogador" ng-repeat="jogador in jogo.jogadores | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
-                    <img ng-class="{confirmado: jogador.confirmado}" cache-src="{{jogador.fotoPerfil | defaultImage}}">
-                  </div>
-                  <div ng-if="jogo.jogadores.length > 4" class="plus">
-                    <div class="value"> + {{jogo.jogadores.length - 4}}</div>
+      <div ng-if="vm.jogos.length > 0">
+        <div ng-if="vm.jogos.length > 0" class="item item-divider">
+          PRÓXIMAS PARTIDAS
+        </div>
+        <ion-list class="jogo-card">
+          <a ng-repeat="jogo in vm.jogos" ng-click="vm.jogosService.jogoSelecionado = jogo;" href="#/main/meus-jogos/{{jogo.id}}">
+            <div class="card" style="margin: 1px 0px; padding:0 7px">
+              <div class="row">
+                <div class="col col-nome">{{jogo.nome}}</div>
+                <div class="col col-data">{{jogo.inicio | date :"dd/MM 'às' H:mm"}}</div>
+              </div>
+              <div class="row">
+                <div class="col-75">
+                  <div class="jogadores">
+                    <div class="jogador" ng-repeat="jogador in jogo.jogadores | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
+                      <img ng-class="{confirmado: jogador.confirmado}" cache-src="{{jogador.fotoPerfil | defaultImage}}">
+                    </div>
+                    <div ng-if="jogo.jogadores.length > 4" class="plus">
+                      <div class="value"> + {{jogo.jogadores.length - 4}}</div>
+                    </div>
                   </div>
                 </div>
+                <div class="col resumo">
+                  <b>{{jogo.jogadores.length}}</b> / {{jogo.maxJogadores}}
+                </div>
               </div>
-              <div class="col resumo">
-                <b>{{jogo.jogadores.length}}</b> / {{jogo.maxJogadores}}
+              <div class="row ">
+                <div class="col">
+                  <i class="icon ion-ios-location"></i> {{jogo.endereco}}
+                </div>
               </div>
             </div>
-            <div class="row row-end">
-              <div class="col">
-                <i class="icon ion-ios-location"></i> {{jogo.endereco}}
-              </div>
-            </div>
-          </div>
-        </a>
-      </ion-list>
+          </a>
+        </ion-list>
+        <div ng-if="vm.jogosAnteriores.length > 0" class="item item-divider">
+          PARTIDAS ANTERIORES
+        </div>
+      </div>
     </div>
-    <!--<pre>{{vm.jogos | json}}</pre>-->
+
+    <div ng-if="!vm.verPartidas">
+      <div ng-if="vm.minhasReservas.length == 0" class="lista-vazia text-center">
+        <i class="icon ion-ios-calendar-outline"></i>
+        <h5>Você ainda não tem reservas.</h5>
+        <div style="padding:20px">
+          <button ui-sref="main.home({'origem': 'reservas'})" class="button button-full button-positive">Reservas</button>
+        </div>
+      </div>
+      <div ng-if="vm.minhasReservas.length > 0">
+        <div ng-if="vm.jogos.length > 0" class="item item-divider">
+          RESERVAS ATUAIS
+        </div>
+        <ion-list>
+          <ion-item ng-click="vm.openReservamodal(reserva);" class="item-icon-right item-thumbnail-left" ng-repeat="reserva in vm.minhasReservas | filter: vm.filtroReservas()">
+            <div style="position: absolute; top: 10px; left: 10px; max-width: 80px; max-height: 80px; width: 100%; height: 100%; text-align:center; padding-top:10px">
+              <span style="font-size:2.5em">{{reserva.start | date :"dd"}}</span>
+              <br/>
+              <span>{{reserva.start | date :"MMM"}}</span>
+              <br/>
+              <span>{{reserva.start | date :"H:mm"}}</span>
+            </div>
+            <h2 style="margin-bottom: 10px">{{reserva.arenaNome}}</h2>
+            <p>{{vm.getStatusReserva(reserva.status);}}</p>
+            <i ng-if="reserva.status == 'agendado'" class="icon ion-ios-checkmark positive"></i>
+            <i ng-if="reserva.status == 'aguardando-confirmacao'" class="icon ion-ios-circle-outline calm"></i>
+            <i ng-if="reserva.status == 'cancelado'" class="icon ion-android-cancel assertive"></i>
+          </ion-item>
+        </ion-list>
+      </div>
+    </div>
+
   </ion-content>
 </ion-view>

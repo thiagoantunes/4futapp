@@ -1,4 +1,4 @@
-<ion-view view-title="ARENAS {{actrl.showDetails}}" id="arenas-view" class="cards-view">
+<ion-view view-title="ARENAS" id="arenas-view" class="cards-view">
   <ion-nav-buttons side="right">
     <button ng-click="actrl.mapView = !actrl.mapView" ng-class="actrl.mapView ? 'ion-ios-list-outline' : 'ion-map'" class="button button-icon button-clear icon"></button>
   </ion-nav-buttons>
@@ -40,9 +40,7 @@
             <div class="list card">
               <div class="row card-outer">
                 <div class="col col-50 card-image">
-                  <pre-img ratio="_1_2" helper-class="main-image">
-                    <img cache-src="{{actrl.arenaService.arenaSelecionada.fotoPerfil}}" >
-                  </pre-img>
+                  <img cache-src="{{actrl.arenaService.arenaSelecionada.fotoPerfil}}" >
                 </div>
                 <div class="col card-content">
                   <h2 class="card-title">{{actrl.arenaService.arenaSelecionada.nome}}</h2>

@@ -31,7 +31,7 @@
           </div>
           <ion-content>
             <div class="list" style="padding-bottom: 80px;">
-              <a class="item item-avatar item-icon-right" ng-repeat="jogador in vm.jogadores" href="#">
+              <a class="item item-avatar item-icon-right" ng-repeat="jogador in vm.jogadores | orderBy : vm.orderByConfirmacao" href="#">
                 <img src="{{jogador.fotoPerfil | defaultImage}}">
                 <h2>{{jogador.nome}}</h2> 
                 <i ng-class="vm.getPresencaClass(jogador.confirmado)"></i>

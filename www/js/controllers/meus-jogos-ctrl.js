@@ -1,32 +1,52 @@
 /*global firebase moment*/
 'use strict';
 angular.module('main')
-  .controller('MeusJogosCtrl', function (JogosService, UserService, $ionicModal) {
+  .controller('MeusJogosCtrl', function ($scope, JogosService, UserService, ReservasService, ArenasService, GeoService, $ionicModal, $ionicPopup) {
     var vm = this;
     vm.jogosService = JogosService;
+    vm.minhasReservas = UserService.reservas;
     vm.jogos = UserService.jogos;
-    vm.filtroJogos = filtroJogos;
-    vm.mostrarHistorico = false;
+    vm.jogosAnteriores = [];
+    vm.verPartidas = true;
 
     vm.openNovoJogoModal = openNovoJogoModal;
     vm.orderByConfirmacao = orderByConfirmacao;
+    vm.openReservamodal = openReservamodal;
+    vm.cancelarReserva = cancelarReserva;
+    vm.getStatusReserva = getStatusReserva;
+    vm.isAndroid = isAndroid;
 
     activate();
 
     function activate() {
-
+      setMap();
+      $ionicModal.fromTemplateUrl('templates/modal/reserva-details.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function (modal) {
+        vm.modal = modal;
+      });
     }
 
-    function filtroJogos() {
-      return function (item) {
-        var diff = moment().diff(item['inicio'], 'days');
-        if (vm.mostrarHistorico) {
-          return diff > 0;
-        }
-        else {
-          return diff <= 0;
-        }
-      }
+    function cancelarReserva() {
+      var popup = $ionicPopup.confirm({
+        template: 'Confirma o cancelamento da reserva?',
+        buttons: [{
+          text: 'Não',
+          type: 'button-default',
+          onTap: function (e) {
+            e.preventDefault();
+            popup.close();
+          }
+        }, {
+            text: 'Sim',
+            type: 'button-assertive',
+            onTap: function (e) {
+              ReservasService.cancelarReserva(vm.reservaSelecionada.arenaId, vm.reservaSelecionada.id);
+              vm.modal.hide();
+            }
+          }]
+      });
     }
 
     function openNovoJogoModal() {
@@ -40,6 +60,18 @@ angular.module('main')
       });
     }
 
+    function openReservamodal(reserva) {
+      vm.reservaSelecionada = reserva;
+      vm.reservaSelecionada.arena = ArenasService.getArena(reserva.arenaId);
+      vm.reservaSelecionada.arenaLocation = ArenasService.getArenaLocation(reserva.arenaId).$loaded().then(function (val) {
+        vm.map.center = {
+          latitude: val.l[0],
+          longitude: val.l[1]
+        };
+      });
+      vm.modal.show();
+    }
+
     function orderByConfirmacao(jogador) {
       if(jogador.confirmado == true){
         return 1;
@@ -50,6 +82,38 @@ angular.module('main')
       else if(jogador.confirmado == false){
         return 3;
       }
+    }
+
+    function isAndroid() {
+      return ionic.Platform.isAndroid();
+    }
+
+    function setMap() {
+      vm.showDetails = false;
+      vm.map = {
+        center: {
+          latitude: GeoService.position[0],
+          longitude: GeoService.position[1]
+        },
+        zoom: 14,
+        options: {
+          disableDefaultUI: true,
+
+        }
+      };
+    }
+
+    function getStatusReserva(status) {
+      if (status == 'cancelado') {
+        return 'Reserva cancelada';
+      }
+      else if (status == 'agendado') {
+        return 'Agendamento confirmado';
+      }
+      else if (status == 'aguardando-confirmacao') {
+        return 'Aguardando confirmação';
+      }
+
     }
 
   })
@@ -267,6 +331,7 @@ angular.module('main')
     vm.checkPresencaAmigo = checkPresencaAmigo;
     vm.convidarAmigo = convidarAmigo;
     vm.desconvidarAmigo = desconvidarAmigo;
+    vm.orderByConfirmacao = orderByConfirmacao;
 
     activate();
 
@@ -320,6 +385,18 @@ angular.module('main')
 
     function desconvidarAmigo(amigo) {
       JogosService.desconvidarAmigo(amigo, vm.jogo.id);
+    }
+
+    function orderByConfirmacao(jogador) {
+      if(jogador.confirmado == true){
+        return 1;
+      }
+      else if(jogador.confirmado == undefined){
+        return 2;
+      }
+      else if(jogador.confirmado == false){
+        return 3;
+      }
     }
 
     var oldSoftBack = $rootScope.$ionicGoBack;

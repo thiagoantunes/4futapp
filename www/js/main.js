@@ -277,45 +277,39 @@ angular.module('main', [
       .state('main.meus-jogos', {
         url: '/meus-jogos',
         views: {
-          'tab-home': {
+          'tab-meus-jogos': {
             templateUrl: 'templates/meus-jogos.html',
             controller: 'MeusJogosCtrl as vm'
           }
         }
       })
 
-      .state('main.reservas', {
-        url: '/reservas',
+      .state('main.meus-jogos-detail', {
+        url: '/meus-jogos/:id',
         views: {
-          'tab-jogos': {
-            templateUrl: 'templates/reservas.html',
-            controller: 'ReservasCtrl as vm',
+          'tab-meus-jogos': {
+            templateUrl: 'templates/jogos-detail.html',
+            controller: 'JogosDetailCtrl as vm',
           }
         }
       })
 
-      .state('main.amigos', {
-        url: '/amigos',
+      .state('main.meus-times', {
+        url: '/meus-times',
         views: {
-          'tab-amigos': {
-            templateUrl: 'templates/amigos.html',
-            controller: 'AmigosCtrl as vm',
+          'tab-meus-times': {
+            templateUrl: 'templates/meus-times.html',
+            controller: 'MeusTimesCtrl as vm',
           }
         }
       })
 
-      .state('main.user', {
-        url: '/amigos/:userId',
+      .state('main.desafios', {
+        url: '/desafios',
         views: {
-          'tab-amigos': {
-            templateUrl: 'templates/perfil.html',
-            controller: 'PerfilCtrl as vm',
-            resolve: {
-              selectedUser: ['$stateParams', 'UserService', function ($stateParams, UserService) {
-                return UserService.getUserProfile($stateParams.userId).$loaded();
-              }
-              ]
-            }
+          'tab-home': {
+            templateUrl: 'templates/desafios.html',
+            controller: 'DesafiosCtrl as vm',
           }
         }
       })
@@ -323,19 +317,19 @@ angular.module('main', [
       .state('main.buscarJogadores', {
         url: '/buscar-jogadores',
         views: {
-          'tab-amigos': {
+          'tab-meus-times': {
             templateUrl: 'templates/buscar-jogadores.html',
             controller: 'BuscarJogadores as vm',
           }
         }
       })
 
-      .state('main.criarGrupo', {
-        url: '/criar-grupo',
+      .state('main.criarTime', {
+        url: '/criar-time',
         views: {
-          'tab-amigos': {
-            templateUrl: 'templates/criar-grupo.html',
-            controller: 'CriarGrupoCtrl as vm',
+          'tab-meus-times': {
+            templateUrl: 'templates/criar-time.html',
+            controller: 'CriarTimeCtrl as vm',
           }
         }
       })
@@ -366,15 +360,15 @@ angular.module('main', [
       });
   })
 
-  .controller('MenuCtrl', function ($state, $rootScope, ArenasService, UserService, ReservasService, JogosService, $ionicHistory) {
+  .controller('MenuCtrl', function ($state, $rootScope, ArenasService, UserService, ReservasService, JogosService,TimesService, $ionicHistory) {
     var vm = this;
     var hideTabsStates = [
       'main.arenas',
       'main.arenas-detail',
       'main.minhas-reservas',
       'main.encontrar-jogos',
-      'main.meus-jogos',
       'main.jogos-detail',
+      'main.meus-jogos-detail',
       'main.jogos',
       'main.perfilAmigo'
     ];
@@ -388,8 +382,9 @@ angular.module('main', [
     JogosService.getJogosRegiao();
     ArenasService.getArenas();
     UserService.getMeusAmigos();
-    UserService.getGrupos();
+    UserService.getTimes();
     UserService.getNotificacoes();
+    TimesService.getTimesRegiao();
 
     UserService.notificacoesNaoLidas.$loaded().then(function (val) {
       vm.notificacoes = UserService.notificacoesNaoLidas;

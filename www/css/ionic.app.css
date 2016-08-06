@@ -17432,8 +17432,7 @@ For example, you might change some of the default colors:
   text-decoration: none;
   color: #efefef; }
   .jogo-card a .col-nome {
-    font-weight: bold;
-    font-size: 1.4em; }
+    font-weight: bold; }
   .jogo-card a .col-data {
     font-weight: 300;
     font-size: 1.5em;
@@ -17471,9 +17470,6 @@ For example, you might change some of the default colors:
     font-weight: 300;
     text-align: right;
     padding-top: 25px; }
-
-.platform-ios .map-container .card {
-  top: -60px; }
 
 #jogos-detail .header {
   background: #0C2633;
@@ -17666,6 +17662,9 @@ For example, you might change some of the default colors:
   max-width: 50px !important;
   max-height: 50px !important; }
 
+.platform-ios .hero {
+  min-height: 200px; }
+
 .platform-ios .bar-positive {
   background: #1E394C; }
 
@@ -17764,3 +17763,10 @@ hr {
 
 .button-bar > .button:first-child {
   border-radius: 20px 0px 0px 20px !important; }
+
+.tabs .tab-item .icon.time {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 100%;
+  background-image: url("https://raw.github.com/driftyco/ionic-site/gh-pages/img/docs/mcfly.jpg");
+  background-size: contain; }

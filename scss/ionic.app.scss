@@ -187,6 +187,9 @@ input[readonly]{
 }
 
 .platform-ios {
+    .hero{
+        min-height: 200px;
+    }
     .bar-positive{
         background: $dark;
     }
@@ -321,3 +324,11 @@ hr{
     border-radius: 20px 0px 0px 20px !important;
 }
 
+
+.tabs .tab-item .icon.time {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 100%;
+  background-image: url('https://raw.github.com/driftyco/ionic-site/gh-pages/img/docs/mcfly.jpg');
+  background-size:contain;
+}

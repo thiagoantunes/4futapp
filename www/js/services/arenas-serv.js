@@ -101,7 +101,7 @@ angular.module('main')
 
   })
 
-  .factory('GeoService', function ($q, $ionicPlatform, $cordovaGeolocation, ArenasService, JogosService) {
+  .factory('GeoService', function ($q, $ionicPlatform, $cordovaGeolocation, ArenasService, JogosService, TimesService) {
     var service = {
       position: [],
 
@@ -120,17 +120,22 @@ angular.module('main')
 
           ArenasService.geoQuery = ArenasService.geoFire.query({
             center: service.position,
-            radius: 2000
+            radius: 100
           });
 
           ArenasService.geoArenasBasicasQuery = ArenasService.geoArenaBasica.query({
             center: service.position,
-            radius: 2000
+            radius: 100
           });
 
           JogosService.geoQuery = JogosService.geoFire.query({
             center: service.position,
-            radius: 2000
+            radius: 100
+          });
+
+          TimesService.geoQuery = TimesService.geoFire.query({
+            center: service.position,
+            radius: 100
           });
 
           deferred.resolve(service.position);
@@ -141,13 +146,19 @@ angular.module('main')
 
           ArenasService.geoQuery.updateCriteria({
             center: [position[0], position[1]],
-            radius: 2000
+            radius: 100
           });
 
           JogosService.geoQuery.updateCriteria({
             center: [position[0], position[1]],
-            radius: 2000
+            radius: 100
           });
+
+          TimesService.geoQuery.updateCriteria({
+            center: [position[0], position[1]],
+            radius: 100
+          });
+
 
         });
       //});

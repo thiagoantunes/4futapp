@@ -1,0 +1,52 @@
+<ion-modal-view ng-controller="PerfilTimeCtrl as vm">
+    <ion-header-bar class="bar-positive">
+        <h1 class="title">{{vm.time.nome}}</h1>
+        <div class="buttons">
+            <button class="button button-icon button-clear ion-android-close" ng-click="vm.closeModal()">
+        </button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div class="hero has-mask slide-up">
+            <div class="content ">
+                <div class="avatar " style="background-image: url( '{{vm.time.escudo}}'); "></div>
+                <h4>{{vm.time.nome}}
+                <br/>
+                <small><i class="ion-ios-location-outline "></i> {{vm.time.regiao}}</small>
+                </h4>
+            </div>
+        </div>
+        <button class="button button-outline button-full button-positive">
+            DESAFIAR
+        </button>
+        <div ng-if="vm.time.jogadores.list.length>0" class="item item-divider"> Jogadores
+        </div>
+        <div class="item">
+          <ul>
+            <div class="row" style="padding-left:0px" ng-repeat="amigo in vm.time.jogadores.list" ng-if="$index % 5 === 0">
+              <div class="col col-20" ng-if="$index < vm.time.jogadores.list.length">
+                <img ui-sref="main.user({userId: vm.time.jogadores.list[$index].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                  src="{{vm.time.jogadores.list[$index].fotoPerfil | defaultImage}} ">
+              </div>
+              <div class="col col-20" ng-if="$index + 1 < vm.time.jogadores.list.length">
+                <img ui-sref="main.user({userId: vm.time.jogadores.list[$index + 1].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                  src="{{vm.time.jogadores.list[$index + 1].fotoPerfil | defaultImage}} ">
+              </div>
+              <div class="col col-20" ng-if="$index + 2 < vm.time.jogadores.list.length">
+                <img ui-sref="main.user({userId: vm.time.jogadores.list[$index + 2].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                  src="{{vm.time.jogadores.list[$index + 2].fotoPerfil | defaultImage}} ">
+              </div>
+              <div class="col col-20" ng-if="$index + 3 < vm.time.jogadores.list.length">
+                <img ui-sref="main.user({userId: vm.time.jogadores.list[$index + 3].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                  src="{{vm.time.jogadores.list[$index + 3].fotoPerfil | defaultImage}} ">
+              </div>
+              <div class="col col-20" ng-if="$index + 4 < vm.time.jogadores.list.length">
+                <img ui-sref="main.user({userId: vm.time.jogadores.list[$index + 4].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                  src="{{vm.time.jogadores.list[$index + 4].fotoPerfil | defaultImage}} ">
+              </div>
+            </div>
+          </ul>
+        </div>
+        <!--<pre>{{vm.time}}</pre>-->
+    </ion-content>
+</ion-modal-view>

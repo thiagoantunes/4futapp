@@ -1,6 +1,6 @@
 <ion-view view-title="ENCONTRE JOGOS" id="jogos-view">
   <!-- do you want padding? -->
-  <ion-content class="map-container" >
+  <ion-content scroll="false" class="map-container" >
     <ui-gmap-google-map center='vm.map.center' pan="true" events="vm.map.mapEvents" options='vm.map.options' zoom='vm.map.zoom'>
       <ui-gmap-markers events="vm.map.markersEvents" models="vm.jogosRegiao" icon="'icon'" coords="'self'" '>
       </ui-gmap-markers>

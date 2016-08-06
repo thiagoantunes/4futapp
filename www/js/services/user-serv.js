@@ -1,30 +1,31 @@
 'use strict';
 angular.module('main')
-  .factory('UserService', function (Ref, $firebaseObject, $firebaseArray, $q, $timeout, $http) {
+  .factory('UserService', function (Ref, $firebaseObject, $firebaseArray, $q, $timeout, $http, $ionicModal) {
     var service = {
       jogos: [],
       amigos: [],
-      grupos: [],
+      times: [],
       reservas: [],
       notificacoes: [],
-      usuarioSelecionado: null,
+      jogadorSelecionado: {},
       ref: Ref.child('users'),
-      refAmigos: Ref.child('usersAmigos'),
-      refGrupos: Ref.child('grupos'),
+      refTimes: Ref.child('times'),
       refNotificacoes: Ref.child('usersNotificacoes'),
 
       getUserProfile: getUserProfile,
       getCurrentUser: getCurrentUser,
       getMeusAmigos: getMeusAmigos,
-      getAmigosUsuario: getAmigosUsuario,
+      getAmigosUsuarioLight: getAmigosUsuarioLight,
       getUsers: getUsers,
-      getGrupos: getGrupos,
-      criarGrupo: criarGrupo,
+      getTimes: getTimes,
       getNotificacoes: getNotificacoes,
+      verificaAmizade: verificaAmizade,
+      verificaAmizadeDeAmizades: verificaAmizadeDeAmizades,
 
       adicionarAmigo: adicionarAmigo,
       removerAmigo: removerAmigo,
-      enviaNotificacao: enviaNotificacao
+      enviaNotificacao: enviaNotificacao,
+      openPerfilJogador: openPerfilJogador
     };
 
     return service;
@@ -57,7 +58,7 @@ angular.module('main')
       amigoData['users/' + firebase.auth().currentUser.uid + '/amigos/' + id] = true;
       amigoData['users/' + id + '/amigos/' + firebase.auth().currentUser.uid] = false;
 
-      Ref.update(amigoData, function(){
+      Ref.update(amigoData, function () {
         enviaNotificacao({
           msg: '<b>' + firebase.auth().currentUser.displayName + '</b> começou a te seguir',
           img: firebase.auth().currentUser.photoURL,
@@ -68,7 +69,7 @@ angular.module('main')
       });
     }
 
-    function enviaNotificacao(data, userId){
+    function enviaNotificacao(data, userId) {
       var notificacaoId = service.refNotificacoes.push().key;
       var notificacaoData = {};
       notificacaoData['usersNotificacoes/' + userId + '/' + notificacaoId] = data;
@@ -102,7 +103,7 @@ angular.module('main')
       });
     }
 
-    function getAmigosUsuario(amigos) {
+    function getAmigosUsuarioLight(amigos) {
       amigos.list = [];
       $timeout(function () {
         for (var i in amigos) {
@@ -121,13 +122,13 @@ angular.module('main')
       });
     }
 
-    function getGrupos() {
-      service.ref.child(firebase.auth().currentUser.uid + '/grupos').on('child_added', function (snap) {
-        service.refGrupos.child(snap.key).on('value', function (snapUser) {
+    function getTimes() {
+      service.ref.child(firebase.auth().currentUser.uid + '/times').on('child_added', function (snap) {
+        service.refTimes.child(snap.key).on('value', function (snapUser) {
           var data = snapUser.val();
           $timeout(function () {
-            _.remove(service.grupos, { 'id': snap.key });
-            service.grupos.push(data);
+            _.remove(service.times, { 'id': snap.key });
+            service.times.push(data);
           });
         });
       });
@@ -137,34 +138,49 @@ angular.module('main')
       return $firebaseArray(service.ref.orderByChild('usuarioComum').startAt(true).endAt(true));
     }
 
-    function criarGrupo(grupo, membros) {
+    function openPerfilJogador(jogador) {
+      service.jogadorSelecionado.data = jogador;
+      $ionicModal.fromTemplateUrl('templates/modal/perfil-jogador.html', {
+        animation: 'slide-in-up'
+      }).then(function (modal) {
+        service.jogadorSelecionado.modal = modal;
+        modal.show();
+      });
+    }
+
+    function verificaAmizadeDeAmizades(user) {
       var deferred = $q.defer();
-
-      var grupoData = {};
-      var grupoId = service.refGrupos.push().key;
-      grupoData['grupos/' + grupoId] = grupo;
-      grupoData['grupos/' + grupoId].membros = {};
-      _.forEach(membros, function (val) {
-        grupoData['grupos/' + grupoId].membros[val.id] = true;
-      });
-      grupoData['grupos/' + grupoId].membros[firebase.auth().currentUser.uid] = true;
-      _.forEach(membros, function (val) {
-        grupoData['users/' + val.id + '/grupos/' + grupoId] = true;
-      });
-      grupoData['users/' + firebase.auth().currentUser.uid + '/grupos/' + grupoId] = true;
-
-      Ref.update(grupoData, function (error) {
-        if (error) {
-          deferred.reject('Erro ao cadastrar novo grupo');
-        }
-        else {
-          deferred.resolve();
-        }
+      service.ref.child(user + '/amigos/').once('value').then(function (snapshot) {
+        var amigos = Object.keys(snapshot.val()).map(function (key) {
+          if(snapshot.val()[key]){
+            return key;
+          }
+        });
+        var promises = [];
+        _.forEach(amigos, function (amigo) {
+          var promise = service.ref.child(amigo + '/amigos/' + firebase.auth().currentUser.uid).once('value');
+          promises.push(promise);
+        });
+        $q.all(promises).then(function (requests) {
+          var result = false;
+          _.forEach(requests, function (snap) {
+            if (snap.val()) {
+              result = true;
+            }
+          });
+          deferred.resolve(result);
+        });
       });
 
       return deferred.promise;
     }
 
+    function verificaAmizade(userId) {
+      var deferred = $q.defer();
+      service.ref.child(userId + '/amigos/' + firebase.auth().currentUser.uid).once('value').then(function (snapshot) {
+        deferred.resolve(snapshot.val());
+      });
+      return deferred.promise;
+    }
+
   });
-
-

@@ -5,6 +5,7 @@ angular.module('main')
     var vm = this;
     vm.jogosRegiao = JogosService.jogosRegiao;
     vm.jogosService = JogosService;
+    vm.orderByConfirmacao = orderByConfirmacao;
     activate();
 
     function activate() {
@@ -36,13 +37,26 @@ angular.module('main')
     }
 
     function selecionaJogoMapa(marker, eventName, model) {
+      if (model.visivel) {
         vm.jogosService.jogoSelecionado = _.find(vm.jogosRegiao, { id: model.id });
-        vm.jogosService.jogoSelecionado.jogadores = JogosService.getJogadoresJogo(model.id);
         vm.map.center = {
           latitude: vm.jogosService.jogoSelecionado.latitude,
           longitude: vm.jogosService.jogoSelecionado.longitude
         };
         vm.showDetails = true;
+      }
+    }
+
+    function orderByConfirmacao(jogador) {
+      if (jogador.confirmado == true) {
+        return 1;
+      }
+      else if (jogador.confirmado == undefined) {
+        return 2;
+      }
+      else if (jogador.confirmado == false) {
+        return 3;
+      }
     }
 
   });
