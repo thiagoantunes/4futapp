@@ -1,84 +1,124 @@
 <ion-view id="jogos-detail" view-title="{{vm.jogo.nome}}">
-  <ion-pane>
-    <ion-tabs class="tabs-top">
-      <!-- Tab 1 -->
-      <ion-tab title="JOGADORES" class="tabs-item-hide" href="#/tab/tab1">
-        <ion-nav-view name="tab-tab1">
-          <div class="header">
-            <div class="row">
-              <div class="col-50">
-                <span style="font-size:2.5em; font-weight: 200" class="positive">{{vm.jogo.inicio | date: 'dd/MM'}}</span>
-              </div>
-              <div class="col-50" style="text-align:right">
-                <span style="font-size:2.5em;font-weight: 100">{{vm.jogo.inicio | date: 'HH:mm'}}</span>
-              </div>
+  <ion-nav-buttons side="right">
+    <button ng-click="modal.show();" class="button button-icon button-clear ion-android-person-add"></button>
+  </ion-nav-buttons>
+  <ion-content>
+    <div class="header">
+      <div class="row">
+        <div class="col-50">
+          <span style="font-size:2.5em; font-weight: 200" class="positive">{{vm.jogo.inicio | date: 'dd/MM'}}</span>
+        </div>
+        <div class="col-50" style="text-align:right">
+          <span style="font-size:2.5em;font-weight: 100">{{vm.jogo.inicio | date: 'HH:mm'}}</span>
+        </div>
+      </div>
+      <hr/>
+      <h4>Arena Castelão FC</h4>
+      <h5 style="font-weight: 300; margin-bottom:0px">
+        <i class="icon ion-ios-location" style="margin-right:5px"></i> {{vm.jogo.endereco}}
+      </h5>
+      <div class="confirmacao" ng-if="vm.minhaPresenca && !vm.minhaPresenca.aguardandoConfirmacao">
+        <div class="row">
+          <div class="col-50 vou" ng-click="vm.atualizaPresenca(true);" ng-class="{'vou-checked' : vm.minhaPresenca.confirmado}">
+            <i class="icon ion-checkmark-round"></i> VOU
+          </div>
+          <div class="col-50 nao-vou" ng-click="vm.atualizaPresenca(false);" ng-class="{'nao-vou-checked' : vm.minhaPresenca.confirmado!== undefined &&  !vm.minhaPresenca.confirmado}">
+            <i class="icon ion-close"></i> NÃO VOU
+          </div>
+        </div>
+      </div>
+      <div ng-if="!vm.minhaPresenca">
+        <button ng-click="vm.atualizaPresenca(true);" class="button button-small button-full button-positive">
+            JOGAR
+        </button>
+      </div>
+      <div class="aguardando-confirmacao" ng-if="vm.minhaPresenca && vm.minhaPresenca.aguardandoConfirmacao">
+        Voce enviou uma solicitaçao para participar desta partida. Aguarde a aprovaçao do organizador.
+      </div>
+    </div>
+    <div class="list" style="padding-top: 20px;">
+      <div class="item" ng-if="vm.getNumJogadores(true) > 0" style="border: none; padding: 5px 15px;">
+        <span class="positive" style="font-weight:bold; padding-left: 7px;">Confirmados ({{vm.getNumJogadores(true)}})</span>
+        <ul>
+          <div class="row" style="padding-left:0px" ng-repeat="amigo in vm.jogo.jogadores | orderBy: vm.orderByConfirmacao" ng-if="$index % 5 === 0">
+            <div class="col col-20" ng-if="$index < vm.jogo.jogadores.length && vm.jogo.jogadores[$index].confirmado == true && !vm.jogo.jogadores[$index].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index].fotoPerfil | defaultImage}} ">
             </div>
-            <hr/>
-            <h4>Arena Castelão FC</h4>
-            <h5 style="font-weight: 300; margin-bottom:0px">
-              <i class="icon ion-ios-location" style="margin-right:5px"></i> {{vm.jogo.endereco}}
-            </h5>
-            <div class="confirmacao">
-              <div class="row">
-                <div class="col-50 vou" ng-click="vm.atualizaPresenca(true);" ng-class="{'vou-checked' : vm.minhaPresenca.confirmado}">
-                  <i class="icon ion-checkmark-round"></i> VOU
-                </div>
-                <div class="col-50 nao-vou" ng-click="vm.atualizaPresenca(false);" ng-class="{'nao-vou-checked' : vm.minhaPresenca.confirmado!== undefined &&  !vm.minhaPresenca.confirmado}">
-                  <i class="icon ion-close"></i> NÃO VOU
-                </div>
-              </div>
+            <div class="col col-20" ng-if="$index + 1 < vm.jogo.jogadores.length && vm.jogo.jogadores[$index + 1].confirmado == true && !vm.jogo.jogadores[$index + 1].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index + 1].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index + 1].fotoPerfil | defaultImage}} ">
+            </div>
+            <div class="col col-20" ng-if="$index + 2 < vm.jogo.jogadores.length && vm.jogo.jogadores[$index + 2].confirmado == true && !vm.jogo.jogadores[$index + 2].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index + 2].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index + 2].fotoPerfil | defaultImage}} ">
+            </div>
+            <div class="col col-20" ng-if="$index + 3 < vm.jogo.jogadores.length && vm.jogo.jogadores[$index + 3].confirmado == true && !vm.jogo.jogadores[$index + 3].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index + 3].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index + 3].fotoPerfil | defaultImage}} ">
+            </div>
+            <div class="col col-20" ng-if="$index + 4 < vm.jogo.jogadores.length && vm.jogo.jogadores[$index + 4].confirmado == true && !vm.jogo.jogadores[$index + 4].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index + 4].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index + 4].fotoPerfil | defaultImage}} ">
             </div>
           </div>
-          <ion-content>
-            <div class="list" style="padding-bottom: 80px;">
-              <a class="item item-avatar item-icon-right" ng-repeat="jogador in vm.jogadores | orderBy : vm.orderByConfirmacao" href="#">
-                <img src="{{jogador.fotoPerfil | defaultImage}}">
-                <h2>{{jogador.nome}}</h2> 
-                <i ng-class="vm.getPresencaClass(jogador.confirmado)"></i>
-              </a>
+        </ul>
+      </div>
+      <div class="item" ng-if="vm.getNumJogadores() > 0" style="border: none; padding: 5px 15px;">
+        <span style="font-weight:bold; padding-left: 7px;">Não responderam ({{vm.getNumJogadores()}})</span>
+        <ul>
+          <div class="row" style="padding-left:0px" ng-repeat="amigo in vm.jogo.jogadores | orderBy: vm.orderByConfirmacao" ng-if="$index % 5 === 0">
+            <div class="col col-20" ng-if="$index < vm.jogo.jogadores.length && vm.jogo.jogadores[$index].confirmado == undefined && !vm.jogo.jogadores[$index].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index].fotoPerfil | defaultImage}} ">
             </div>
-          </ion-content>
-          <div class="footer">
-            <button ng-click="modal.show();" class="button button-small button-full button-positive">CONVIDAR AMIGOS</button>
-          </div>
-        </ion-nav-view>
-      </ion-tab>
-
-
-      <!-- Tab 2 -->
-      <ion-tab title="MENSAGENS" href="#/tab/tab2">
-        <ion-nav-view name="tab-tab2">
-          <div class="header">
-            <div class="row">
-              <div class="col-50">
-                <span style="font-size:2.5em; font-weight: 200" class="positive">{{vm.jogo.inicio | date: 'dd/MM'}}</span>
-              </div>
-              <div class="col-50" style="text-align:right">
-                <span style="font-size:2.5em;font-weight: 100">{{vm.jogo.inicio | date: 'HH:mm'}}</span>
-              </div>
+            <div class="col col-20" ng-if="$index + 1 < vm.jogo.jogadores.length && vm.jogo.jogadores[$index + 1].confirmado == undefined && !vm.jogo.jogadores[$index + 1].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index + 1].id}) " style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index + 1].fotoPerfil | defaultImage}} ">
             </div>
-            <hr/>
-            <h4>Arena Castelão FC</h4>
-            <h5 style="font-weight: 300; margin-bottom:0px">
-              <i class="icon ion-ios-location" style="margin-right:5px"></i> {{vm.jogo.endereco}}
-            </h5>
-            <div class="confirmacao">
-              <div class="row">
-                <div class="col-50 vou" ng-click="vm.atualizaPresenca(true);" ng-class="{'vou-checked' : vm.minhaPresenca.confirmado}">
-                  <i class="icon ion-checkmark-round"></i> VOU
-                </div>
-                <div class="col-50 nao-vou" ng-click="vm.atualizaPresenca(false);" ng-class="{'nao-vou-checked' : vm.minhaPresenca.confirmado!== undefined &&  !vm.minhaPresenca.confirmado}">
-                  <i class="icon ion-close"></i> NÃO VOU
-                </div>
-              </div>
+            <div class="col col-20 " ng-if="$index + 2 < vm.jogo.jogadores.length && vm.jogo.jogadores[$index + 2].confirmado == undefined && !vm.jogo.jogadores[$index + 2].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index + 2].id}) " style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index + 2].fotoPerfil | defaultImage}} ">
+            </div>
+            <div class="col col-20 " ng-if="$index + 3 < vm.jogo.jogadores.length && vm.jogo.jogadores[$index + 3].confirmado == undefined && !vm.jogo.jogadores[$index + 3].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index + 3].id}) " style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index + 3].fotoPerfil | defaultImage}} ">
+            </div>
+            <div class="col col-20 " ng-if="$index + 4 < vm.jogo.jogadores.length && vm.jogo.jogadores[$index + 4].confirmado == undefined && !vm.jogo.jogadores[$index + 4].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index + 4].id}) " style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index + 4].fotoPerfil | defaultImage}} ">
             </div>
           </div>
-          <ion-content>
-            Tab 2 content
-          </ion-content>
-        </ion-nav-view>
-      </ion-tab>
-    </ion-tabs>
+        </ul>
+      </div>
+      <div class="item " ng-if="vm.getNumJogadores(false)> 0" style="border: none; padding: 5px 15px;">
+        <span class="assertive" style="font-weight:bold; padding-left: 7px;">Não vão ({{vm.getNumJogadores(false)}})</span>
+        <ul>
+          <div class="row" style="padding-left:0px" ng-repeat="amigo in vm.jogo.jogadores | orderBy: vm.orderByConfirmacao" ng-if="$index % 5 === 0">
+            <div class="col col-20" ng-if="$index < vm.jogo.jogadores.length && vm.jogo.jogadores[$index].confirmado == false && !vm.jogo.jogadores[$index].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index].fotoPerfil | defaultImage}} ">
+            </div>
+            <div class="col col-20" ng-if="$index + 1 < vm.jogo.jogadores.length && vm.jogo.jogadores[$index + 1].confirmado == false && !vm.jogo.jogadores[$index +1].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index + 1].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index + 1].fotoPerfil | defaultImage}} ">
+            </div>
+            <div class="col col-20" ng-if="$index + 2 < vm.jogo.jogadores.length && vm.jogo.jogadores[$index + 2].confirmado == false && !vm.jogo.jogadores[$index + 2].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index + 2].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index + 2].fotoPerfil | defaultImage}} ">
+            </div>
+            <div class="col col-20" ng-if="$index + 3 < vm.jogo.jogadores.length && vm.jogo.jogadores[$index + 3].confirmado == false && !vm.jogo.jogadores[$index + 3].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index + 3].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index + 3].fotoPerfil | defaultImage}} ">
+            </div>
+            <div class="col col-20" ng-if="$index + 4 < vm.jogo.jogadores.length && vm.jogo.jogadores[$index + 4].confirmado == false && !vm.jogo.jogadores[$index + 4].aguardandoConfirmacao">
+              <img ui-sref="main.user({userId: vm.jogo.jogadores[$index + 4].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                src="{{vm.jogo.jogadores[$index + 4].fotoPerfil | defaultImage}} ">
+            </div>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </ion-content>
 
-  </ion-pane>
 </ion-view>

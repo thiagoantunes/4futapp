@@ -16,7 +16,7 @@
               <div class="col-75">
                 <div class="jogadores">
                   <div class="jogador" ng-repeat="jogador in vm.jogosService.jogoSelecionado.jogadores | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
-                    <img ng-class="{confirmado: jogador.confirmado}" src="{{jogador.fotoPerfil | defaultImage}}">
+                    <img ng-if="!jogador.aguardandoConfirmacao" ng-class="{confirmado: jogador.confirmado}" src="{{jogador.fotoPerfil | defaultImage}}">
                   </div>
                   <div ng-if="vm.jogosService.jogoSelecionado.jogadores.length > 4" class="plus">
                     <div class="value"> + {{vm.jogosService.jogoSelecionado.jogadores.length - 4}}</div>

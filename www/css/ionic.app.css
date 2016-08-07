@@ -17419,15 +17419,6 @@ For example, you might change some of the default colors:
 #jogos-view .angular-google-map-container {
   height: 100vh; }
 
-.platform-ios #jogos-detail .header {
-  margin-top: 63px; }
-
-.platform-ios #jogos-detail .tab-nav {
-  margin-top: 220px; }
-
-.platform-ios #jogos-detail ion-content {
-  margin-top: 220px; }
-
 .jogo-card a {
   text-decoration: none;
   color: #efefef; }
@@ -17474,9 +17465,7 @@ For example, you might change some of the default colors:
 #jogos-detail .header {
   background: #0C2633;
   width: 100%;
-  height: 200px;
-  position: absolute;
-  margin-top: 43px;
+  height: 230px;
   padding: 20px; }
   #jogos-detail .header .confirmacao {
     padding: 10px 0px;
@@ -17499,34 +17488,16 @@ For example, you might change some of the default colors:
     #jogos-detail .header .confirmacao .nao-vou-checked {
       background-color: #F34235;
       border: none !important; }
-
-#jogos-detail .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 10px;
-  background-color: #0C2633;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.6); }
-
-#jogos-detail .tab-nav {
-  font-weight: bold;
-  margin-top: 200px;
-  background: #0C2633 !important;
-  border-top: none !important; }
-
-#jogos-detail .tab-title {
-  font-weight: bold;
-  font-size: 0.9em; }
-
-#jogos-detail .tab-item {
-  color: rgba(255, 255, 255, 0.4); }
-
-#jogos-detail .tab-item-active {
-  color: #00D466;
-  border-color: #00D466; }
+  #jogos-detail .header .aguardando-confirmacao {
+    background: #46687E;
+    border-radius: 10px;
+    padding: 5px;
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9em; }
 
 #jogos-detail ion-content {
-  margin-top: 200px;
   background-color: #1E394C; }
 
 #jogos-detail .item h2 {

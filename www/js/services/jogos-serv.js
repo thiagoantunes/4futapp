@@ -19,7 +19,8 @@ angular.module('main')
       getUserJogos: getUserJogos,
       criarJogo: criarJogo,
       convidarAmigo: convidarAmigo,
-      desconvidarAmigo: desconvidarAmigo
+      desconvidarAmigo: desconvidarAmigo,
+      solicitarPresenca: solicitarPresenca
     };
 
     return service;
@@ -27,33 +28,43 @@ angular.module('main')
     function getJogosRegiao() {
       service.geoQuery.on('key_entered', function (key, location, distance) {
         service.ref.child(key).on('value', function (snapshot) {
-          getJogadoresJogo(key).$loaded().then(function (val) {
-            var jogo = snapshot.val();
-            jogo.distance = distance;
-            jogo.id = key;
-            jogo.latitude = location[0];
-            jogo.longitude = location[1];
-            jogo.jogadores = val;
-            if (jogo.responsavel == firebase.auth().currentUser.uid) {
-              jogo.visivel = true;
-              jogo.icon = 'img/pin-jogos.png';
-              $timeout(function () {
-                _.remove(service.jogosRegiao, { 'id': key });
-                service.jogosRegiao.push(jogo);
-              });
-            }
-            else {
-              verificaPermissao(jogo).then(function (visivel) {
-                jogo.visivel = visivel;
-                jogo.icon = visivel ? 'img/pin-jogos.png' : 'img/pin-jogos-readonly.png';
+          if (snapshot.val() && snapshot.val().inicio > moment(new Date()).subtract(1, 'H')._d.getTime()) {
+            getJogadoresJogo(key).$loaded().then(function (val) {
+              var jogo = snapshot.val();
+              jogo.distance = distance;
+              jogo.id = key;
+              jogo.latitude = location[0];
+              jogo.longitude = location[1];
+              jogo.jogadores = val;
+              if (jogo.responsavel == firebase.auth().currentUser.uid) {
+                jogo.visivel = true;
+                jogo.icon = 'img/pin-jogos.png';
                 $timeout(function () {
                   _.remove(service.jogosRegiao, { 'id': key });
                   service.jogosRegiao.push(jogo);
                 });
-              });
-            }
-          });
+              }
+              else {
+                verificaPermissao(jogo).then(function (visivel) {
+                  jogo.visivel = visivel;
+                  jogo.icon = visivel ? 'img/pin-jogos.png' : 'img/pin-jogos-readonly.png';
+                  $timeout(function () {
+                    _.remove(service.jogosRegiao, { 'id': key });
+                    service.jogosRegiao.push(jogo);
+                  });
+                });
+              }
+            });
+          }
+          else {
+            service.geoFire.remove(key);
+          }
         });
+      });
+
+
+      service.geoQuery.on("key_exited", function (key, location, distance) {
+        _.remove(service.jogosRegiao, { 'id': key });
       });
     }
 
@@ -95,19 +106,45 @@ angular.module('main')
       return deferred.promise;
     }
 
+    function solicitarPresenca(jogo) {
+      var deferred = $q.defer();
+      var conviteData = {};
+      var solicitacao = {
+        nome: firebase.auth().currentUser.displayName,
+        fotoPerfil: firebase.auth().currentUser.photoURL,
+        confirmado: true
+      };
+      if (jogo.aprovacaoManual) {
+        solicitacao.aguardandoConfirmacao = true;
+      }
+      conviteData['jogosJogadores/' + jogo.id + '/' + firebase.auth().currentUser.uid] = solicitacao;
+      conviteData['usersJogos/' + firebase.auth().currentUser.uid + '/' + jogo.id] = true;
+
+      Ref.update(conviteData, function () {
+        deferred.resolve(solicitacao);
+        if (jogo.aprovacaoManual) {
+          UserService.enviaNotificacao({
+            msg: '<b>' + firebase.auth().currentUser.displayName + '</b> solicitou presença na partida <b>' + jogo.nome + '</b>',
+            img: firebase.auth().currentUser.photoURL,
+            tipo: 'solicitacaoPartida',
+            lida: false,
+            dateTime: new Date().getTime()
+          }, jogo.responsavel);
+        }
+      });
+      return deferred.promise;
+    }
+
     function getMeusJogos() {
       service.refUserJogos.child(firebase.auth().currentUser.uid).on('child_added', function (snap) {
         service.ref.child(snap.key).on('value', function (snapJogo) {
-          service.refLocalizacao.child(snap.key).on('value', function (snapLocalizacao) {
-            getJogadoresJogo(snap.key).$loaded().then(function (val) {
-              var data = snapJogo.val();
-              data.id = snap.key;
-              data.l = snapLocalizacao.val().l;
-              data.jogadores = val;
-              $timeout(function () {
-                _.remove(UserService.jogos, { 'id': snap.key });
-                UserService.jogos.push(data);
-              });
+          getJogadoresJogo(snap.key).$loaded().then(function (val) {
+            var data = snapJogo.val();
+            data.id = snap.key;
+            data.jogadores = val;
+            $timeout(function () {
+              _.remove(UserService.jogos, { 'id': snap.key });
+              UserService.jogos.push(data);
             });
           });
         });

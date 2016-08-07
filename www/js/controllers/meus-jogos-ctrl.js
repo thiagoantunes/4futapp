@@ -73,13 +73,13 @@ angular.module('main')
     }
 
     function orderByConfirmacao(jogador) {
-      if(jogador.confirmado == true){
+      if (jogador.confirmado == true) {
         return 1;
       }
-      else if(jogador.confirmado == undefined){
+      else if (jogador.confirmado == undefined) {
         return 2;
       }
-      else if(jogador.confirmado == false){
+      else if (jogador.confirmado == false) {
         return 3;
       }
     }
@@ -323,7 +323,6 @@ angular.module('main')
   .controller('JogosDetailCtrl', function ($scope, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal) {
     var vm = this;
     vm.jogo = JogosService.jogoSelecionado;
-    vm.jogadores = JogosService.getJogadoresJogo(vm.jogo.id);
     vm.amigos = UserService.amigos;
 
     vm.atualizaPresenca = atualizaPresenca;
@@ -331,14 +330,13 @@ angular.module('main')
     vm.checkPresencaAmigo = checkPresencaAmigo;
     vm.convidarAmigo = convidarAmigo;
     vm.desconvidarAmigo = desconvidarAmigo;
+    vm.getNumJogadores = getNumJogadores;
     vm.orderByConfirmacao = orderByConfirmacao;
 
     activate();
 
     function activate() {
-      vm.jogadores.$loaded(function (val) {
-        vm.minhaPresenca = _.find(val, { '$id': firebase.auth().currentUser.uid });
-      });
+      vm.minhaPresenca = _.find(vm.jogo.jogadores, { '$id': firebase.auth().currentUser.uid });
 
       $ionicModal.fromTemplateUrl('templates/modal/convidar-amigos.html', {
         scope: $scope,
@@ -352,14 +350,21 @@ angular.module('main')
     }
 
     function atualizaPresenca(bool) {
-      if (vm.minhaPresenca.confirmado !== undefined) {
-        vm.minhaPresenca.confirmado = bool == vm.minhaPresenca.confirmado ? null : bool;
+      if (vm.minhaPresenca) {
+        if (vm.minhaPresenca.confirmado !== undefined) {
+          vm.minhaPresenca.confirmado = bool == vm.minhaPresenca.confirmado ? null : bool;
+        }
+        else {
+          vm.minhaPresenca.confirmado = bool;
+        }
+
+        vm.jogo.jogadores.$save(vm.minhaPresenca);
       }
       else {
-        vm.minhaPresenca.confirmado = bool;
+        JogosService.solicitarPresenca(vm.jogo).then(function (val) {
+          vm.minhaPresenca = val;
+        });
       }
-
-      vm.jogadores.$save(vm.minhaPresenca);
     }
 
     function getPresencaClass(confirmacao) {
@@ -376,7 +381,7 @@ angular.module('main')
     }
 
     function checkPresencaAmigo(amigo) {
-      return _.some(vm.jogadores, { '$id': amigo.id });
+      return _.some(vm.jogo.jogadores, { '$id': amigo.id });
     }
 
     function convidarAmigo(amigo) {
@@ -388,16 +393,35 @@ angular.module('main')
     }
 
     function orderByConfirmacao(jogador) {
-      if(jogador.confirmado == true){
+      if (jogador.confirmado == true) {
         return 1;
       }
-      else if(jogador.confirmado == undefined){
+      else if (jogador.confirmado == undefined) {
         return 2;
       }
-      else if(jogador.confirmado == false){
+      else if (jogador.confirmado == false) {
         return 3;
       }
     }
+
+    function getNumJogadores(confirmado) {
+      if (confirmado == true) {
+        return _.filter(vm.jogo.jogadores, function (val) {
+          return val.confirmado == true && !val.aguardandoConfirmacao;
+        }).length;
+      }
+      else if (confirmado == false) {
+        return _.filter(vm.jogo.jogadores, function (val) {
+          return val.confirmado == false && !val.aguardandoConfirmacao;
+        }).length;
+      }
+      else {
+        return _.filter(vm.jogo.jogadores, function (val) {
+          return val.confirmado == undefined && !val.aguardandoConfirmacao;
+        }).length;
+      }
+    }
+
 
     var oldSoftBack = $rootScope.$ionicGoBack;
 
