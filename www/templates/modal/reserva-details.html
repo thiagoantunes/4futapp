@@ -1,36 +1,36 @@
-<ion-modal-view class="modal-reserva">
+<ion-modal-view class="modal-reserva" ng-controller="ReservaCtrl as vm">
     <ion-header-bar class="bar-positive">
         <div ng-if="!vm.isAndroid();" class="buttons">
-            <button class="button button-icon button-clear ion-android-close" ng-click="vm.modal.hide()">
+            <button class="button button-icon button-clear ion-android-close" ng-click="vm.closeModal()">
                 </button>
         </div>
         <div class="h1 title">DADOS DA RESERVA</div>
         <div ng-if="vm.isAndroid();" class="buttons">
-            <button class="button button-icon button-clear ion-android-close" ng-click="vm.modal.hide()">
+            <button class="button button-icon button-clear ion-android-close" ng-click="vm.closeModal()">
             </button>
         </div>
     </ion-header-bar>
     <ion-content>
-        <div class="list">
-            <a style="background: transparent" class="item item-icon-left" href="#">
+        <div class="list" style="margin-bottom:0px">
+            <a style="border:0px" class="item item-icon-left" href="#">
                 <i class="icon ion-navicon"></i> {{vm.reservaSelecionada.arena.nome}}
             </a>
-            <a style="background: transparent" class="item item-icon-left" href="#">
+            <a style="border:0px" class="item item-icon-left" href="#">
                 <i class="icon ion-android-time"></i> {{vm.reservaSelecionada.start | date :'EEEE'}}, dia {{vm.reservaSelecionada.start
                 | date :'d'}} às {{vm.reservaSelecionada.start | date :'HH:mm'}}
             </a>
-            <a ng-if="vm.reservaSelecionada.saldoQuitado > 0" style="background: transparent" class="item item-icon-left" href="#">
+            <a style="border:0px" ng-if="vm.reservaSelecionada.saldoQuitado > 0" class="item item-icon-left" href="#">
                 <i class="icon ion-card"></i> {{vm.reservaSelecionada.saldoQuitado | currency:'R$'}} (Valor pago)
             </a>
-            <a ng-if="vm.reservaSelecionada.saldoDevedor > 0" style="background: transparent" class="item item-icon-left" href="#">
+            <a style="border:0px" ng-if="vm.reservaSelecionada.saldoDevedor > 0" class="item item-icon-left" href="#">
                 <i class="icon ion-ios-pricetag"></i> {{vm.reservaSelecionada.saldoDevedor | currency:'R$'}} (Pagar na arena)
             </a>
 
-            <a style="background: transparent" ng-if="vm.reservaSelecionada.arena.telefone" class="item item-icon-left" href="#">
+            <a  style="border:0px"ng-if="vm.reservaSelecionada.arena.telefone" class="item item-icon-left" href="#">
                 <i class="icon ion-ios-telephone"></i> {{vm.reservaSelecionada.arena.telefone | tel}}
             </a>
 
-            <a style="background: transparent" class="item item-icon-left" href="#">
+            <a style="border:0px" class="item item-icon-left" href="#">
                 <i class="icon ion-navigate"></i> {{vm.reservaSelecionada.arena.endereco}}
             </a>
         </div>
@@ -39,11 +39,22 @@
             <ui-gmap-marker idKey="0" coords='vm.map.center'>
             </ui-gmap-marker>
         </ui-gmap-google-map>
-        <button class="button button-outline button-full button-positive">
-            AGENDAR NOVAMENTE
+        <div class="padding">
+            <button  ng-if="!vm.reservaSelecionada.partida"  ng-click="vm.criaPartida();" class="button button-full botton-small button-positive">
+                CRIAR PARTIDA
+            </button>
+             <button ng-if="vm.reservaSelecionada.partida" ng-click="vm.idParaPartida();" class="button button-full botton-small button-positive">
+                IR PARA PARTIDA RELACIONADA
+            </button>
+        <button ng-if="vm.reservaSelecionada.status !== 'cancelado'" ng-click="vm.cancelarReserva();" class="button button-full botton-small button-assertive">
+            CANCELAR RESERVA
         </button>
-        <button ng-if="vm.reservaSelecionada.status !== 'cancelado'" ng-click="vm.cancelarReserva();" class="button button-outline button-full button-assertive">
-            CANCELAR
-        </button>
+        </div>
     </ion-content>
+    <div ng-if="vm.reservaSelecionada.novaReserva" class="bar bar-footer bar-assertive" style="font-weight: bold; text-align: center; width: 100%;" >
+        <p style="width:100%; margin-top:-5px">
+            Reserva criada com sucesso! Crie uma partida 
+            <br/>a partir desta reserva e convide seus amigos.
+        </p>
+    </div>
 </ion-modal-view>

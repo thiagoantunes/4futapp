@@ -50,7 +50,7 @@ angular.module('main')
 
   })
 
-  .controller('ArenaDetailsCtrl', function (ArenasService, JogosService, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup) {
+  .controller('ArenaDetailsCtrl', function (ArenasService, UserService, JogosService, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup) {
     var vm = this;
     vm.arena = ArenasService.arenaSelecionada;
     vm.album = ArenasService.getAlbum($stateParams.id);
@@ -266,11 +266,14 @@ angular.module('main')
         title: firebase.auth().currentUser.displayName,
         status: 'agendado'
       };
-      ReservasService.criarReservaAvulsa(novaReserva, vm.arena.id).then(function () {
+      ReservasService.criarReservaAvulsa(novaReserva, vm.arena.id).then(function (reservaId) {
         console.log('Reserva criada com sucesso!');
         getReservas(vm.diaSelecionado);
         $scope.modal.hide();
-        openModalCriacaoPartida(novaReserva);
+        //openModalCriacaoPartida(novaReserva);
+        var reserva = _.find(UserService.reservas, {'id': reservaId});
+        reserva.novaReserva = true;
+        ReservasService.openReservaModal(reserva, vm.arena);
       }, function (error) {
         console.log(error, novaReserva, 'Ops!');
       });

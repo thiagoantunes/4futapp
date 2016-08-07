@@ -17416,6 +17416,9 @@ For example, you might change some of the default colors:
 .modal-reserva .angular-google-map-container {
   height: 150px; }
 
+.modal-reserva ion-content {
+  background-color: #1E394C; }
+
 #jogos-view .angular-google-map-container {
   height: 100vh; }
 

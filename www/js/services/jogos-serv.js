@@ -77,7 +77,7 @@ angular.module('main')
       return $firebaseArray(service.refJogadoresJogo.child(jogoId));
     }
 
-    function criarJogo(novoJogo, coords) {
+    function criarJogo(novoJogo, coords, arenaId) {
       var deferred = $q.defer();
 
       var jogoId = service.ref.push().key;
@@ -89,6 +89,9 @@ angular.module('main')
         fotoPerfil: firebase.auth().currentUser.photoURL,
         confirmado: true
       };
+      if(novoJogo.reserva && arenaId){
+        jogoData['reservas/' + arenaId + '/' + novoJogo.reserva + '/partida'] = jogoId;
+      }
 
       Ref.update(jogoData, function (error) {
         if (error) {

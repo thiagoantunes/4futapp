@@ -1,15 +1,17 @@
 /*global _ moment firebase GeoFire*/
 'use strict';
 angular.module('main')
-  .factory('ReservasService', function (Ref, $timeout, $firebaseArray, $q, $rootScope, UserService) {
+  .factory('ReservasService', function (Ref, $timeout, $firebaseArray, $q, $rootScope, UserService, $ionicModal, ArenasService) {
     var service = {
+      reservaSelecionada: {},
       ref: Ref.child('reservas'),
       refUserReservas: Ref.child('usersReservas').child(firebase.auth().currentUser.uid),
 
       getReservasDia: getReservasDia,
       getMinhasReservas: getMinhasReservas,
       criarReservaAvulsa: criarReservaAvulsa,
-      cancelarReserva: cancelarReserva
+      cancelarReserva: cancelarReserva,
+      openReservaModal: openReservaModal
       //createGeo: createGeo
     };
 
@@ -51,7 +53,7 @@ angular.module('main')
               deferred.reject('Erro ao cadastrar nova turma');
             }
             else {
-              deferred.resolve();
+              deferred.resolve(reservaId);
             }
           });
         }
@@ -107,6 +109,17 @@ angular.module('main')
       var reservaData = {};
       reservaData['reservas/' + arenaId + '/' + reservaId + '/status'] = 'cancelado';
       Ref.update(reservaData);
+    }
+
+    function openReservaModal(reserva, arena) {
+      service.reservaSelecionada.data = reserva;
+      service.reservaSelecionada.data.arena = arena;
+      $ionicModal.fromTemplateUrl('templates/modal/reserva-details.html', {
+        animation: 'slide-in-up'
+      }).then(function (modal) {
+        service.reservaSelecionada.modal = modal;
+        modal.show();
+      });
     }
 
   });
