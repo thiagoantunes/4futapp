@@ -11,4 +11,15 @@ angular.module('main')
     function activate() {
     }
 
+  })
+
+  .controller('CriarDesafioCtrl', function (TimesService, $timeout, $ionicModal) {
+    var vm = this;
+    vm.timeDesafiado = TimesService.timeSelecionado.data;
+
+    activate();
+
+    function activate() {
+    }
+
   });

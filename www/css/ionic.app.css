@@ -53,6 +53,9 @@ input[readonly] {
   line-height: 22px !important;
   padding: 0px 10px 0px 10px !important; }
 
+.swiper-pagination-bullet {
+  background: #46687E !important; }
+
 /*!
   Ionicons, v2.0.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/
@@ -17418,6 +17421,9 @@ For example, you might change some of the default colors:
 
 .modal-reserva ion-content {
   background-color: #1E394C; }
+
+#criar-partida .bar-header .back-button {
+  display: none !important; }
 
 #jogos-view .angular-google-map-container {
   height: 100vh; }

@@ -9,7 +9,6 @@ angular.module('main')
       notificacoes: [],
       jogadorSelecionado: {},
       ref: Ref.child('users'),
-      refTimes: Ref.child('times'),
       refNotificacoes: Ref.child('usersNotificacoes'),
 
       getUserProfile: getUserProfile,
@@ -17,7 +16,6 @@ angular.module('main')
       getMeusAmigos: getMeusAmigos,
       getAmigosUsuarioLight: getAmigosUsuarioLight,
       getUsers: getUsers,
-      getTimes: getTimes,
       getNotificacoes: getNotificacoes,
       verificaAmizade: verificaAmizade,
       verificaAmizadeDeAmizades: verificaAmizadeDeAmizades,
@@ -119,18 +117,6 @@ angular.module('main')
             });
           }
         }
-      });
-    }
-
-    function getTimes() {
-      service.ref.child(firebase.auth().currentUser.uid + '/times').on('child_added', function (snap) {
-        service.refTimes.child(snap.key).on('value', function (snapUser) {
-          var data = snapUser.val();
-          $timeout(function () {
-            _.remove(service.times, { 'id': snap.key });
-            service.times.push(data);
-          });
-        });
       });
     }
 

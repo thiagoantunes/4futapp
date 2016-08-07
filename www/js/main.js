@@ -284,6 +284,16 @@ angular.module('main', [
         }
       })
 
+      .state('main.criar-partida', {
+        url: '/criar-partida',
+        views: {
+          'tab-meus-jogos': {
+            templateUrl: 'templates/criar-partida.html',
+            controller: 'NovaPartidaCtrl as vm',
+          }
+        }
+      })
+
       .state('main.meus-jogos-detail', {
         url: '/meus-jogos/:id',
         views: {
@@ -304,12 +314,22 @@ angular.module('main', [
         }
       })
 
-      .state('main.desafios', {
-        url: '/desafios',
+      .state('main.times', {
+        url: '/times',
         views: {
           'tab-home': {
-            templateUrl: 'templates/desafios.html',
-            controller: 'DesafiosCtrl as vm',
+            templateUrl: 'templates/times.html',
+            controller: 'TimesCtrl as vm',
+          }
+        }
+      })
+
+      .state('main.criarDesafio', {
+        url: '/criar-desafio',
+        views: {
+          'tab-home': {
+            templateUrl: 'templates/criar-desafio.html',
+            controller: 'CriarDesafioCtrl as vm',
           }
         }
       })
@@ -368,6 +388,7 @@ angular.module('main', [
       'main.minhas-reservas',
       'main.encontrar-jogos',
       'main.jogos-detail',
+      'main.criar-partida',
       'main.meus-jogos-detail',
       'main.jogos',
       'main.perfilAmigo'
@@ -382,9 +403,9 @@ angular.module('main', [
     JogosService.getJogosRegiao();
     ArenasService.getArenas();
     UserService.getMeusAmigos();
-    UserService.getTimes();
     UserService.getNotificacoes();
     TimesService.getTimesRegiao();
+    TimesService.getMeusTimes();
 
     UserService.notificacoesNaoLidas.$loaded().then(function (val) {
       vm.notificacoes = UserService.notificacoesNaoLidas;

@@ -1,6 +1,6 @@
 'use strict';
 angular.module('main')
-  .factory('TimesService', function (Ref, $firebaseObject, $firebaseArray, $q, $timeout, $http, $ionicModal) {
+  .factory('TimesService', function (Ref, UserService, $firebaseObject, $firebaseArray, $q, $timeout, $http, $ionicModal) {
     var service = {
       timesRegiao: [],
       timeSelecionado: {},
@@ -10,13 +10,29 @@ angular.module('main')
       geoFire: new GeoFire(Ref.child('timesLocalizacao')),
       geoQuery: {},
 
+      getMeusTimes: getMeusTimes,
       criarTime: criarTime,
       getTimesRegiao: getTimesRegiao,
-      openPerfilTime: openPerfilTime,
-      getJogadoresTime: getJogadoresTime
+      openPerfilTime: openPerfilTime
     };
 
     return service;
+
+    function getMeusTimes() {
+      service.refJogador.child(firebase.auth().currentUser.uid + '/times').on('child_added', function (snap) {
+        service.ref.child(snap.key).on('value', function (snapUser) {
+          var data = snapUser.val();
+          data.id = snap.key;
+          data.jogadores = Object.keys(data.jogadores).map(function (key) {
+            return data.jogadores[key];
+          });
+          $timeout(function () {
+            _.remove(UserService.times, { 'id': snap.key });
+            UserService.times.push(data);
+          });
+        });
+      });
+    }
 
     function getTimesRegiao() {
       service.geoQuery.on('key_entered', function (key, location, distance) {
@@ -24,10 +40,18 @@ angular.module('main')
           var time = snapshot.val();
           time.distance = distance;
           time.id = key;
+          time.jogadores = Object.keys(time.jogadores).map(function (key) {
+            return time.jogadores[key];
+          });
           $timeout(function () {
+            _.remove(service.timesRegiao, { 'id': key });
             service.timesRegiao.push(time);
           });
         });
+      });
+
+      service.geoQuery.on("key_exited", function (key, location, distance) {
+        _.remove(service.timesRegiao, { 'id': key });
       });
     }
 
@@ -39,9 +63,15 @@ angular.module('main')
       timeData['times/' + timeId] = time;
       timeData['times/' + timeId].jogadores = {};
       _.forEach(jogadores, function (val) {
-        timeData['times/' + timeId].jogadores[val.id] = true;
+        timeData['times/' + timeId].jogadores[val.id] = {
+          fotoPerfil: val.fotoPerfil,
+          id: val.id
+        };
       });
-      timeData['times/' + timeId].jogadores[firebase.auth().currentUser.uid] = true;
+      timeData['times/' + timeId].jogadores[firebase.auth().currentUser.uid] = {
+        fotoPerfil: firebase.auth().currentUser.photoURL,
+        id: firebase.auth().currentUser.uid
+      };
       _.forEach(jogadores, function (val) {
         timeData['users/' + val.id + '/times/' + timeId] = true;
       });
@@ -59,25 +89,6 @@ angular.module('main')
       });
 
       return deferred.promise;
-    }
-
-    function getJogadoresTime(jogadores) {
-      jogadores.list = [];
-      $timeout(function () {
-        for (var i in jogadores) {
-          var key = i;
-          if (jogadores[i]) {
-            service.refJogador.child(key + '/fotoPerfil').on('value', function (snapUser) {
-              if (snapUser.val()) {
-                jogadores.list.push({
-                  fotoPerfil: snapUser.val(),
-                  id: key
-                });
-              }
-            });
-          }
-        }
-      });
     }
 
     function openPerfilTime(time) {

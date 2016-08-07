@@ -151,8 +151,12 @@ angular.module('main')
 
   })
 
-  .controller('NovaPartidaCtrl', function ($scope, $state, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService) {
+  .controller('NovaPartidaCtrl', function ($scope, $state, $ionicHistory, UserService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService) {
     var vm = this;
+    vm.jogadores = [];
+    vm.times = [];
+    vm.amigos = UserService.amigos;
+    vm.meusTimes = UserService.times;
     vm.arenasBasicas = ArenasService.arenasBasicas;
     vm.modalData = JogosService.novaPartidaModal.data;
     vm.openTimePicker = openTimePicker;
@@ -162,6 +166,11 @@ angular.module('main')
     vm.selecionaArenaBasica = selecionaArenaBasica;
     vm.salvarJogo = salvarJogo;
     vm.hideModal = hideModal;
+    vm.goBack = goBack;
+    vm.toggleJogador = toggleJogador;
+    vm.checkJogadorPartida = checkJogadorPartida;
+    vm.toggleTime = toggleTime;
+    vm.checkTime = checkTime;
 
     activate();
 
@@ -193,12 +202,55 @@ angular.module('main')
       };
     }
 
+    function goBack(){
+      $ionicHistory.goBack(-1);
+    }
+
+    function toggleJogador(amigo) {
+      if (_.some(vm.jogadores, { 'id': amigo.id })) {
+        var index = vm.jogadores.indexOf(amigo);
+        if (index > -1) {
+          vm.jogadores.splice(index, 1);
+        }
+      }
+      else {
+        vm.jogadores.push(amigo);
+      }
+    }
+
+    function checkJogadorPartida(amigo) {
+      return _.some(vm.jogadores, { 'id': amigo.id });
+    }
+
+    function toggleTime(time) {
+      if (_.some(vm.times, { 'id': time.id })) {
+        var index = vm.times.indexOf(time);
+        if (index > -1) {
+          vm.times.splice(index, 1);
+        }
+      }
+      else {
+        vm.times.push(time);
+      }
+    }
+
+    function checkTime(time) {
+      return _.some(vm.times, { 'id': time.id });
+    }
+
     function salvarJogo(location) {
       vm.novaPartida.endereco = vm.localSelecionado.endereco;
       vm.novaPartida.inicio = moment(vm.novaPartida.dia + vm.novaPartida.hora, 'DD/MM/YYYYHH:mm')._d.getTime();
-      JogosService.criarJogo(vm.novaPartida, [vm.localSelecionado.latitude, vm.localSelecionado.longitude], vm.arenaReserva)
+      var novaPartidaData = {
+        partida: vm.novaPartida,
+        coords: [vm.localSelecionado.latitude, vm.localSelecionado.longitude],
+        arenaId: vm.arenaReserva,
+        jogadores: vm.jogadores,
+        times: vm.times
+      }
+      JogosService.criarJogo(novaPartidaData)
         .then(function (val) {
-          hideModal();
+          goBack();
           JogosService.jogoSelecionado = val;
           JogosService.jogoSelecionado.novoJogo = true;
           $state.go('main.jogos-detail', { id: val.id });

@@ -1,0 +1,28 @@
+<ion-view view-title="">
+    <ion-nav-buttons side="left">
+        <button ion-wizard-previous class="button button-icon button-clear icon ion-android-arrow-back"></button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button button-clear button-light" ion-wizard-next>
+            Próximo
+        </button>
+        <button class="button button-clear button-light" ion-wizard-start="vm.criarTime()">
+            Criar time
+        </button>
+    </ion-nav-buttons>
+    <ion-slides options="swiperOptions" slider="swiper" ion-wizard>
+        <ion-slide-page ion-wizard-step>
+            <ion-content class="has-header">
+            </ion-content>
+        </ion-slide-page>
+        <ion-slide-page ion-wizard-step>
+            <ion-content class="has-header">
+            </ion-content>
+        </ion-slide-page>
+        <ion-slide-page ion-wizard-step >
+            <ion-content class="has-header">
+            </ion-content>
+        </ion-slide-page>
+    </ion-slides>
+
+</ion-view>

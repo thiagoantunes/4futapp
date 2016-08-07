@@ -143,6 +143,10 @@ input[readonly]{
     }
 }
 
+.swiper-pagination-bullet{
+    background: $stable !important;
+}
+
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic",
         "www/lib/ionic-material/src/scss/index";

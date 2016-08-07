@@ -1,7 +1,14 @@
+#criar-partida{
+    .bar-header{
+        .back-button{
+            display: none !important;
+        }
+    }
+}
+
 #jogos-view{
     .angular-google-map-container { height: 100vh; }
 }
-
 
 .jogo-card{
     a{
@@ -44,16 +51,6 @@
         }
     }
 }
-
-// .platform-ios {
-//     #jogos-view{
-//         .map-container {
-//             .card{
-//                 top: -60px;
-//             }
-//         }
-//     }   
-// }
 
 #jogos-detail{
 
@@ -149,6 +146,7 @@
 }
 
 .modal-convidar-amigos{
+    
 
       background-color: $light;
 

@@ -77,20 +77,38 @@ angular.module('main')
       return $firebaseArray(service.refJogadoresJogo.child(jogoId));
     }
 
-    function criarJogo(novoJogo, coords, arenaId) {
+    function criarJogo(data) {
       var deferred = $q.defer();
 
       var jogoId = service.ref.push().key;
       var jogoData = {};
       jogoData['usersJogos/' + firebase.auth().currentUser.uid + '/' + jogoId] = true;
-      jogoData['jogos/' + jogoId] = novoJogo;
+      jogoData['jogos/' + jogoId] = data.partida;
       jogoData['jogosJogadores/' + jogoId + '/' + firebase.auth().currentUser.uid] = {
-        nome: firebase.auth().currentUser.displayName,
         fotoPerfil: firebase.auth().currentUser.photoURL,
+        id: firebase.auth().currentUser.uid,
         confirmado: true
       };
-      if(novoJogo.reserva && arenaId){
-        jogoData['reservas/' + arenaId + '/' + novoJogo.reserva + '/partida'] = jogoId;
+      _.forEach(data.jogadores, function (jogador) {
+        jogoData['jogosJogadores/' + jogoId + '/' + jogador.id] = {
+          fotoPerfil: jogador.fotoPerfil,
+          id: jogador.id
+        };
+        jogoData['usersJogos/' + jogador.id + '/' + jogoId] = true;
+      });
+      _.forEach(data.times, function (time) {
+        _.forEach(time.jogadores, function (jogador) {
+          if (jogador.id !== firebase.auth().currentUser.uid) {
+            jogoData['jogosJogadores/' + jogoId + '/' + jogador.id] = {
+              fotoPerfil: jogador.fotoPerfil,
+              id: jogador.id
+            };
+            jogoData['usersJogos/' + jogador.id + '/' + jogoId] = true;
+          }
+        });
+      });
+      if (data.partida.reserva && data.arenaId) {
+        jogoData['reservas/' + data.arenaId + '/' + data.partida.reserva + '/partida'] = jogoId;
       }
 
       Ref.update(jogoData, function (error) {
@@ -98,11 +116,33 @@ angular.module('main')
           deferred.reject('Erro ao cadastrar nova turma');
         }
         else {
+          _.forEach(data.jogadores, function (jogador) {
+            UserService.enviaNotificacao({
+              msg: '<b>' + firebase.auth().currentUser.displayName + '</b> te convidou para uma partida',
+              img: firebase.auth().currentUser.photoURL,
+              tipo: 'convitePartida',
+              lida: false,
+              dateTime: new Date().getTime()
+            }, jogador.id);
+          });
+          _.forEach(data.times, function (time) {
+            _.forEach(time.jogadores, function (jogador) {
+              if (jogador.id !== firebase.auth().currentUser.uid) {
+                UserService.enviaNotificacao({
+                  msg: '<b>' + firebase.auth().currentUser.displayName + '</b> te convidou para uma partida',
+                  img: firebase.auth().currentUser.photoURL,
+                  tipo: 'convitePartida',
+                  lida: false,
+                  dateTime: new Date().getTime()
+                }, jogador.id);
+              }
+            });
+          });
           var geo = new GeoFire(Ref.child('jogosLocalizacao'));
-          geo.set(jogoId, coords);
-          novoJogo.id = jogoId;
-          novoJogo.l = coords;
-          deferred.resolve(novoJogo);
+          geo.set(jogoId, data.coords);
+          data.partida.id = jogoId;
+          data.partida.l = data.coords;
+          deferred.resolve(data.partida);
         }
       });
 

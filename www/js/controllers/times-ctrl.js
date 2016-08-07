@@ -1,6 +1,19 @@
 /*global firebase moment*/
 'use strict';
 angular.module('main')
+
+  .controller('TimesCtrl', function (TimesService, $timeout, $ionicModal) {
+    var vm = this;
+    vm.timesService = TimesService;
+    vm.times = TimesService.timesRegiao;
+
+    activate();
+
+    function activate() {
+    }
+
+  })
+
   .controller('MeusTimesCtrl', function ($state, TimesService, UserService, $timeout, $ionicActionSheet, $ionicModal) {
     var vm = this;
     vm.timesService = TimesService;
@@ -52,7 +65,6 @@ angular.module('main')
     activate();
 
     function activate() {
-      TimesService.getJogadoresTime(vm.time.jogadores);
     }
 
     function closeModal(){

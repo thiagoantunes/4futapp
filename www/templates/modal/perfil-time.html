@@ -16,37 +16,36 @@
                 </h4>
             </div>
         </div>
-        <button class="button button-outline button-full button-positive">
+        <a ng-click="vm.closeModal();" ui-sref="main.criarDesafio" class="button button-outline button-full button-positive">
             DESAFIAR
-        </button>
-        <div ng-if="vm.time.jogadores.list.length>0" class="item item-divider"> Jogadores
+        </a>
+        <div ng-if="vm.time.jogadores.length>0" class="item item-divider"> Jogadores
         </div>
         <div class="item">
           <ul>
-            <div class="row" style="padding-left:0px" ng-repeat="amigo in vm.time.jogadores.list" ng-if="$index % 5 === 0">
-              <div class="col col-20" ng-if="$index < vm.time.jogadores.list.length">
-                <img ui-sref="main.user({userId: vm.time.jogadores.list[$index].id})" style="width: 50px; height: 50px; border-radius: 50%; "
-                  src="{{vm.time.jogadores.list[$index].fotoPerfil | defaultImage}} ">
+            <div class="row" style="padding-left:0px" ng-repeat="amigo in vm.time.jogadores" ng-if="$index % 5 === 0">
+              <div class="col col-20" ng-if="$index < vm.time.jogadores.length">
+                <img ui-sref="main.user({userId: vm.time.jogadores[$index].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                  src="{{vm.time.jogadores[$index].fotoPerfil | defaultImage}} ">
               </div>
-              <div class="col col-20" ng-if="$index + 1 < vm.time.jogadores.list.length">
-                <img ui-sref="main.user({userId: vm.time.jogadores.list[$index + 1].id})" style="width: 50px; height: 50px; border-radius: 50%; "
-                  src="{{vm.time.jogadores.list[$index + 1].fotoPerfil | defaultImage}} ">
+              <div class="col col-20" ng-if="$index + 1 < vm.time.jogadores.length">
+                <img ui-sref="main.user({userId: vm.time.jogadores[$index + 1].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                  src="{{vm.time.jogadores[$index + 1].fotoPerfil | defaultImage}} ">
               </div>
-              <div class="col col-20" ng-if="$index + 2 < vm.time.jogadores.list.length">
-                <img ui-sref="main.user({userId: vm.time.jogadores.list[$index + 2].id})" style="width: 50px; height: 50px; border-radius: 50%; "
-                  src="{{vm.time.jogadores.list[$index + 2].fotoPerfil | defaultImage}} ">
+              <div class="col col-20" ng-if="$index + 2 < vm.time.jogadores.length">
+                <img ui-sref="main.user({userId: vm.time.jogadores[$index + 2].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                  src="{{vm.time.jogadores[$index + 2].fotoPerfil | defaultImage}} ">
               </div>
-              <div class="col col-20" ng-if="$index + 3 < vm.time.jogadores.list.length">
-                <img ui-sref="main.user({userId: vm.time.jogadores.list[$index + 3].id})" style="width: 50px; height: 50px; border-radius: 50%; "
-                  src="{{vm.time.jogadores.list[$index + 3].fotoPerfil | defaultImage}} ">
+              <div class="col col-20" ng-if="$index + 3 < vm.time.jogadores.length">
+                <img ui-sref="main.user({userId: vm.time.jogadores[$index + 3].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                  src="{{vm.time.jogadores[$index + 3].fotoPerfil | defaultImage}} ">
               </div>
-              <div class="col col-20" ng-if="$index + 4 < vm.time.jogadores.list.length">
-                <img ui-sref="main.user({userId: vm.time.jogadores.list[$index + 4].id})" style="width: 50px; height: 50px; border-radius: 50%; "
-                  src="{{vm.time.jogadores.list[$index + 4].fotoPerfil | defaultImage}} ">
+              <div class="col col-20" ng-if="$index + 4 < vm.time.jogadores.length">
+                <img ui-sref="main.user({userId: vm.time.jogadores[$index + 4].id})" style="width: 50px; height: 50px; border-radius: 50%; "
+                  src="{{vm.time.jogadores[$index + 4].fotoPerfil | defaultImage}} ">
               </div>
             </div>
           </ul>
         </div>
-        <!--<pre>{{vm.time}}</pre>-->
     </ion-content>
 </ion-modal-view>
