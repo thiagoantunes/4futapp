@@ -99,18 +99,15 @@ angular.module('main')
         longitude: vm.reservaSelecionada.arena.longitude
       };
       JogosService.novaPartidaModal.data = vm.reservaSelecionada;
-      $ionicModal.fromTemplateUrl('templates/modal/criar-jogo.html', {
-      }).then(function (modal) {
-        JogosService.novaPartidaModal.modal = modal;
-        modal.show();
-      });
+      $state.go('main.criar-partida-reserva');
+      closeModal();
     }
 
     function idParaPartida() {
       closeModal();
-      var partida = _.find(UserService.jogos, { 'id' : vm.reservaSelecionada.partida});
+      var partida = _.find(UserService.jogos, { 'id': vm.reservaSelecionada.partida });
       JogosService.jogoSelecionado = partida;
-      $state.go('main.meus-jogos-detail' , { 'id': partida.id});
+      $state.go('main.meus-jogos-detail', { 'id': partida.id });
     }
 
     function isAndroid() {
@@ -151,7 +148,7 @@ angular.module('main')
 
   })
 
-  .controller('NovaPartidaCtrl', function ($scope, $state, $ionicHistory, UserService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService) {
+  .controller('NovaPartidaCtrl', function ($scope, $state, $ionicHistory, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService) {
     var vm = this;
     vm.jogadores = [];
     vm.times = [];
@@ -202,7 +199,12 @@ angular.module('main')
       };
     }
 
-    function goBack(){
+    function goBack() {
+      if (vm.modalData) {
+        var reserva = _.find(UserService.reservas, { 'id': vm.modalData.id });
+        var arena = _.find(ArenasService.arenas, { 'id': vm.modalData.arenaId })
+        ReservasService.openReservaModal(reserva, arena);
+      }
       $ionicHistory.goBack(-1);
     }
 
@@ -249,11 +251,13 @@ angular.module('main')
         times: vm.times
       }
       JogosService.criarJogo(novaPartidaData)
-        .then(function (val) {
-          goBack();
-          JogosService.jogoSelecionado = val;
-          JogosService.jogoSelecionado.novoJogo = true;
-          $state.go('main.jogos-detail', { id: val.id });
+        .then(function (jogoId) {
+          //goBack();
+          JogosService.getJogo(jogoId).then(function (val) {
+            JogosService.jogoSelecionado = val;
+            JogosService.jogoSelecionado.novoJogo = true;
+            $state.go('main.meus-jogos-detail-reserva', { id: jogoId });
+          });
         });
     }
 
@@ -430,9 +434,6 @@ angular.module('main')
         animation: 'slide-in-up'
       }).then(function (modal) {
         $scope.modal = modal;
-        if (vm.jogo.novoJogo) {
-          $scope.modal.show();
-        }
       });
     }
 

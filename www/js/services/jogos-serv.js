@@ -13,6 +13,7 @@ angular.module('main')
       geoFire: new GeoFire(Ref.child('jogosLocalizacao')),
       geoQuery: {},
 
+      getJogo: getJogo,
       getJogosRegiao: getJogosRegiao,
       getJogadoresJogo: getJogadoresJogo,
       getMeusJogos: getMeusJogos,
@@ -24,6 +25,19 @@ angular.module('main')
     };
 
     return service;
+
+    function getJogo(jogoId) {
+      var deferred = $q.defer();
+      service.ref.child(jogoId).on('value', function (snapJogo) {
+        getJogadoresJogo(jogoId).$loaded().then(function (val) {
+          var data = snapJogo.val();
+          data.id = jogoId;
+          data.jogadores = val;
+          deferred.resolve(data);
+        });
+      });
+      return deferred.promise;
+    }
 
     function getJogosRegiao() {
       service.geoQuery.on('key_entered', function (key, location, distance) {
@@ -140,9 +154,7 @@ angular.module('main')
           });
           var geo = new GeoFire(Ref.child('jogosLocalizacao'));
           geo.set(jogoId, data.coords);
-          data.partida.id = jogoId;
-          data.partida.l = data.coords;
-          deferred.resolve(data.partida);
+          deferred.resolve(jogoId);
         }
       });
 

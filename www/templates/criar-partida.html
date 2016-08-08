@@ -12,7 +12,7 @@
                 </div>
             </ion-content>
         </ion-slide-page>
-        <ion-slide-page ion-wizard-step>
+        <ion-slide-page ng-if="!vm.modalData" ion-wizard-step>
             <ion-content>
                 <button ion-wizard-previous class="button button-positive button-full icon ion-android-arrow-back"></button>
                 <button class="button button-positive button-full" ion-wizard-next>Próximo</button>
