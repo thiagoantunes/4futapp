@@ -9,7 +9,6 @@ angular.module('main')
     vm.jogosAnteriores = [];
     vm.verPartidas = true;
 
-    vm.openNovoJogoModal = openNovoJogoModal;
     vm.orderByConfirmacao = orderByConfirmacao;
     vm.isAndroid = isAndroid;
     vm.openReservamodal = openReservamodal;
@@ -17,17 +16,6 @@ angular.module('main')
     activate();
 
     function activate() {
-    }
-
-    function openNovoJogoModal() {
-      JogosService.novaPartidaModal = {
-        data: undefined
-      };
-      $ionicModal.fromTemplateUrl('templates/modal/criar-jogo.html', {
-      }).then(function (modal) {
-        JogosService.novaPartidaModal.modal = modal;
-        modal.show();
-      });
     }
 
     function openReservamodal(reserva) {
@@ -92,13 +80,21 @@ angular.module('main')
     }
 
     function criaPartida() {
-      vm.reservaSelecionada.local = {
-        nome: vm.reservaSelecionada.arena.nome,
-        endereco: vm.reservaSelecionada.arena.endereco,
-        latitude: vm.reservaSelecionada.arena.latitude,
-        longitude: vm.reservaSelecionada.arena.longitude
+      JogosService.novaPartida = {
+        data: {
+          reserva: vm.reservaSelecionada.id,
+          dia: moment(vm.reservaSelecionada.start).format('DD/MM/YYYY'),
+          hora: moment(vm.reservaSelecionada.start).format('HH:mm'),
+        },
+        arenaReserva: vm.reservaSelecionada.arenaId,
+        localSelecionado: {
+          nome: vm.reservaSelecionada.arena.nome,
+          endereco: vm.reservaSelecionada.arena.endereco,
+          latitude: vm.reservaSelecionada.arena.latitude,
+          longitude: vm.reservaSelecionada.arena.longitude
+        }
       };
-      JogosService.novaPartidaModal.data = vm.reservaSelecionada;
+
       $state.go('main.criar-partida-reserva');
       closeModal();
     }
@@ -153,42 +149,34 @@ angular.module('main')
     vm.jogadores = [];
     vm.times = [];
     vm.amigos = UserService.amigos;
+    vm.arenas = ArenasService.arenas;
     vm.meusTimes = UserService.times;
     vm.arenasBasicas = ArenasService.arenasBasicas;
-    vm.modalData = JogosService.novaPartidaModal.data;
+    vm.novaPartida = JogosService.novaPartida;
     vm.openTimePicker = openTimePicker;
     vm.openDatePicker = openDatePicker;
     vm.openLocalPicker = openLocalPicker;
     vm.openCriaLocalModal = openCriaLocalModal;
     vm.selecionaArenaBasica = selecionaArenaBasica;
     vm.salvarJogo = salvarJogo;
-    vm.hideModal = hideModal;
     vm.goBack = goBack;
     vm.toggleJogador = toggleJogador;
     vm.checkJogadorPartida = checkJogadorPartida;
     vm.toggleTime = toggleTime;
     vm.checkTime = checkTime;
+    vm.abrirArena = abrirArena;
 
     activate();
 
     function activate() {
       ArenasService.getArenasBasicas();
-      vm.novaPartida = {
-        minJogadores: 10,
-        maxJogadores: 20,
-        visibilidade: '4',
-        compartilharFacebook: true,
-        aprovacaoManual: false,
-        responsavel: firebase.auth().currentUser.uid,
-        status: 'agendado'
-      };
-      if (vm.modalData) {
-        vm.arenaReserva = vm.modalData.arenaId;
-        vm.novaPartida.reserva = vm.modalData.id;
-        vm.novaPartida.dia = moment(vm.modalData.start).format('DD/MM/YYYY');
-        vm.novaPartida.hora = moment(vm.modalData.start).format('HH:mm');
-        vm.localSelecionado = vm.modalData.local;
-      }
+      vm.novaPartida.data.minJogadores = 10;
+      vm.novaPartida.data.maxJogadores = 20;
+      vm.novaPartida.data.visibilidade = '4';
+      vm.novaPartida.data.compartilharFacebook = true;
+      vm.novaPartida.data.aprovacaoManual = false;
+      vm.novaPartida.data.responsavel = firebase.auth().currentUser.uid;
+      vm.novaPartida.data.status = 'agendado';
 
       vm.numJogadoresRangeOptions = {
         floor: 5,
@@ -199,13 +187,39 @@ angular.module('main')
       };
     }
 
+    function salvarJogo(location) {
+      vm.novaPartida.data.endereco = vm.novaPartida.localSelecionado.endereco;
+      vm.novaPartida.data.inicio = moment(vm.novaPartida.data.dia + vm.novaPartida.data.hora, 'DD/MM/YYYYHH:mm')._d.getTime();
+      var novaPartidaData = {
+        partida: vm.novaPartida.data,
+        coords: [vm.novaPartida.localSelecionado.latitude, vm.novaPartida.localSelecionado.longitude],
+        arenaId: vm.novaPartida.arenaReserva,
+        jogadores: vm.jogadores,
+        times: vm.times
+      }
+      JogosService.criarJogo(novaPartidaData)
+        .then(function (jogoId) {
+          //goBack();
+          JogosService.getJogo(jogoId).then(function (val) {
+            JogosService.jogoSelecionado = val;
+            JogosService.jogoSelecionado.novoJogo = true;
+            if (vm.novaPartida.arenaReserva) {
+              $state.go('main.meus-jogos-detail-reserva', { id: jogoId });
+            }
+            else {
+              $state.go('main.meus-jogos-detail', { id: jogoId });
+            }
+          });
+        });
+    }
+
     function goBack() {
       if (vm.modalData) {
-        var reserva = _.find(UserService.reservas, { 'id': vm.modalData.id });
-        var arena = _.find(ArenasService.arenas, { 'id': vm.modalData.arenaId })
-        ReservasService.openReservaModal(reserva, arena);
+        $ionicHistory.goBack(-5);
       }
-      $ionicHistory.goBack(-1);
+      else {
+        $ionicHistory.goBack();
+      }
     }
 
     function toggleJogador(amigo) {
@@ -218,6 +232,11 @@ angular.module('main')
       else {
         vm.jogadores.push(amigo);
       }
+    }
+
+    function abrirArena(arena) {
+      ArenasService.arenaSelecionada = arena;
+      ArenasService.arenaSelecionada.criacaoPartidaAndamento = true;
     }
 
     function checkJogadorPartida(amigo) {
@@ -240,115 +259,95 @@ angular.module('main')
       return _.some(vm.times, { 'id': time.id });
     }
 
-    function salvarJogo(location) {
-      vm.novaPartida.endereco = vm.localSelecionado.endereco;
-      vm.novaPartida.inicio = moment(vm.novaPartida.dia + vm.novaPartida.hora, 'DD/MM/YYYYHH:mm')._d.getTime();
-      var novaPartidaData = {
-        partida: vm.novaPartida,
-        coords: [vm.localSelecionado.latitude, vm.localSelecionado.longitude],
-        arenaId: vm.arenaReserva,
-        jogadores: vm.jogadores,
-        times: vm.times
-      }
-      JogosService.criarJogo(novaPartidaData)
-        .then(function (jogoId) {
-          //goBack();
-          JogosService.getJogo(jogoId).then(function (val) {
-            JogosService.jogoSelecionado = val;
-            JogosService.jogoSelecionado.novoJogo = true;
-            $state.go('main.meus-jogos-detail-reserva', { id: jogoId });
-          });
-        });
-    }
-
-    function hideModal() {
-      JogosService.novaPartidaModal.modal.hide();
-    }
-
     function openTimePicker() {
-      if (window.cordova) {
-        var options = {
-          date: new Date(),
-          mode: 'time',
-          locale: 'pt_br',
-          minuteInterval: 15,
-          doneButtonLabel: 'Ok',
-          cancelButtonLabel: 'Cancelar',
-          androidTheme: 4,
-          is24Hour: true,
-          okText: 'Ok',
-          cancelText: 'Cancelar',
+      if (!vm.novaPartida.arenaReservaCallback) {
+        if (window.cordova) {
+          var options = {
+            date: new Date(),
+            mode: 'time',
+            locale: 'pt_br',
+            minuteInterval: 15,
+            doneButtonLabel: 'Ok',
+            cancelButtonLabel: 'Cancelar',
+            androidTheme: 4,
+            is24Hour: true,
+            okText: 'Ok',
+            cancelText: 'Cancelar',
 
-        };
-        datePicker.show(options, function (date) {
-          $scope.$apply(function () {
-            var activeElement = document.activeElement;
-            if (activeElement) {
-              activeElement.blur();
-            }
-            vm.novaPartida.hora = moment(date).format('HH:mm');
+          };
+          datePicker.show(options, function (date) {
+            $scope.$apply(function () {
+              var activeElement = document.activeElement;
+              if (activeElement) {
+                activeElement.blur();
+              }
+              vm.novaPartida.data.hora = moment(date).format('HH:mm');
+            });
           });
-        });
-      }
-      else {
-        var tpObj = {
-          callback: function (val) {
-            if (!(typeof (val) === 'undefined')) {
-              var selectedTime = new Date(val * 1000);
-              vm.novaPartida.hora = moment(new Date(val * 1000)).add(moment(new Date(val * 1000))._d.getTimezoneOffset(), 'm').format('HH:mm');
+        }
+        else {
+          var tpObj = {
+            callback: function (val) {
+              if (!(typeof (val) === 'undefined')) {
+                var selectedTime = new Date(val * 1000);
+                vm.novaPartida.data.hora = moment(new Date(val * 1000)).add(moment(new Date(val * 1000))._d.getTimezoneOffset(), 'm').format('HH:mm');
+              }
             }
-          }
-        };
-        ionicTimePicker.openTimePicker(tpObj);
+          };
+          ionicTimePicker.openTimePicker(tpObj);
+        }
       }
-
     }
 
     function openDatePicker() {
-      if (window.cordova) {
-        var options = {
-          date: new Date(),
-          mode: 'date',
-          locale: 'pt_br',
-          minuteInterval: 15,
-          doneButtonLabel: 'Ok',
-          cancelButtonLabel: 'Cancelar',
-          allowOldDates: false,
-          androidTheme: 4,
-          is24Hour: true,
-          okText: 'Ok',
-          cancelText: 'Cancelar',
-        };
-        datePicker.show(options, function (date) {
-          $scope.$apply(function () {
-            var activeElement = document.activeElement;
-            if (activeElement) {
-              activeElement.blur();
-            }
-            vm.novaPartida.dia = moment(date).format('DD/MM/YYYY');
+      if (!vm.novaPartida.arenaReservaCallback) {
+        if (window.cordova) {
+          var options = {
+            date: new Date(),
+            mode: 'date',
+            locale: 'pt_br',
+            minuteInterval: 15,
+            doneButtonLabel: 'Ok',
+            cancelButtonLabel: 'Cancelar',
+            allowOldDates: false,
+            androidTheme: 4,
+            is24Hour: true,
+            okText: 'Ok',
+            cancelText: 'Cancelar',
+          };
+          datePicker.show(options, function (date) {
+            $scope.$apply(function () {
+              var activeElement = document.activeElement;
+              if (activeElement) {
+                activeElement.blur();
+              }
+              vm.novaPartida.data.dia = moment(date).format('DD/MM/YYYY');
+            });
           });
-        });
-      }
-      else {
-        var ipObj1 = {
-          callback: function (val) {  //Mandatory
-            vm.novaPartida.dia = moment(val).format('DD/MM/YYYY');
-          },
-          inputDate: new Date(),
-          mondayFirst: true,
-        };
-        ionicDatePicker.openDatePicker(ipObj1);
+        }
+        else {
+          var ipObj1 = {
+            callback: function (val) {  //Mandatory
+              vm.novaPartida.data.dia = moment(val).format('DD/MM/YYYY');
+            },
+            inputDate: new Date(),
+            mondayFirst: true,
+          };
+          ionicDatePicker.openDatePicker(ipObj1);
+        }
       }
     }
 
     function openLocalPicker() {
-      $ionicModal.fromTemplateUrl('templates/modal/selecionar-local.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-      }).then(function (modal) {
-        $scope.modalLocal = modal;
-        $scope.modalLocal.show();
-      });
+      if (!vm.novaPartida.arenaReservaCallback) {
+        $ionicModal.fromTemplateUrl('templates/modal/selecionar-local.html', {
+          scope: $scope,
+          animation: 'slide-in-up'
+        }).then(function (modal) {
+          $scope.modalLocal = modal;
+          $scope.modalLocal.show();
+        });
+      }
     }
 
     function openCriaLocalModal() {
@@ -381,7 +380,7 @@ angular.module('main')
             $scope.location.formatted_address
           )
             .then(function () {
-              vm.localSelecionado = {
+              vm.novaPartida.localSelecionado = {
                 nome: $scope.search.nome,
                 latitude: $scope.location.geometry.location.lat(),
                 longitude: $scope.location.geometry.location.lng(),
@@ -404,7 +403,7 @@ angular.module('main')
     }
 
     function selecionaArenaBasica(arenaBasica) {
-      vm.localSelecionado = arenaBasica;
+      vm.novaPartida.localSelecionado = arenaBasica;
       $scope.modalLocal.hide();
       console.log(arenaBasica);
     }

@@ -314,6 +314,16 @@ angular.module('main', [
         }
       })
 
+      .state('main.arenas-detail-partida', {
+        url: '/arenas-partida/:id',
+        views: {
+          'tab-meus-jogos': {
+            templateUrl: 'templates/arenas/arenas-detail.html',
+            controller: 'ArenaDetailsCtrl as vm',
+          }
+        }
+      })
+
       .state('main.meus-jogos-detail', {
         url: '/meus-jogos/:id',
         views: {
@@ -413,7 +423,8 @@ angular.module('main', [
       'main.jogos',
       'main.perfilAmigo',
       'main.criar-partida-reserva',
-      'main.meus-jogos-detail-reserva'
+      'main.meus-jogos-detail-reserva',
+      'main.arenas-detail-partida'
     ];
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);

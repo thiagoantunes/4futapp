@@ -17625,7 +17625,7 @@ For example, you might change some of the default colors:
         margin-bottom: 5px; }
       .cards-view .card-2 .card-outer .card-content .card-description-outer .card-description {
         margin-bottom: 3px;
-        color: #959595;
+        color: #efefef;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden; }

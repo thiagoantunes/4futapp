@@ -24,7 +24,7 @@ angular.module('main')
         options: {
           disableDefaultUI: true,
         },
-        
+
         mapEvents: {
           click: function () {
             $scope.$apply(function () {
@@ -40,17 +40,17 @@ angular.module('main')
     }
 
     function selecionaQuadraMapa(marker, eventName, model) {
-        vm.arenaService.arenaSelecionada = _.find(vm.arenas, { id: model.id });
-        vm.map.center = {
-          latitude: vm.arenaService.arenaSelecionada.latitude,
-          longitude: vm.arenaService.arenaSelecionada.longitude
-        };
-        vm.showDetails = true;
+      vm.arenaService.arenaSelecionada = _.find(vm.arenas, { id: model.id });
+      vm.map.center = {
+        latitude: vm.arenaService.arenaSelecionada.latitude,
+        longitude: vm.arenaService.arenaSelecionada.longitude
+      };
+      vm.showDetails = true;
     }
 
   })
 
-  .controller('ArenaDetailsCtrl', function (ArenasService, UserService, JogosService, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup) {
+  .controller('ArenaDetailsCtrl', function (ArenasService, UserService, JogosService, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup, $ionicHistory) {
     var vm = this;
     vm.arena = ArenasService.arenaSelecionada;
     vm.album = ArenasService.getAlbum($stateParams.id);
@@ -267,50 +267,32 @@ angular.module('main')
         status: 'agendado'
       };
       ReservasService.criarReservaAvulsa(novaReserva, vm.arena.id).then(function (reservaId) {
-        console.log('Reserva criada com sucesso!');
-        getReservas(vm.diaSelecionado);
-        $scope.modal.hide();
-        //openModalCriacaoPartida(novaReserva);
-        var reserva = _.find(UserService.reservas, {'id': reservaId});
-        reserva.novaReserva = true;
-        ReservasService.openReservaModal(reserva, vm.arena);
+        var reserva = _.find(UserService.reservas, { 'id': reservaId });
+        if (vm.arena.criacaoPartidaAndamento) {
+          JogosService.novaPartida.data.reserva = reserva.id;
+          JogosService.novaPartida.data.dia = moment(reserva.start).format('DD/MM/YYYY');
+          JogosService.novaPartida.data.hora = moment(reserva.start).format('HH:mm');
+          JogosService.novaPartida.arenaReserva = vm.arena.id;
+          JogosService.novaPartida.arenaReservaCallback = true;
+          JogosService.novaPartida.localSelecionado = {
+            nome: vm.arena.nome,
+            endereco: vm.arena.endereco,
+            latitude: vm.arena.latitude,
+            longitude: vm.arena.longitude
+          };
+
+          $scope.modal.hide();
+          $ionicHistory.goBack();
+        }
+        else {
+          console.log('Reserva criada com sucesso!');
+          getReservas(vm.diaSelecionado);
+          $scope.modal.hide();
+          reserva.novaReserva = true;
+          ReservasService.openReservaModal(reserva, vm.arena);
+        }
       }, function (error) {
         console.log(error, novaReserva, 'Ops!');
-      });
-    }
-
-    function openModalCriacaoPartida(novaReserva) {
-      var confirmPopup = $ionicPopup.confirm({
-        title: 'Reserva criada com sucesso!',
-        template: 'Crie uma partida para esta reserva e convide os seus amigos!',
-        buttons: [{ 
-          text: 'Cancelar',
-          type: 'button-default',
-          onTap: function (e) {
-            e.preventDefault();
-            confirmPopup.close();
-          }
-        }, {
-            text: 'Criar',
-            type: 'button-positive',
-            onTap: function (e) {
-              novaReserva.local= {
-                nome: vm.arena.nome,
-                endereco: vm.arena.endereco,
-                latitude: vm.arena.latitude,
-                longitude: vm.arena.longitude
-              };
-              JogosService.novaPartidaModal = {
-                  modal: {},
-                  data: novaReserva
-              };
-              $ionicModal.fromTemplateUrl('templates/modal/criar-jogo.html', {
-              }).then(function (modal) {
-                JogosService.novaPartidaModal.modal = modal;
-                modal.show();
-              });
-            }
-          }]
       });
     }
 

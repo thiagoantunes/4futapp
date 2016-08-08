@@ -7,34 +7,57 @@
                 <div class="list">
                     <label class="item item-input item-stacked-label">
                         <span class="input-label">None da partida</span>
-                        <input ng-model="vm.novaPartida.nome" type="text" >
+                        <input ng-model="vm.novaPartida.data.nome" type="text" >
                     </label>
                 </div>
             </ion-content>
         </ion-slide-page>
-        <ion-slide-page ng-if="!vm.modalData" ion-wizard-step>
-            <ion-content>
+        <ion-slide-page ng-if="!vm.novaPartida.arenaReserva || vm.novaPartida.arenaReservaCallback" ion-wizard-step>
+            <ion-content scroll="false">
                 <button ion-wizard-previous class="button button-positive button-full icon ion-android-arrow-back"></button>
                 <button class="button button-positive button-full" ion-wizard-next>Próximo</button>
                 <div class="list">
                     <label class="item item-input item-stacked-label">
                         <span class="input-label">Local da partida</span>
-                        <input ng-model="vm.localSelecionado.endereco" ng-focus="vm.openLocalPicker();" ng-readonly="true" type="text" >
+                        <input ng-model="vm.novaPartida.localSelecionado.endereco" ng-readonly="vm.novaPartida.arenaReservaCallback" ng-focus="vm.openLocalPicker();" ng-readonly="true" type="text" >
                     </label>
                     <label class="item item-input item-stacked-label">
                         <span class="input-label">Dia</span>
-                        <input ng-model="vm.novaPartida.dia" ng-focus="vm.openDatePicker();" ng-readonly="true" type="text" >
+                        <input ng-model="vm.novaPartida.data.dia" ng-focus="vm.openDatePicker();" ng-readonly="true" type="text" >
                     </label>
                     <label class="item item-input item-stacked-label">
                         <span class="input-label">Horário de início</span>
-                        <input ng-model="vm.novaPartida.hora" ng-focus="vm.openTimePicker();" ng-readonly="true" type="text" >
+                        <input ng-model="vm.novaPartida.data.hora" ng-focus="vm.openTimePicker();" ng-readonly="true" type="text" >
                     </label>
                 </div>
+                <ion-scroll style="height: 500px" zooming="false" direction="y">
+                    <div class="cards-view">
+                        <div class="card-2" ng-repeat="arena in vm.arenas | orderBy:'distance'">
+                            <a ng-click="vm.abrirArena(arena);" ui-sref="main.arenas-detail-partida({id: arena.id})" >
+                                <div class="list card">
+                                    <div class="row card-outer">
+                                        <div class="col col-50 card-image">
+                                            <img cache-src="{{arena.fotoPerfil}}">
+                                        </div>
+                                        <div class="col card-content">
+                                            <h2 class="card-title">{{arena.nome}}</h2>
+                                            <div class="card-description-outer">
+                                                <p class="card-description">{{arena.endereco}}</p>
+                                                <p class="card-description">{{arena.distance | number : 2}} km</p>
+                                                <p class="card-description">Teste</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </ion-scroll>
             </ion-content>
         </ion-slide-page>
         <ion-slide-page ion-wizard-step>
             <ion-content>
-                <button ion-wizard-previous  class="button button-positive button-full icon ion-android-arrow-back"></button>
+                <button ion-wizard-previous class="button button-positive button-full icon ion-android-arrow-back"></button>
                 <button class="button button-positive button-full" ion-wizard-next>Próximo</button>
                 <div class="list">
                     <div class="item" style="padding-right: 0;">
@@ -80,13 +103,13 @@
                         <br/>
                         <div class="row">
                             <div class="col-10" style="padding-top:3px">
-                                {{vm.novaPartida.minJogadores}}
+                                {{vm.novaPartida.data.minJogadores}}
                             </div>
                             <div class="col-80" style="margin-left: -5px">
-                                <rzslider rz-slider-model="vm.novaPartida.minJogadores" rz-slider-high="vm.novaPartida.maxJogadores" rz-slider-options="vm.numJogadoresRangeOptions"></rzslider>
+                                <rzslider rz-slider-model="vm.novaPartida.data.minJogadores" rz-slider-high="vm.novaPartida.data.maxJogadores" rz-slider-options="vm.numJogadoresRangeOptions"></rzslider>
                             </div>
                             <div class="col-10"  style="padding:3px 0 0 15px">
-                                {{vm.novaPartida.maxJogadores}}
+                                {{vm.novaPartida.data.maxJogadores}}
                             </div>
                         </div>
   	                </label>
@@ -94,7 +117,7 @@
                         <div class="input-label">
                             Quem pode jogar?
                         </div>
-                        <select ng-model="vm.novaPartida.visibilidade">
+                        <select ng-model="vm.novaPartida.data.visibilidade">
                             <option value="1">Convidados</option>
                             <option value="2">Amigos</option>
                             <option value="3">Amigos de amigos</option>
@@ -104,7 +127,7 @@
                     <li class="item item-toggle">
                         Aprovar jogadores manualmente
                         <label class="toggle toggle-positive">
-                            <input ng-model="vm.novaPartida.aprovacaoManual" type="checkbox">
+                            <input ng-model="vm.novaPartida.data.aprovacaoManual" type="checkbox">
                             <div class="track">
                               <div class="handle"></div>
                             </div>

@@ -69,7 +69,7 @@
 					.card-description
 					{
 						margin-bottom: 3px;
-						color: lighten($card-2-color, 45%);
+						color: $base-color;
 						text-overflow: ellipsis;
 					  white-space: nowrap;
 					  overflow: hidden;

@@ -1,6 +1,6 @@
 <ion-view view-title="MINHAS PARTIDAS">
   <ion-nav-buttons side="right">
-    <button ui-sref="main.criar-partida" class="button button-icon button-clear ion-android-add icon"></button>
+    <button ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="main.criar-partida" class="button button-icon button-clear ion-android-add icon"></button>
   </ion-nav-buttons>
   <ion-content>
     <div class="padding">
@@ -14,7 +14,7 @@
         <i class="icon ion-ios-football-outline"></i>
         <h5>Você ainda não tem uma partida.</h5>
         <div style="padding:20px">
-          <button ui-sref="main.criar-partida"  class="button button-full button-positive">Criar Partida</button>
+          <button ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="main.criar-partida"  class="button button-full button-positive">Criar Partida</button>
         </div>
       </div>
       <div ng-if="vm.jogos.length > 0">
