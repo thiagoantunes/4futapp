@@ -172,7 +172,7 @@ angular.module('main')
       ArenasService.getArenasBasicas();
       vm.novaPartida.data.minJogadores = 10;
       vm.novaPartida.data.maxJogadores = 20;
-      vm.novaPartida.data.visibilidade = '4';
+      vm.novaPartida.data.visibilidade = 4;
       vm.novaPartida.data.compartilharFacebook = true;
       vm.novaPartida.data.aprovacaoManual = false;
       vm.novaPartida.data.responsavel = firebase.auth().currentUser.uid;
@@ -182,14 +182,12 @@ angular.module('main')
         floor: 5,
         ceil: 30,
         step: 1,
-        hidePointerLabels: true,
         hideLimitLabels: true,
       };
     }
 
     function salvarJogo(location) {
       vm.novaPartida.data.endereco = vm.novaPartida.localSelecionado.endereco;
-      vm.novaPartida.data.inicio = moment(vm.novaPartida.data.dia + vm.novaPartida.data.hora, 'DD/MM/YYYYHH:mm')._d.getTime();
       var novaPartidaData = {
         partida: vm.novaPartida.data,
         coords: [vm.novaPartida.localSelecionado.latitude, vm.novaPartida.localSelecionado.longitude],
@@ -281,7 +279,8 @@ angular.module('main')
               if (activeElement) {
                 activeElement.blur();
               }
-              vm.novaPartida.data.hora = moment(date).format('HH:mm');
+              vm.novaPartida.data.inicio = moment(vm.novaPartida.data.inicio + moment(date).format('HH:mm'), 'DD/MM/YYYYHH:mm')._d.getTime();
+              vm.novaPartida.dataFormatada = moment(vm.novaPartida.data.inicio).format('DD/MM/YYYY') + ' às ' + moment(vm.novaPartida.data.inicio).format('HH:mm');
             });
           });
         }
@@ -291,6 +290,9 @@ angular.module('main')
               if (!(typeof (val) === 'undefined')) {
                 var selectedTime = new Date(val * 1000);
                 vm.novaPartida.data.hora = moment(new Date(val * 1000)).add(moment(new Date(val * 1000))._d.getTimezoneOffset(), 'm').format('HH:mm');
+
+                vm.novaPartida.data.inicio = moment(vm.novaPartida.data.inicio+ vm.novaPartida.data.hora, 'DD/MM/YYYYHH:mm')._d.getTime();
+                vm.novaPartida.dataFormatada = moment(vm.novaPartida.data.inicio).format('DD/MM/YYYY') + ' às ' + moment(vm.novaPartida.data.inicio).format('HH:mm');
               }
             }
           };
@@ -304,7 +306,7 @@ angular.module('main')
         if (window.cordova) {
           var options = {
             date: new Date(),
-            mode: 'date',
+            mode: ionic.Platform.isAndroid() ? 'date' : 'datetime',
             locale: 'pt_br',
             minuteInterval: 15,
             doneButtonLabel: 'Ok',
@@ -321,14 +323,22 @@ angular.module('main')
               if (activeElement) {
                 activeElement.blur();
               }
-              vm.novaPartida.data.dia = moment(date).format('DD/MM/YYYY');
+              if(ionic.Platform.isAndroid()){
+                vm.novaPartida.data.inicio = moment(date).format('DD/MM/YYYY');
+                openTimePicker();
+              }
+              else{
+                vm.novaPartida.data.inicio =  moment(date)._d.getTime();
+                vm.novaPartida.dataFormatada = moment(date).format('DD/MM/YYYY') + ' às ' + moment(date).format('HH:mm');
+              }
             });
           });
         }
         else {
           var ipObj1 = {
-            callback: function (val) {  //Mandatory
-              vm.novaPartida.data.dia = moment(val).format('DD/MM/YYYY');
+            callback: function (val) {  
+              openTimePicker();
+              vm.novaPartida.data.inicio = moment(val).format('DD/MM/YYYY');
             },
             inputDate: new Date(),
             mondayFirst: true,

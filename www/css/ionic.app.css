@@ -54,7 +54,7 @@ input[readonly] {
   padding: 0px 10px 0px 10px !important; }
 
 .swiper-pagination-bullet {
-  background: #46687E !important; }
+  background: #FFF !important; }
 
 /*!
   Ionicons, v2.0.1
@@ -17424,6 +17424,107 @@ For example, you might change some of the default colors:
 
 #criar-partida .bar-header .back-button {
   display: none !important; }
+
+#criar-partida .step-nome .nome-input {
+  padding: 30px;
+  margin-top: 30%; }
+  #criar-partida .step-nome .nome-input label {
+    font-size: 4em;
+    font-weight: lighter;
+    line-height: 1.2em; }
+  #criar-partida .step-nome .nome-input input[type="text"] {
+    border-bottom: 1px solid;
+    font-size: 1.8em;
+    width: 100%;
+    font-weight: 300;
+    margin-top: 10px;
+    background: transparent; }
+
+#criar-partida .step-opcoes {
+  padding: 30px; }
+  #criar-partida .step-opcoes label {
+    font-size: 3em;
+    font-weight: lighter;
+    line-height: 1.2em; }
+  #criar-partida .step-opcoes .rzslider {
+    margin-top: 50px !important; }
+  #criar-partida .step-opcoes .rzslider .rz-bubble {
+    font-size: 1.5em;
+    font-weight: 300;
+    top: -45px; }
+  #criar-partida .step-opcoes .rzslider .rz-bar.rz-selection {
+    background: #00D466 !important; }
+  #criar-partida .step-opcoes .rzslider .rz-pointer {
+    background: #00D466 !important; }
+  #criar-partida .step-opcoes .rzslider .rz-pointer:after {
+    background: #00D466 !important; }
+  #criar-partida .step-opcoes .item-select select {
+    background: transparent !important; }
+
+#criar-partida .step-local .form {
+  padding: 30px 30px 0px 30px; }
+  #criar-partida .step-local .form label {
+    font-size: 3em;
+    font-weight: lighter;
+    line-height: 1.2em; }
+  #criar-partida .step-local .form .local-input input[type="text"], #criar-partida .step-local .form .local-input input[readonly] {
+    width: 100%;
+    border-bottom: 1px solid;
+    font-size: 1.8em;
+    font-weight: 300;
+    background: transparent !important; }
+  #criar-partida .step-local .form .data-input input[type="text"], #criar-partida .step-local .form .data-input input[readonly] {
+    width: 75%;
+    border-bottom: 1px solid;
+    font-size: 1.8em;
+    font-weight: 300;
+    background: transparent !important; }
+
+#criar-partida .step-jogadores {
+  padding-top: 20px; }
+  #criar-partida .step-jogadores hr {
+    border-top-color: #fff; }
+  #criar-partida .step-jogadores .label {
+    padding: 15px;
+    line-height: 1em;
+    color: white !important;
+    font-weight: 200;
+    font-size: 1.5em !important; }
+
+#criar-partida .item {
+  background: transparent !important;
+  border: 0px !important; }
+
+#criar-partida .list-arena {
+  width: 100%;
+  height: 180px;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  position: relative;
+  margin: 15px 0px; }
+  #criar-partida .list-arena .item {
+    position: absolute;
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+    height: 70px;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    top: 110px;
+    color: white;
+    margin: 0px;
+    border-radius: 0px; }
+    #criar-partida .list-arena .item .title {
+      font-size: 1.5em;
+      font-weight: bold; }
+    #criar-partida .list-arena .item .info {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
 
 #jogos-view .angular-google-map-container {
   height: 100vh; }
