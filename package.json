@@ -33,7 +33,9 @@
       "locator": "phonegap-plugin-push",
       "id": "phonegap-plugin-push"
     },
-    "cordova-plugin-file"
+    "cordova-plugin-file",
+    "cordova-plugin-camera",
+    "cordova-plugin-actionsheet"
   ],
   "cordovaPlatforms": [
     "android",

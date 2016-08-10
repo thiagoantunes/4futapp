@@ -426,7 +426,8 @@ angular.module('main', [
       'main.meus-jogos-detail-reserva',
       'main.arenas-detail-partida',
       'main.criarDesafio',
-      'main.times'
+      'main.times',
+      'main.criarTime'
     ];
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);
