@@ -53,7 +53,9 @@ angular.module('main')
               deferred.reject('Erro ao cadastrar nova turma');
             }
             else {
-              deferred.resolve(reservaId);
+              novaReserva.id = reservaId;
+              novaReserva.arenaId = arena;
+              deferred.resolve(novaReserva);
             }
           });
         }

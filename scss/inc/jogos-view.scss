@@ -1,4 +1,13 @@
-#criar-partida{
+.criar-partida{
+    -webkit-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center center;
+   
+
     .bar-header{
         .back-button{
             display: none !important;
@@ -26,7 +35,7 @@
     .step-opcoes{
         padding:30px;;
         label{
-            font-size:3em; font-weight: lighter; line-height:1.2em;
+            font-size:2.5em; font-weight: lighter; line-height:1.2em;
         }
         .rzslider{
             margin-top: 50px !important;
@@ -65,7 +74,7 @@
                     input[type="text"], input[readonly]{
                     width: 100%;
                     border-bottom: 1px solid;
-                    font-size: 1.8em;
+                    font-size: 1.3em;
                     font-weight: 300;
                     background: transparent !important;
                 }   
@@ -74,7 +83,7 @@
                 input[type="text"], input[readonly]{
                     width: 75%;
                     border-bottom: 1px solid;
-                    font-size: 1.8em;
+                    font-size: 1.3em;
                     font-weight: 300;
                     background: transparent !important;
                 }
@@ -92,6 +101,15 @@
             line-height: 1em; color: white !important;
             font-weight: 200;
             font-size: 1.5em !important;
+        }
+    }
+
+    .step-meu-time{
+        .meu-time-input{
+            padding:30px; margin-top:20%;
+            label{
+                font-size:3.5em; font-weight: lighter; line-height:1.2em;
+            }
         }
     }
 
@@ -235,7 +253,7 @@
     }
 
     ion-content{
-        background-color: $light;
+        background-color: $dark;
     }
 
     .item h2{
@@ -278,7 +296,7 @@
 .modal-convidar-amigos{
     
 
-      background-color: $light;
+      background-color: $dark;
 
       ion-content{
         top:190px;

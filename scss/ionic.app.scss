@@ -22,27 +22,27 @@
 
 
 
-$light:                           #1E394C !default;
-$stable:                          #46687E !default;
-$positive:                        #00D466 !default;
-$calm:                            #00BCD4 !default;
+$light:                           #AABDC2 !default;
+$stable:                          #1A5463 !default;
+$positive:                        #AAF502 !default;
+$calm:                            #0084A8 !default;
 $balanced:                        #03b7a5 !default;
 $energized:                       #FFC107 !default;
 $assertive:                       #F34235 !default;
 $royal:                           #8a6de9 !default;
-$dark:                            #1E394C !default;
-$base-background-color:           #0C2633 !default;
+$dark:                            #00303D !default;
+$base-background-color:           #00242E !default;
 
-$base-color:                      #efefef !default;
-$card-header-bg:                  #0C2633 !default;
-$card-body-bg:                    #1E394C !default;
-$card-footer-bg:                  #0C2633 !default;
+$base-color:                      #F1F7E9 !default;
+$card-header-bg:                  #00242E !default;
+$card-body-bg:                    #00303D !default;
+$card-footer-bg:                  #00242E !default;
 
 $button-stable-bg:                $stable !default;
-$button-stable-text:              #efefef !default;
-$button-stable-border:            #0C2633 !default;
-$button-stable-active-bg:         #0C2633 !default;
-$button-stable-active-border:     #1E394C !default;
+$button-stable-text:              $base-color !default;
+$button-stable-border:            #00242E !default;
+$button-stable-active-bg:         #00242E !default;
+$button-stable-active-border:     #00303D !default;
 
 $button-positive-bg:              $positive !default;
 $button-positive-text:            $dark !default;
@@ -113,6 +113,7 @@ input[readonly]{
 }
 
 .item{
+    background-color: $dark !important;
     p{
         color: darken($base-color, 20%) !important;
     }
@@ -120,7 +121,7 @@ input[readonly]{
 
 .item.item-divider{
     background-color: $base-background-color !important;
-    color: $stable !important;
+    color: $light !important;
     line-height: 32px !important;
 }
 

@@ -1,11 +1,4 @@
-<ion-view hide-nav-bar="true" view-title="" id="criar-partida" style="-webkit-box-align: center;
-	-webkit-align-items: center;
-	-ms-flex-align: center;
-	align-items: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-position: center center;
-    background-image: url('img/wizardbg.jpg');">
+<ion-view hide-nav-bar="true" view-title="" class="criar-partida" style=" background-image: url('img/wizardbg.jpg');">
     <ion-slides options="swiperOptions" slider="swiper" ion-wizard>
         <ion-slide-page  next-condition="vm.novaPartida.data.nome"  ion-wizard-step>
             <div class="bar bar-header" style="background:transparent; border: 0px !important">
@@ -73,7 +66,8 @@
             <ion-content class="has-header step-opcoes">
                 <label for="nomePartida">Mínimo e máximo <br/> de jogadores</label>
                 <rzslider rz-slider-model="vm.novaPartida.data.minJogadores" rz-slider-high="vm.novaPartida.data.maxJogadores" rz-slider-options="vm.numJogadoresRangeOptions"></rzslider>
-
+                <br/>
+                <br/>
                 <label for="nomePartida">Quem pode jogar?</label>
                 <div class="row" style="margin-top: 10px">
                     <div ng-click="vm.novaPartida.data.visibilidade = 1" class="col-25 text-center">
@@ -98,6 +92,7 @@
                     </div>
                 </div>
                 <br/>
+                <br/>
                 <label for="nomePartida">Aprovar jogadores manualmente</label>
                 <label class="toggle toggle-positive" style="font-size: 1em; margin: 10px;">
                     <input ng-model="vm.novaPartida.data.aprovacaoManual" type="checkbox">
@@ -120,10 +115,10 @@
                         <ion-scroll zooming="false" direction="x">
                             <div style="display: block; position:relative;">
                                 <div class="img" style="position:relative; display:inline-block; padding:5px;" ng-repeat="time in vm.times">
-                                    <img style="width: 60px; height: 60px; border-radius: 50%;" src="{{time.escudo | defaultImage}}">
+                                    <img style="width: 60px; height: 60px; border-radius: 50%;" cache-src="{{time.escudo | defaultImage}}">
                                 </div>
                                 <div class="img" style="position:relative; display:inline-block; padding:5px;" ng-repeat="jogador in vm.jogadores">
-                                    <img style="width: 60px; height: 60px; border-radius: 50%;" src="{{jogador.fotoPerfil | defaultImage}}">
+                                    <img style="width: 60px; height: 60px; border-radius: 50%;" cache-src="{{jogador.fotoPerfil | defaultImage}}">
                                 </div>
                             </div>
                         </ion-scroll>
@@ -133,14 +128,14 @@
                     </div>
                     <div ng-if="vm.meusTimes.length> 0" class="label">Chame um time inteiro para esta partida</div>
                     <div class="item item-avatar item-icon-right" ng-click="vm.toggleTime(time)" ng-repeat="time in vm.meusTimes" href="#">
-                        <img style="margin-top:-7px;" src="{{time.escudo | defaultImage}}">
+                        <img style="margin-top:-7px;" cache-src="{{time.escudo | defaultImage}}">
                         <h2>{{time.nome}}</h2>
                         <i ng-if="!vm.checkTime(time);" class="icon ion-ios-circle-outline"></i>
                         <i ng-if="vm.checkTime(time);" class="icon ion-ios-checkmark positive"></i>
                     </div>
                     <div class="label">Convocar jogadores</div>
                     <div class="item item-avatar item-icon-right" ng-click="vm.toggleJogador(amigo)" ng-repeat="amigo in vm.amigos" href="#">
-                        <img style="margin-top:-7px;" src="{{amigo.fotoPerfil | defaultImage}}">
+                        <img style="margin-top:-7px;" cache-src="{{amigo.fotoPerfil | defaultImage}}">
                         <h2>{{amigo.nome}}</h2>
                         <i ng-if="!vm.checkJogadorPartida(amigo);" class="icon ion-ios-circle-outline"></i>
                         <i ng-if="vm.checkJogadorPartida(amigo);" class="icon ion-ios-checkmark positive"></i>

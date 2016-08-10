@@ -424,7 +424,9 @@ angular.module('main', [
       'main.perfilAmigo',
       'main.criar-partida-reserva',
       'main.meus-jogos-detail-reserva',
-      'main.arenas-detail-partida'
+      'main.arenas-detail-partida',
+      'main.criarDesafio',
+      'main.times'
     ];
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);

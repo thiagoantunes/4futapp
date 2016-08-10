@@ -186,7 +186,7 @@ angular.module('main')
       };
     }
 
-    function salvarJogo(location) {
+    function salvarJogo() {
       vm.novaPartida.data.endereco = vm.novaPartida.localSelecionado.endereco;
       var novaPartidaData = {
         partida: vm.novaPartida.data,
@@ -289,9 +289,9 @@ angular.module('main')
             callback: function (val) {
               if (!(typeof (val) === 'undefined')) {
                 var selectedTime = new Date(val * 1000);
-                vm.novaPartida.data.hora = moment(new Date(val * 1000)).add(moment(new Date(val * 1000))._d.getTimezoneOffset(), 'm').format('HH:mm');
+                var hora = moment(new Date(val * 1000)).add(moment(new Date(val * 1000))._d.getTimezoneOffset(), 'm').format('HH:mm');
 
-                vm.novaPartida.data.inicio = moment(vm.novaPartida.data.inicio+ vm.novaPartida.data.hora, 'DD/MM/YYYYHH:mm')._d.getTime();
+                vm.novaPartida.data.inicio = moment(vm.novaPartida.data.inicio+ hora, 'DD/MM/YYYYHH:mm')._d.getTime();
                 vm.novaPartida.dataFormatada = moment(vm.novaPartida.data.inicio).format('DD/MM/YYYY') + ' às ' + moment(vm.novaPartida.data.inicio).format('HH:mm');
               }
             }

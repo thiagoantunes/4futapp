@@ -266,8 +266,7 @@ angular.module('main')
         title: firebase.auth().currentUser.displayName,
         status: 'agendado'
       };
-      ReservasService.criarReservaAvulsa(novaReserva, vm.arena.id).then(function (reservaId) {
-        var reserva = _.find(UserService.reservas, { 'id': reservaId });
+      ReservasService.criarReservaAvulsa(novaReserva, vm.arena.id).then(function (reserva) {
         if (vm.arena.criacaoPartidaAndamento) {
           JogosService.novaPartida.data.reserva = reserva.id;
           JogosService.novaPartida.data.dia = moment(reserva.start).format('DD/MM/YYYY');

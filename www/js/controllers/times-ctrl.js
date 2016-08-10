@@ -2,14 +2,29 @@
 'use strict';
 angular.module('main')
 
-  .controller('TimesCtrl', function (TimesService, $timeout, $ionicModal) {
+  .controller('TimesCtrl', function (TimesService, UserService, $timeout, $ionicModal) {
     var vm = this;
     vm.timesService = TimesService;
+    vm.meusTimes = UserService.times;
     vm.times = TimesService.timesRegiao;
+    vm.filtrarModalidades = filtrarModalidades;
 
     activate();
 
     function activate() {
+    }
+
+    function filtrarModalidades(time) {
+      if (_.some(time.jogadores, { id: firebase.auth().currentUser.uid })) {
+        return false;
+      }
+      return _.some(time.modalidades, function (mod) {
+        return _.some(UserService.times, function (meuTime) {
+          return _.some(meuTime.modalidades, function (minhaModalidade) {
+            return minhaModalidade == mod;
+          });
+        });
+      });
     }
 
   })
@@ -57,18 +72,46 @@ angular.module('main')
 
   })
 
-  .controller('PerfilTimeCtrl', function (TimesService , $timeout, ionicMaterialMotion, ionicMaterialInk) {
+  .controller('PerfilTimeCtrl', function (TimesService, UserService, $state, $timeout, ionicMaterialMotion, ionicMaterialInk, $ionicPopup) {
     var vm = this;
     vm.time = TimesService.timeSelecionado.data;
     vm.closeModal = closeModal;
+    vm.desafiarTime = desafiarTime;
 
     activate();
 
     function activate() {
     }
 
-    function closeModal(){
+    function closeModal() {
       TimesService.timeSelecionado.modal.hide();
+    }
+
+    function desafiarTime() {
+      if (UserService.times.length == 0) {
+        var popup = $ionicPopup.confirm({
+          template: 'Você ainda não faz parte de um time.',
+          buttons: [{
+            text: 'Fechar',
+            type: 'button-stable',
+            onTap: function (e) {
+              popup.close();
+            }
+          },
+            {
+              text: 'Criar Time',
+              type: 'button-positive',
+              onTap: function (e) {
+                popup.close();
+                closeModal();
+              }
+            }]
+        });
+      }
+      else {
+        closeModal();
+        $state.go('main.criarDesafio');
+      }
     }
 
     // Set Motion
@@ -128,7 +171,7 @@ angular.module('main')
         regiao: vm.novoTime.regiao,
         modalidades: vm.novoTime.modalidades
       };
-      TimesService.criarTime(novoTime, vm.novoTime.jogadores, vm.locationNovoTime ).then(function () {
+      TimesService.criarTime(novoTime, vm.novoTime.jogadores, vm.locationNovoTime).then(function () {
         $ionicHistory.goBack(-1);
       });
     }

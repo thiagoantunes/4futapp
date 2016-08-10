@@ -1,7 +1,7 @@
 <ion-view view-title="REI DA QUADRA">
   <ion-content>
     <ul class="list">
-      <li class="item" ng-click="vm.timesService.openPerfilTime(time);" ng-repeat="time in vm.times">
+      <li class="item" ng-click="vm.timesService.openPerfilTime(time);" ng-repeat="time in vm.times | filter: vm.filtrarModalidades">
         {{time.nome}}
       </li>
     </ul>

@@ -1,28 +1,167 @@
-<ion-view view-title="">
-    <ion-nav-buttons side="left">
-        <button ion-wizard-previous class="button button-icon button-clear icon ion-android-arrow-back"></button>
-    </ion-nav-buttons>
-    <ion-nav-buttons side="right">
-        <button class="button button-clear button-light" ion-wizard-next>
-            Próximo
-        </button>
-        <button class="button button-clear button-light" ion-wizard-start="vm.criarTime()">
-            Criar time
-        </button>
-    </ion-nav-buttons>
+<ion-view hide-nav-bar="true" view-title="" class="criar-partida" style=" background-image: url('img/wizardbg.jpg');">
     <ion-slides options="swiperOptions" slider="swiper" ion-wizard>
-        <ion-slide-page ion-wizard-step>
+        <ion-slide-page ng-if="vm.meusTimes.length > 1" ion-wizard-step>
+            <div class="bar bar-header" style="background:transparent; border: 0px !important">
+                <button ng-click="vm.goBack()" style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">Cancelar</button>
+                <div style="font-weight:bold" class="title">Desafiar</div>
+                <!--<button ion-wizard-next style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">PRÓXIMO</button>-->
+            </div>
             <ion-content class="has-header">
+                <div style="margin-top:20%; padding:30px 0px;">
+                    <div style="padding:0px 30px;">
+                        <label style="font-weight: 100; font-size:3em;">Escolha um time</label>
+                        <div style="font-weight: 300; font-size:1.1em; margin-bottom:30px;"> Você joga em mais de um time. Escolha um. </div>
+                    </div>
+                    <div class="list">
+                        <div style="background-color: rgba(255,255,255,0.2) !important; margin-bottom: 10px;" ng-click="vm.selecionaTime(time);" ion-wizard-next class="item item-avatar item-button-right" ng-repeat="time in vm.meusTimes">
+                            <img style="margin-top:-7px; margin-left:10px;" cache-src="{{time.escudo | defaultImage}}">
+                            <h2 style="margin-left:20px">{{time.nome}}</h2>
+                        </div>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-slide-page>
+        <ion-slide-page ion-wizard-step>
+            <div class="bar bar-header" style="background:transparent; border: 0px !important">
+                <button ng-if="vm.meusTimes.length == 1" ng-click="vm.goBack()" style="color: white; font-weight: normal; font-size: 1em;"
+                    class="button button-clear">Cancelar</button>
+                <button ng-if="vm.meusTimes.length > 1" ion-wizard-previous style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">VOLTAR</button>
+                <div style="font-weight:bold" class="title">Desafiar</div>
+                <button ion-wizard-next style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">PRÓXIMO</button>
+            </div>
+            <ion-content class="has-header">
+                <div class="row" style="margin-top:60px; padding:30px">
+                    <div style="text-align:center" class="col-33">
+                        <img style="height: 100px; width:100px; border-radius:50%" cache-src="{{vm.novoDesafio.data.desafiante.escudo | defaultImage}}">
+                        <br/>
+                        <b>{{vm.novoDesafio.data.desafiante.nome}}</b>
+                    </div>
+                    <div style="text-align: center; font-size: 3em; line-height: 100px; font-weight: 300;" class="col-33">
+                        X
+                    </div>
+                    <div style="text-align:center" class="col-33">
+                        <img style="height: 100px; width:100px; border-radius:50%" cache-src="{{vm.novoDesafio.data.desafiado.escudo | defaultImage}}">
+                        <br/>
+                        <b>{{vm.novoDesafio.data.desafiado.nome}}</b>
+                    </div>
+                </div>
+                <div ng-if="vm.modalidadesCombinadas.length > 1">
+                    <div style="padding:0px 30px;">
+                        <label style="font-weight: 100; font-size:2.5em;">Escolha a modalidade</label>
+                        <div style="font-weight: 300; font-size:1.1em; margin-bottom:30px;"> Os times jogam em mais de uma modalidade. Escolha uma.</div>
+                    </div>
+                    <div class="list">
+                        <div style="background-color: rgba(255,255,255,0.2) !important; margin-bottom: 10px;" ng-click="vm.novoDesafio.data.modalidade = modalidade"
+                            ion-wizard-next class="item item-avatar item-button-right" ng-repeat="modalidade in vm.modalidadesCombinadas;">
+                            <img style="margin-top:-7px; margin-left:10px;" cache-src="{{modalidade.escudo | defaultImage}}">
+                            <h2 style="margin-left:20px">{{modalidade}}</h2>
+                        </div>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-slide-page>
+        <ion-slide-page ion-wizard-step>
+            <div class="bar bar-header" style="background:transparent; border: 0px !important">
+                <button ion-wizard-previous style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">VOLTAR</button>
+                <div style="font-weight:bold" class="title">Desafiar</div>
+                <button ion-wizard-next style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">PRÓXIMO</button>
+            </div>
+            <ion-content class="has-header step-local" scroll="false">
+                <div class="form">
+                    <div ng-if="vm.arenas.length == 0" style="margin-top:40%"></div>
+                    <div class="data-input">
+                        <label for="diaPartida">Dia e hora</label>
+                        <input id="diaPartida" name="diaPartida" ng-model="vm.novoDesafio.dataFormatada" ng-focus="vm.openDatePicker();" ng-readonly="true"
+                            type="text">
+                    </div>
+                    <br/>
+                    <div class="local-input">
+                        <label for="localPartida">Local da Partida</label>
+                        <input id="localPartida" name="localPartida" ng-model="vm.novoDesafio.localSelecionado.endereco" ng-focus="vm.openLocalPicker();"
+                            ng-readonly="true" type="text">
+                    </div>
+                    <p ng-if="vm.arenas.length > 0" style="padding-top: 40px; font-size: 1.2em;">
+                        Ainda nao tem onde jogar? Reserve um horário em uma das arenas abaixo.
+                    </p>
+                </div>
+                <ion-scroll style="height: 50vh;" zooming="false" direction="y">
+                    <div class="list card" style="background: transparent !important; margin:0px;">
+                        <a ng-repeat="arena in vm.arenas | orderBy:'distance'" ng-click="vm.abrirArena(arena);" ui-sref="main.arenas-detail-partida({id: arena.id})">
+                            <div class="list-arena" style="background-image: url('{{arena.fotoPerfil | defaultImage}}');">
+                                <div class="item">
+                                    <div class="title">
+                                        {{arena.nome}}
+                                    </div>
+                                    <div class="info">
+                                        <i class="icon ion-location"></i> {{arena.endereco}}
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </ion-scroll>
+
             </ion-content>
         </ion-slide-page>
         <ion-slide-page ion-wizard-step>
             <ion-content class="has-header">
-            </ion-content>
-        </ion-slide-page>
-        <ion-slide-page ion-wizard-step >
-            <ion-content class="has-header">
+                <div style="margin-top: 50px; padding: 0px 30px;">
+                    <div class="row" style="margin-bottom: 40px;">
+                        <div style="text-align:center" class="col-33">
+                            <img style="height: 100px; width:100px; border-radius:50%" cache-src="{{vm.novoDesafio.data.desafiante.escudo | defaultImage}}">
+                            <br/>
+                            <b>{{vm.novoDesafio.data.desafiante.nome}}</b>
+                        </div>
+                        <div style="text-align: center; font-size: 3em; line-height: 100px; font-weight: 300;" class="col-33">
+                            X
+                        </div>
+                        <div style="text-align:center" class="col-33">
+                            <img style="height: 100px; width:100px; border-radius:50%" cache-src="{{vm.novoDesafio.data.desafiado.escudo | defaultImage}}">
+                            <br/>
+                            <b>{{vm.novoDesafio.data.desafiado.nome}}</b>
+                        </div>
+                    </div>
+                    <div style="font-size: 1.3em; font-weight: 200; padding: 7px 0px;" class="row">
+                        <div class="col-10 text-center">
+                            <i style="font-size: 1.5em;" class="icon ion-ios-calendar-outline positive"></i>
+                        </div>
+                        <div style="padding-left: 10px;" class="col-90">
+                            {{vm.novoDesafio.dataFormatada}}
+                        </div>
+                    </div>
+                    <div style="font-size: 1.3em; font-weight: 200; padding: 7px 0px;" class="row">
+                        <div class="col-10 text-center">
+                            <i style="font-size: 1.5em;" class="icon ion-location positive"></i>
+                        </div>
+                        <div style="padding-left: 10px;" class="col-90">
+                            {{vm.novoDesafio.localSelecionado.endereco}}
+                        </div>
+
+                    </div>
+                    <div style="font-size: 1.3em; font-weight: 200;  padding: 7px 0px;" class="row">
+                        <div class="col-10 text-center">
+                            <i style="font-size: 1.5em;" class="icon ion-ios-checkmark positive"></i>
+                        </div>
+                        <div style="padding-left: 10px;" class="col-90">
+                            {{vm.novoDesafio.data.modalidade}}
+                        </div>
+                    </div>
+                    <hr style="border-top: solid 1px #fff;">
+                    <p>Uma solicitação será enviada aos capitães dos times. O desafio estará valendo quando eles aprovarem.</p>
+                </div>
+                <div class="row" style="padding: 0px 20px;">
+                    <div class="col-50" style="    margin-right: 5px;">
+                        <button ion-wizard-start="vm.salvarDesafio();" class="button button-full button-positive">
+                          CONFIRMAR
+                        </button>
+                    </div>
+                    <div class="col-50" style="    margin-left: 5px;">
+                        <button ion-wizard-previous class="button button-full button-stable">
+                          VOLTAR
+                        </button>
+                    </div>
+                </div>
             </ion-content>
         </ion-slide-page>
     </ion-slides>
-
 </ion-view>

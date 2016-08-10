@@ -13,7 +13,8 @@ angular.module('main')
       getMeusTimes: getMeusTimes,
       criarTime: criarTime,
       getTimesRegiao: getTimesRegiao,
-      openPerfilTime: openPerfilTime
+      openPerfilTime: openPerfilTime,
+      criarDesafio: criarDesafio
     };
 
     return service;
@@ -23,6 +24,9 @@ angular.module('main')
         service.ref.child(snap.key).on('value', function (snapUser) {
           var data = snapUser.val();
           data.id = snap.key;
+          data.modalidades = Object.keys(data.modalidades).map(function (key) {
+            return key;
+          });
           data.jogadores = Object.keys(data.jogadores).map(function (key) {
             return data.jogadores[key];
           });
@@ -36,10 +40,13 @@ angular.module('main')
 
     function getTimesRegiao() {
       service.geoQuery.on('key_entered', function (key, location, distance) {
-        service.ref.child(key).once('value').then(function (snapshot) {
+        service.ref.child(key).on('value', function (snapshot) {
           var time = snapshot.val();
           time.distance = distance;
           time.id = key;
+          time.modalidades = Object.keys(time.modalidades).map(function (key) {
+            return key;
+          });
           time.jogadores = Object.keys(time.jogadores).map(function (key) {
             return time.jogadores[key];
           });
@@ -85,6 +92,40 @@ angular.module('main')
           var geo = new GeoFire(service.refLocalizacao);
           geo.set(timeId, location);
           deferred.resolve();
+        }
+      });
+
+      return deferred.promise;
+    }
+
+    function criarDesafio(data) {
+      var deferred = $q.defer();
+
+      var desafioId = service.ref.push().key;
+      var desafioData = {};
+      desafioData['times/' + data.desafio.desafiante.id + '/desafios/' + desafioId] = true;
+      desafioData['times/' + data.desafio.desafiado.id + '/desafios/' + desafioId] = false;
+      desafioData['desafios/' + desafioId] = data.desafio;
+
+      if (data.desafio.reserva && data.arenaId) {
+        desafioData['reservas/' + data.arenaId + '/' + data.desafio.reserva + '/desafio'] = desafioId;
+      }
+
+      Ref.update(desafioData, function (error) {
+        if (error) {
+          deferred.reject('Erro ao cadastrar novo desafio');
+        }
+        else {
+          UserService.enviaNotificacao({
+            msg: 'Seu time <b>' + data.desafio.desafiado.nome + '</b> foi desafiado pelo time <b>' + data.desafio.desafiante.nome + '</b> ',
+            img: data.desafio.desafiante.escudo,
+            tipo: 'desafio',
+            lida: false,
+            dateTime: new Date().getTime()
+          }, data.desafio.desafiado.capitao);
+          var geo = new GeoFire(Ref.child('desafiosLocalizacao'));
+          geo.set(desafioId, data.coords);
+          deferred.resolve(desafioId);
         }
       });
 
