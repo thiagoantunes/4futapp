@@ -25,7 +25,7 @@ angular.module('main', [
   // TODO: load other modules selected during generation
 ])
 
-  .run(function ($ionicPlatform, $ionicAnalytics, $state, Ref, $rootScope) {
+  .run(function ($ionicPlatform, $ionicAnalytics, $state, Ref, $rootScope, UserService) {
     firebase.auth().onAuthStateChanged(checkLogin);
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
@@ -52,6 +52,18 @@ angular.module('main', [
         StatusBar.styleLightContent();
         //StatusBar.styleDefault();
       }
+
+      var push = new Ionic.Push({
+        "debug": true
+      });
+
+      var token = '';
+
+      push.register(function (token) {
+        UserService.salvarDeviceToken(token.token);
+        console.log('token:' + token);
+        push.saveToken(token);
+      });
 
       var deploy = new Ionic.Deploy();
       deploy.watch().then(
@@ -84,14 +96,6 @@ angular.module('main', [
       if (window.cordova) {
         navigator.splashscreen.hide();
       }
-    });
-
-    var push = new Ionic.Push({
-      "debug": true
-    });
-
-    push.register(function (token) {
-      console.log("Device token:", token.token);
     });
 
     // Load the facebook SDK asynchronously
@@ -410,7 +414,7 @@ angular.module('main', [
       });
   })
 
-  .controller('MenuCtrl', function ($state, $rootScope, ArenasService, UserService, ReservasService, JogosService,TimesService, $ionicHistory) {
+  .controller('MenuCtrl', function ($state, $rootScope, ArenasService, UserService, ReservasService, JogosService, TimesService, $ionicHistory) {
     var vm = this;
     var hideTabsStates = [
       'main.arenas',
@@ -515,10 +519,10 @@ angular.module('main', [
 
       if (number) {
         if (number.length > 8) {
-          number = number.slice(0,5) + '-' + number.slice(5, 9);
+          number = number.slice(0, 5) + '-' + number.slice(5, 9);
         }
         else if (number.length > 7) {
-          number = number.slice(0,4) + '-' + number.slice(4, 8);
+          number = number.slice(0, 4) + '-' + number.slice(4, 8);
         }
         else {
           number = number;

@@ -17741,6 +17741,9 @@ For example, you might change some of the default colors:
         .cards-view .card-2 .card-outer .card-content .card-description-outer .card-description:last-child {
           margin-bottom: 0px; }
 
+#login-view ion-slides {
+  height: calc(100vh - 220px); }
+
 .bar .title {
   font-size: 17px !important; }
 

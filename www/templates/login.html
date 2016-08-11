@@ -1,16 +1,74 @@
-<ion-view>
+<ion-view id="login-view" hide-nav-bar="true" style="-webkit-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center center;
+  background-image: url('img/wizardbg.jpg');">
   <!-- do you want padding? -->
-  <ion-content class="padding">
-    <div style="padding:20px">
-      <button class="button button-full button-assertive" ng-click="vm.facebookLogin();">Login</button>
+  <ion-content scroll="false">
+    <ion-slides options="options" slider="data.slider">
+      <ion-slide-page>
+        <div class="text-center" style="padding-top:80px">
+          <img style="width:70%;" src="img/logo-pb.png">
+        </div>
+      </ion-slide-page>
+      <ion-slide-page>
+        <div class="text-center" style="padding: 60px 10px;">
+          <div style="font-size: 1.5em; font-weight: 500; line-height: 1.2em;">
+            RESERVE HORÁRIOS EM ARENAS DE FORMA FÁCIL E DIRETA
+          </div>
+        </div>
+      </ion-slide-page>
+      <ion-slide-page>
+        <div class="text-center" style="padding: 60px 10px;">
+          <div style="font-size: 1.5em; font-weight: 500; line-height: 1.2em;">
+            ORGANIZE SUAS PELADAS E CONVIDE SEUS AMIGOS
+          </div>
+        </div>
+      </ion-slide-page>
+      <ion-slide-page>
+        <div class="text-center" style="padding: 60px 10px;">
+          <div style="font-size: 1.5em; font-weight: 500; line-height: 1.2em;">
+            MONTE O SEU TIME E DESAFIE OUTROS 
+          </div>
+        </div>
+      </ion-slide-page>
+      <ion-slide-page>
+        <div class="text-center" style="padding: 60px 10px;">
+          <div style="font-size: 1.5em; font-weight: 500; line-height: 1.2em;">
+            ENCONTRE JOGOS PERTO DE VOCÊ
+          </div>
+        </div>
+      </ion-slide-page>
+    </ion-slides>
+    <div style="    
+    height: 220px; 
+    bottom: 0px;
+    position: absolute;
+    width: 100%; 
+    padding:0px 20px">
+      <p style="text-align:center; font-size: small;">Ao continuar você concorda com os nossos <a href="#" style="text-decoration: none; font-weight: bold; color: white;">Termos de serviço</a> e <a style="text-decoration: none; font-weight: bold; color: white;" href="">Política de privacidade</a></p>
+      <div class="row" ng-click="vm.facebookLogin();" style="margin:5px 0px;">
+        <div class="col-33" style="background: #39579B; text-align:center; font-size:2em; padding: 10px 0px; border-radius: 5px 0px 0px 5px">
+          <i class="icon ion-social-facebook"></i>
+        </div>
+        <div class="col-67" style="background: #39579B; padding: 15px 0px; font-weight:bold; border-radius: 0px 5px 5px 0px">
+          Entrar com Facebook
+        </div>
+      </div>
+      <div class="row" ng-click="vm.googleLogin();" style="margin:5px 0px;">
+        <div class="col-33" style="background: #CF4332; text-align:center; font-size:2em; padding: 10px 0px; border-radius: 5px 0px 0px 5px">
+          <i class="icon ion-social-google"></i>
+        </div>
+        <div class="col-67" style="background: #CF4332; padding: 15px 0px; font-weight:bold; border-radius: 0px 5px 5px 0px">
+          Entrar com Google
+        </div>
+      </div>
+      <p style="text-align:center;">
+        <i class="icon ion-ios-information"></i> Não postamos nada em seu nome
+      </p>
     </div>
-
-    <!--<h1>Welcome to My Awesome App</h1>
-    <div id="firebaseui-auth-container"></div>
-    
-    <div id="quickstart-sign-in-status"></div>
-    <div id="quickstart-sign-in"></div>
-    <div id="quickstart-account-details"></div>-->
-
   </ion-content>
 </ion-view>

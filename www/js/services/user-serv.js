@@ -23,7 +23,8 @@ angular.module('main')
       adicionarAmigo: adicionarAmigo,
       removerAmigo: removerAmigo,
       enviaNotificacao: enviaNotificacao,
-      openPerfilJogador: openPerfilJogador
+      openPerfilJogador: openPerfilJogador,
+      salvarDeviceToken: salvarDeviceToken
     };
 
     return service;
@@ -138,7 +139,7 @@ angular.module('main')
       var deferred = $q.defer();
       service.ref.child(user + '/amigos/').once('value').then(function (snapshot) {
         var amigos = Object.keys(snapshot.val()).map(function (key) {
-          if(snapshot.val()[key]){
+          if (snapshot.val()[key]) {
             return key;
           }
         });
@@ -167,6 +168,16 @@ angular.module('main')
         deferred.resolve(snapshot.val());
       });
       return deferred.promise;
+    }
+
+    function salvarDeviceToken(token) {
+      var update = {};
+      firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+          update['users/' + user.uid + '/token/' + token] = token;
+          Ref.update(update);
+        }
+      });
     }
 
   });
