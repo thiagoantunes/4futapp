@@ -1,0 +1,20 @@
+<ion-modal-view hide-nav-bar="true" class="criar-partida" style=" background-image: url('img/wizardbg.jpg');">
+    <div class="bar bar-header" style="background:transparent; border: 0px !important">
+        <button style="color:white" class="button button-icon button-clear ion-android-close" ng-click="modalLocal.hide()">
+    </div>
+    <ion-content class="has-header step-local">
+        <div class="form" style="padding-top:30px">
+            <div class="local-input">
+            <div style="margin-bottom: 10px; font-size:1.2em; font-weight: 200;">Informe o bairro ou a cidade do time joga ( ex: Santa Tereza - Belo Horizonte )</div>
+            <input id="regiaoTime" name="regiaoTime" ng-model="search.query" ng-focus="search.query = ''; search.justSelected = false;"
+                type="text">
+            <ion-list>
+                <ion-item style="background-color: rgba(255,255,255,0.2) !important; margin-bottom: 10px;" ng-repeat="suggestion in search.suggestions"
+                    ng-click="choosePlace(suggestion)">
+                    {{suggestion.description}}
+                    </ion-item>
+                </ion-list>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

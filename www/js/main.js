@@ -412,6 +412,16 @@ angular.module('main', [
             controller: 'NotificacoesCtrl as vm'
           }
         }
+      })
+      
+      .state('main.meus-jogos-detail-notificacoes', {
+        url: '/meus-jogos-notificacoes/:id',
+        views: {
+          'tab-notificacoes': {
+            templateUrl: 'templates/jogos-detail.html',
+            controller: 'JogosDetailCtrl as vm',
+          }
+        }
       });
   })
 
@@ -432,7 +442,8 @@ angular.module('main', [
       'main.arenas-detail-partida',
       'main.criarDesafio',
       'main.times',
-      'main.criarTime'
+      'main.criarTime',
+      'main.meus-jogos-detail-notificacoes'
     ];
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);

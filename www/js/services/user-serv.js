@@ -1,6 +1,6 @@
 'use strict';
 angular.module('main')
-  .factory('UserService', function (Ref, $firebaseObject, PushNotification, $firebaseArray, $q, $timeout, $http, $ionicModal, $resource) {
+  .factory('UserService', function (Ref, $firebaseObject, Enum, PushNotification, $firebaseArray, $q, $timeout, $http, $ionicModal, $resource) {
     var service = {
       jogos: [],
       amigos: [],
@@ -66,7 +66,7 @@ angular.module('main')
         enviaNotificacao({
           msg: firebase.auth().currentUser.displayName + ' começou a te seguir',
           img: firebase.auth().currentUser.photoURL,
-          tipo: 'solicitacaoAmizade',
+          tipo: Enum.TipoNotificacao.solicitacaoAmizade,
           lida: false,
           dateTime: new Date().getTime()
         }, id);
@@ -85,12 +85,7 @@ angular.module('main')
 
     function sendPushNotification(id, msg) {
       service.ref.child(id + '/token').once('value', function (snap) {
-        var tokens = [];
         if (snap.val()) {
-          _.forEach(snap.val(), function (token) {
-            tokens.push(token);
-          });
-
           var jwt = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjMjYyYjY0Mi01NzEzLTQ5MjctOGMxZC0zMzJlM2EwMzg0ZDQifQ.c1vHBOiHZe8w1Nvf1nUsgtLdrwniRkr8xpYUhjD2f2o';
           var req = {
             method: 'POST',
@@ -100,7 +95,7 @@ angular.module('main')
               'Authorization': 'Bearer ' + jwt
             },
             data: {
-              'tokens': tokens,
+              'tokens': [snap.val()],
               'profile': 'dev',
               'notification': {
                 'title': 'Rei da Quadra',
@@ -212,7 +207,7 @@ angular.module('main')
       var update = {};
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-          update['users/' + user.uid + '/token/' + token] = token;
+          update['users/' + user.uid + '/token/'] = token;
           Ref.update(update);
         }
       });

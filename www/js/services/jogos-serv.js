@@ -1,7 +1,7 @@
 /*global firebase GeoFire*/
 'use strict';
 angular.module('main')
-  .factory('JogosService', function (Ref, $timeout, $firebaseObject, $firebaseArray, $q, UserService) {
+  .factory('JogosService', function (Ref, $timeout, $firebaseObject, Enum, $firebaseArray, $q, UserService) {
     var service = {
       jogoSelecionado: null,
       novaPartida: {},
@@ -21,7 +21,8 @@ angular.module('main')
       criarJogo: criarJogo,
       convidarAmigo: convidarAmigo,
       desconvidarAmigo: desconvidarAmigo,
-      solicitarPresenca: solicitarPresenca
+      solicitarPresenca: solicitarPresenca,
+      aprovarSolicitacaoPresenca: aprovarSolicitacaoPresenca
     };
 
     return service;
@@ -134,7 +135,7 @@ angular.module('main')
             UserService.enviaNotificacao({
               msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
               img: firebase.auth().currentUser.photoURL,
-              tipo: 'convitePartida',
+              tipo: Enum.TipoNotificacao.convitePartida,
               lida: false,
               dateTime: new Date().getTime()
             }, jogador.id);
@@ -145,7 +146,7 @@ angular.module('main')
                 UserService.enviaNotificacao({
                   msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
                   img: firebase.auth().currentUser.photoURL,
-                  tipo: 'convitePartida',
+                  tipo: Enum.TipoNotificacao.convitePartida,
                   lida: false,
                   dateTime: new Date().getTime()
                 }, jogador.id);
@@ -179,9 +180,11 @@ angular.module('main')
         deferred.resolve(solicitacao);
         if (jogo.aprovacaoManual) {
           UserService.enviaNotificacao({
-            msg: firebase.auth().currentUser.displayName + ' solicitou presença na partida <b>' + jogo.nome + '</b>',
+            msg: firebase.auth().currentUser.displayName + ' solicitou presença na partida ' + jogo.nome,
             img: firebase.auth().currentUser.photoURL,
-            tipo: 'solicitacaoPartida',
+            userId: firebase.auth().currentUser.uid,
+            jogoId: jogo.id,
+            tipo: Enum.TipoNotificacao.solicitacaoPresenca,
             lida: false,
             dateTime: new Date().getTime()
           }, jogo.responsavel);
@@ -206,6 +209,23 @@ angular.module('main')
       });
     }
 
+    function aprovarSolicitacaoPresenca(userId, jogoId) {
+      var data = {};
+      data['jogosJogadores/' + jogoId + '/' + userId + '/aguardandoConfirmacao'] = null;
+
+      Ref.update(data, function () {
+        UserService.enviaNotificacao({
+          msg: firebase.auth().currentUser.displayName + ' aprovou sua participação em uma partida',
+          userId: firebase.auth().currentUser.uid,
+          jogoId: jogoId,
+          img: firebase.auth().currentUser.photoURL,
+          tipo: Enum.TipoNotificacao.aprovacaoSolicitacaoPresenca,
+          lida: false,
+          dateTime: new Date().getTime()
+        }, userId);
+      });
+    }
+
     function convidarAmigo(amigo, jogoId) {
       var conviteData = {};
       conviteData['jogosJogadores/' + jogoId + '/' + amigo.id] = {
@@ -217,8 +237,10 @@ angular.module('main')
       Ref.update(conviteData, function () {
         UserService.enviaNotificacao({
           msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
+          userId: firebase.auth().currentUser.uid,
+          jogoId: jogoId,
           img: firebase.auth().currentUser.photoURL,
-          tipo: 'convitePartida',
+          tipo: Enum.TipoNotificacao.convitePartida,
           lida: false,
           dateTime: new Date().getTime()
         }, amigo.id);
@@ -236,20 +258,20 @@ angular.module('main')
     function verificaPermissao(jogo) {
       var deferred = $q.defer();
 
-      if (jogo.visibilidade == 4) {
+      if (jogo.visibilidade == Enum.VisualizacaoJogo.publico) {
         deferred.resolve(true);
       }
-      else if (jogo.visibilidade == 3) {
+      else if (jogo.visibilidade == Enum.VisualizacaoJogo.amigosDeAmigos) {
         UserService.verificaAmizadeDeAmizades(jogo.responsavel).then(function (val) {
           deferred.resolve(val);
         });
       }
-      else if (jogo.visibilidade == 2) {
+      else if (jogo.visibilidade == Enum.VisualizacaoJogo.amigos) {
         UserService.verificaAmizade(jogo.responsavel).then(function (val) {
           deferred.resolve(val);
         });
       }
-      else if (jogo.visibilidade == 1) {
+      else if (jogo.visibilidade == Enum.VisualizacaoJogo.convidados) {
         var convidado = _.some(jogo.jogadores, { '$id': firebase.auth().currentUser.uid });
         deferred.resolve(convidado);
       }

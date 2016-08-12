@@ -41,7 +41,7 @@ angular.module('main')
 
   })
 
-  .controller('ReservaCtrl', function ($scope, $state, JogosService, UserService, ReservasService, ArenasService, GeoService, $ionicModal, $ionicPopup) {
+  .controller('ReservaCtrl', function ($scope, $state, JogosService, UserService, ReservasService, ArenasService, GeoService, Enum, $ionicModal, $ionicPopup) {
     var vm = this;
     vm.reservaSelecionada = ReservasService.reservaSelecionada.data;
 
@@ -144,7 +144,7 @@ angular.module('main')
 
   })
 
-  .controller('NovaPartidaCtrl', function ($scope, $state, $ionicHistory, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService) {
+  .controller('NovaPartidaCtrl', function ($scope, $state, $ionicHistory, Enum, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService) {
     var vm = this;
     vm.jogadores = [];
     vm.times = [];
@@ -152,6 +152,7 @@ angular.module('main')
     vm.arenas = ArenasService.arenas;
     vm.meusTimes = UserService.times;
     vm.arenasBasicas = ArenasService.arenasBasicas;
+    vm.visualizacaoJogo = Enum.VisualizacaoJogo;
     vm.novaPartida = JogosService.novaPartida;
     vm.openTimePicker = openTimePicker;
     vm.openDatePicker = openDatePicker;

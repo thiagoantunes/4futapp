@@ -70,24 +70,24 @@
                 <br/>
                 <label for="nomePartida">Quem pode jogar?</label>
                 <div class="row" style="margin-top: 10px">
-                    <div ng-click="vm.novaPartida.data.visibilidade = 1" class="col-25 text-center">
-                        <i ng-if="vm.novaPartida.data.visibilidade === 1" style="font-size:2em" class="icon ion-ios-checkmark positive"></i>
-                        <i ng-if="vm.novaPartida.data.visibilidade !== 1" style="font-size:2em" class="icon ion-ios-circle-outline"></i>
+                    <div ng-click="vm.novaPartida.data.visibilidade = vm.visualizacaoJogo.convidados" class="col-25 text-center">
+                        <i ng-if="vm.novaPartida.data.visibilidade === vm.visualizacaoJogo.convidados" style="font-size:2em" class="icon ion-ios-checkmark positive"></i>
+                        <i ng-if="vm.novaPartida.data.visibilidade !== vm.visualizacaoJogo.convidados" style="font-size:2em" class="icon ion-ios-circle-outline"></i>
                         <br/> Convidados
                     </div>
-                    <div ng-click="vm.novaPartida.data.visibilidade = 2" class="col-25 text-center">
-                        <i ng-if="vm.novaPartida.data.visibilidade === 2" style="font-size:2em" class="icon ion-ios-checkmark positive"></i>
-                        <i ng-if="vm.novaPartida.data.visibilidade !== 2" style="font-size:2em" class="icon ion-ios-circle-outline"></i>
+                    <div ng-click="vm.novaPartida.data.visibilidade = vm.visualizacaoJogo.amigos" class="col-25 text-center">
+                        <i ng-if="vm.novaPartida.data.visibilidade === vm.visualizacaoJogo.amigos" style="font-size:2em" class="icon ion-ios-checkmark positive"></i>
+                        <i ng-if="vm.novaPartida.data.visibilidade !== vm.visualizacaoJogo.amigos" style="font-size:2em" class="icon ion-ios-circle-outline"></i>
                         <br/> Amigos
                     </div>
-                    <div ng-click="vm.novaPartida.data.visibilidade = 3" class="col-25 text-center">
-                        <i ng-if="vm.novaPartida.data.visibilidade === 3" style="font-size:2em" class="icon ion-ios-checkmark positive"></i>
-                        <i ng-if="vm.novaPartida.data.visibilidade !== 3" style="font-size:2em" class="icon ion-ios-circle-outline"></i>
+                    <div ng-click="vm.novaPartida.data.visibilidade = vm.visualizacaoJogo.amigosDeAmigos" class="col-25 text-center">
+                        <i ng-if="vm.novaPartida.data.visibilidade === vm.visualizacaoJogo.amigosDeAmigos" style="font-size:2em" class="icon ion-ios-checkmark positive"></i>
+                        <i ng-if="vm.novaPartida.data.visibilidade !== vm.visualizacaoJogo.amigosDeAmigos" style="font-size:2em" class="icon ion-ios-circle-outline"></i>
                         <br/> Amigos de amigos
                     </div>
-                    <div ng-click="vm.novaPartida.data.visibilidade = 4" class="col-25 text-center">
-                        <i ng-if="vm.novaPartida.data.visibilidade === 4" style="font-size:2em" class="icon ion-ios-checkmark positive"></i>
-                        <i ng-if="vm.novaPartida.data.visibilidade !== 4" style="font-size:2em" class="icon ion-ios-circle-outline"></i>
+                    <div ng-click="vm.novaPartida.data.visibilidade = vm.visualizacaoJogo.publico" class="col-25 text-center">
+                        <i ng-if="vm.novaPartida.data.visibilidade === vm.visualizacaoJogo.publico" style="font-size:2em" class="icon ion-ios-checkmark positive"></i>
+                        <i ng-if="vm.novaPartida.data.visibilidade !== vm.visualizacaoJogo.publico" style="font-size:2em" class="icon ion-ios-circle-outline"></i>
                         <br/> Público
                     </div>
                 </div>

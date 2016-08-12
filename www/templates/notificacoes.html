@@ -1,13 +1,23 @@
 <ion-view view-title="NOTIFICAÇOES">
   <ion-content>
     <div class="list ">
-      <a class="item  item-avatar item-text-wrap item-button-right" ng-repeat="notificacao in vm.notificacoes" href="# ">
-        <img style="margin-top:-7px;" src="{{notificacao.img | defaultImage}}">
-        <div ng-bind-html="notificacao.msg"></div>
-        <button class="button button-positive">
+      <div ng-click="vm.acaoClickItem(notificacao);" class="item  item-avatar item-text-wrap item-button-right" ng-repeat="notificacao in vm.notificacoes | orderBy: '-dateTime'">
+        <img ng-click="vm.acaoClickImagem(notificacao); $event.stopPropagation();" style="margin-top:-7px;" src="{{notificacao.img | defaultImage}}">
+        <div ng-bind-html="notificacao.msg"></div> 
+        <button ng-if="notificacao.tipo == vm.tiposNotificacoes.solicitacaoAmizade" class="button button-positive">
           <i class="icon ion-android-person-add"></i>
         </button>
-      </a>
+        <button ng-if="notificacao.tipo == vm.tiposNotificacoes.solicitacaoPresenca && vm.solicitacaoPendente(notificacao);" ng-click="vm.aprovarSolicitacaoPresenca(notificacao); $event.stopPropagation();" class="button button-positive">
+          <i class="icon ion-android-add"></i>
+          <i class="icon ion-ios-football"></i>
+        </button>
+        <!--<button ng-if="notificacao.tipo == vm.tiposNotificacoes.convitePartida" class="button button-positive">
+          <i class="icon ion-checkmark"></i>
+        </button>-->
+        <!--<button ng-if="notificacao.tipo == vm.tiposNotificacoes.convitePartida" class="button button-stable">
+          <i class="icon ion-ios-football-outline"></i>
+        </button>-->
+      </div>
     </div>
   </ion-content>
 </ion-view>
