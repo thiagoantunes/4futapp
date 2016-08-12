@@ -1,21 +1,13 @@
-<!--<ion-view view-title="">
-  <ion-nav-buttons side="right">
-    <button ng-if="vm.meuPerfil" ng-click="vm.criarGrupo();" class="button button-clear button-positive">Editar</button>
-    <button ng-if="!vm.meuPerfil && !vm.checkAmizade();" ng-click="vm.addAmigo();" class="button button-clear button-positive">Adicionar</button>
-    <button ng-if="!vm.meuPerfil && vm.checkAmizade();" ng-click="vm.removerAmigo();" class="button button-clear button-positive">Remover</button>
-  </ion-nav-buttons>
-</ion-view>-->
+<ion-modal-view hide-nav-bar="true" class="profile-modal" ng-controller="PerfilJogadorCtrl as vm">
 
-<ion-modal-view ng-controller="PerfilJogadorCtrl as vm">
-  <ion-header-bar class="bar-positive">
-    <h1 class="title">{{vm.jogador.nome}}</h1>
-    <div class="buttons">
-      <button class="button button-icon button-clear ion-android-close" ng-click="vm.closeModal()">
-            </button>
-    </div>
-  </ion-header-bar>
+  <div class="bar bar-header">
+    <button ng-click="vm.closeModal()" class="button button-icon button-clear ion-android-close"></button>
+    <div style="font-weight:bold" class="title"></div>
+    <button ng-if="vm.checkAmizade();" class="button button-icon button-clear ion-chatbubbles"></button>
+    <button ng-if="!vm.checkAmizade();"  ng-click="vm.addAmigo();"  class="button button-icon button-clear ion-person-add"></button>
+  </div>
   <ion-content>
-    <div class="hero has-mask slide-up" ">
+    <div class="hero slide-up" ">
       <div class="content ">
         <div class="avatar " style="background-image: url( '{{vm.jogador.fotoPerfil}}'); "></div>
         <h4>{{vm.jogador.nome}}
@@ -24,8 +16,25 @@
         </h4>
       </div>
     </div>
+    <div class="info ">
+        <div class="row ">
+            <div ng-click="vm.openQuadrasModal(); " class="col text-center ">
+                <span>24</span>
+                <br/> Seguidores
+            </div>
+            <div ng-click="vm.openEstruturaModal(); " class="col text-center ">
+                <span>12</span>
+                <br/> Seguindo
+            </div>
+            <div ng-click="vm.openAlbumModal(); " class="col text-center ">
+                <span>2</span>
+                <br/> Partidas
+            </div>
+        </div>
+    </div>
     <div ng-if="vm.jogador.amigos.list.length>0" class="item item-divider"> Amigos
     </div>
+    <button ng-if="!vm.meuPerfil && vm.checkAmizade();" ng-click="vm.removerAmigo();" class="button button-clear button-positive">Remover</button>
     <div class="item">
       <ul>
         <div class="row" ng-repeat="amigo in vm.jogador.amigos.list" ng-if="$index % 5 === 0">

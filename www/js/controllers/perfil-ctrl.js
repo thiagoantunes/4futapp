@@ -77,14 +77,14 @@ angular.module('main')
        //UserService.getAmigosUsuario(vm.user.amigos);
     }
 
-    function checkAmizade(usuario) {
+    function checkAmizade() {
       return _.some(vm.meusAmigos, function (val) {
-        return val.id == vm.jogador.$id;
+        return val.id == vm.jogador.id;
       });
     }
 
     function addAmigo() {
-      UserService.adicionarAmigo(vm.jogador.$id);
+      UserService.adicionarAmigo(vm.jogador.id);
       var popup = $ionicPopup.confirm({
         template: 'Solicitação de amizade enviada!',
         buttons: [{
@@ -102,8 +102,8 @@ angular.module('main')
     }
 
     function removerAmigo() {
-      UserService.removerAmigo(vm.jogador.$id);
-      vm.jogador.amigos[vm.jogador.$id] = null;
+      UserService.removerAmigo(vm.jogador.id);
+      vm.jogador.amigos[vm.jogador.id] = null;
     }
 
     // Set Motion

@@ -284,3 +284,80 @@
         align-self: auto;
     }
 }
+
+
+.platform-ios {
+    .profile-modal{
+        .bar.bar-header{
+            border-bottom: 0px!important;
+        }
+    }  
+}
+
+.profile-modal{
+
+    .bar-header{
+        background:transparent; border: 0px !important;
+        button{
+            color:$dark
+        }
+    }
+
+    .hero{
+        background-color:$positive;     
+        box-shadow: none;
+        color: $dark;
+
+        h1,h2,h3,h4,h5,h6{
+            color: $dark
+        }
+    }
+
+  .card-title{
+      padding-left: 15px; padding-top: 5px;
+  }
+
+  .info{
+      border-top: 1px solid darken($positive, 10%);
+      background-color:$positive; color: $dark;
+      .row{
+          border-bottom: 1px solid $stable;
+          .col{
+              span{
+                  font-size: 1.3em;
+              }
+          }
+      }
+  }
+
+  .horarios{
+    .row{
+      padding:0px;
+    }
+
+    .col{
+        padding: 5px 5px 5px 0px; margin-right: 3px;
+        button{
+            height:40px; 
+            line-height: 15px ; 
+            border: solid 1px $button-positive-text;
+            box-shadow:none; 
+            padding:0px; 
+            span{
+                font-weight: bold;
+                font-size: 0.8em;
+            }
+        }
+    }
+
+    .empty{
+        width: 200px;
+        display: block;
+        margin: 0 auto;
+        text-align:center;
+        i{
+            font-size:70px;
+        }
+    }
+  }
+}

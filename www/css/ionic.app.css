@@ -17484,6 +17484,59 @@ For example, you might change some of the default colors:
   -ms-flex-item-align: auto;
   align-self: auto; }
 
+.platform-ios .profile-modal .bar.bar-header {
+  border-bottom: 0px !important; }
+
+.profile-modal .bar-header {
+  background: transparent;
+  border: 0px !important; }
+  .profile-modal .bar-header button {
+    color: #00303D; }
+
+.profile-modal .hero {
+  background-color: #AAF502;
+  box-shadow: none;
+  color: #00303D; }
+  .profile-modal .hero h1, .profile-modal .hero h2, .profile-modal .hero h3, .profile-modal .hero h4, .profile-modal .hero h5, .profile-modal .hero h6 {
+    color: #00303D; }
+
+.profile-modal .card-title {
+  padding-left: 15px;
+  padding-top: 5px; }
+
+.profile-modal .info {
+  border-top: 1px solid #87c202;
+  background-color: #AAF502;
+  color: #00303D; }
+  .profile-modal .info .row {
+    border-bottom: 1px solid #1A5463; }
+    .profile-modal .info .row .col span {
+      font-size: 1.3em; }
+
+.profile-modal .horarios .row {
+  padding: 0px; }
+
+.profile-modal .horarios .col {
+  padding: 5px 5px 5px 0px;
+  margin-right: 3px; }
+  .profile-modal .horarios .col button {
+    height: 40px;
+    line-height: 15px;
+    border: solid 1px #00303D;
+    box-shadow: none;
+    padding: 0px; }
+    .profile-modal .horarios .col button span {
+      font-weight: bold;
+      font-size: 0.8em; }
+
+.profile-modal .horarios .empty {
+  width: 200px;
+  display: block;
+  margin: 0 auto;
+  text-align: center; }
+  .profile-modal .horarios .empty i {
+    font-size: 70px; }
+
 .criar-partida {
   -webkit-box-align: center;
   -webkit-align-items: center;
