@@ -1,6 +1,6 @@
 'use strict';
 angular.module('main')
-  .factory('UserService', function (Ref, $firebaseObject, $firebaseArray, $q, $timeout, $http, $ionicModal) {
+  .factory('UserService', function (Ref, $firebaseObject, PushNotification, $firebaseArray, $q, $timeout, $http, $ionicModal, $resource) {
     var service = {
       jogos: [],
       amigos: [],
@@ -13,6 +13,7 @@ angular.module('main')
 
       getUserProfile: getUserProfile,
       getCurrentUser: getCurrentUser,
+      getCurrentUserObject: getCurrentUserObject,
       getMeusAmigos: getMeusAmigos,
       getAmigosUsuarioLight: getAmigosUsuarioLight,
       getUsers: getUsers,
@@ -28,6 +29,10 @@ angular.module('main')
     };
 
     return service;
+
+    function getCurrentUserObject() {
+      return $firebaseObject(service.ref.child(firebase.auth().currentUser.uid));
+    }
 
     function getCurrentUser() {
       var deferred = $q.defer();
@@ -59,7 +64,7 @@ angular.module('main')
 
       Ref.update(amigoData, function () {
         enviaNotificacao({
-          msg: '<b>' + firebase.auth().currentUser.displayName + '</b> começou a te seguir',
+          msg: firebase.auth().currentUser.displayName + ' começou a te seguir',
           img: firebase.auth().currentUser.photoURL,
           tipo: 'solicitacaoAmizade',
           lida: false,
@@ -73,7 +78,39 @@ angular.module('main')
       var notificacaoData = {};
       notificacaoData['usersNotificacoes/' + userId + '/' + notificacaoId] = data;
 
-      Ref.update(notificacaoData);
+      Ref.update(notificacaoData).then(function () {
+        sendPushNotification(userId, data.msg);
+      });
+    }
+
+    function sendPushNotification(id, msg) {
+      service.ref.child(id + '/token').once('value', function (snap) {
+        var tokens = [];
+        if (snap.val()) {
+          _.forEach(snap.val(), function (token) {
+            tokens.push(token);
+          });
+
+          var jwt = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjMjYyYjY0Mi01NzEzLTQ5MjctOGMxZC0zMzJlM2EwMzg0ZDQifQ.c1vHBOiHZe8w1Nvf1nUsgtLdrwniRkr8xpYUhjD2f2o';
+          var req = {
+            method: 'POST',
+            url: 'https://api.ionic.io/push/notifications',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + jwt
+            },
+            data: {
+              'tokens': tokens,
+              'profile': 'dev',
+              'notification': {
+                'title': 'Rei da Quadra',
+                'message': msg,
+              }
+            }
+          };
+          $http(req);
+        }
+      });
     }
 
     function removerAmigo(id) {
@@ -171,6 +208,7 @@ angular.module('main')
     }
 
     function salvarDeviceToken(token) {
+      console.log(token);
       var update = {};
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
@@ -180,4 +218,17 @@ angular.module('main')
       });
     }
 
-  });
+  })
+
+  .factory('PushNotification', function ($resource) {
+
+    var serviceBase = 'http://rdqapi.azurewebsites.net/api/';
+
+    return $resource(serviceBase + 'notifications/', {}, {
+      query: { method: 'POST' },
+      sendNotification: {
+        url: serviceBase + 'notifications/SendNotification',
+        method: 'POST',
+      }
+    });
+  })

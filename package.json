@@ -35,7 +35,8 @@
     },
     "cordova-plugin-file",
     "cordova-plugin-camera",
-    "cordova-plugin-actionsheet"
+    "cordova-plugin-actionsheet",
+    "uk.co.workingedge.phonegap.plugin.launchnavigator"
   ],
   "cordovaPlatforms": [
     "android",

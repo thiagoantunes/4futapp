@@ -14,8 +14,8 @@
       </div>
       <hr/>
       <h4>Arena Castelão FC</h4>
-      <h5 style="font-weight: 300; margin-bottom:0px">
-        <i class="icon ion-ios-location" style="margin-right:5px"></i> {{vm.jogo.endereco}}
+      <h5 ng-click="vm.navigateTo();" style="font-weight: 300; margin-bottom:0px">
+        <i class="icon ion-navigate" style="margin-right:5px"></i> {{vm.jogo.endereco}}
       </h5>
       <div class="confirmacao" ng-if="vm.minhaPresenca && !vm.minhaPresenca.aguardandoConfirmacao">
         <div class="row">

@@ -26,7 +26,7 @@
   <preference name="BackupWebStorage" value="none"/>
   <preference name="SplashScreen" value="screen"/>
   <preference name="StatusBarOverlaysWebView" value="true"/>
-  <preference name="StatusBarBackgroundColor" value="#00a54d"/>
+  <preference name="StatusBarBackgroundColor" value="#7CB201"/>
   <preference name="StatusBarStyle" value="lightcontent"/>
   <preference name="AndroidPersistentFileLocation" value="Internal"/>
   <feature name="StatusBar">

@@ -135,6 +135,17 @@ input[readonly]{
     }
 }
 
+.popup-sub-title {
+    color: $dark;
+    padding: 0px 40px !important;
+}
+
+.popup-body{
+    textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"]{
+        color: $dark !important;
+    }
+}
+
 .item-button-right {
     .button{
         min-height: 24px !important;

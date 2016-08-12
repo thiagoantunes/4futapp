@@ -22,7 +22,8 @@ angular.module('main', [
   'ionic-numberpicker',
   'ionic-datepicker',
   'ionic-cache-src',
-  // TODO: load other modules selected during generation
+  'ngResource',
+  'ui.utils.masks'
 ])
 
   .run(function ($ionicPlatform, $ionicAnalytics, $state, Ref, $rootScope, UserService) {

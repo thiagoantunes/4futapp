@@ -420,7 +420,7 @@ angular.module('main')
 
   })
 
-  .controller('JogosDetailCtrl', function ($scope, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal) {
+  .controller('JogosDetailCtrl', function ($scope, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService) {
     var vm = this;
     vm.jogo = JogosService.jogoSelecionado;
     vm.amigos = UserService.amigos;
@@ -432,6 +432,7 @@ angular.module('main')
     vm.desconvidarAmigo = desconvidarAmigo;
     vm.getNumJogadores = getNumJogadores;
     vm.orderByConfirmacao = orderByConfirmacao;
+    vm.navigateTo = navigateTo;
 
     activate();
 
@@ -517,6 +518,10 @@ angular.module('main')
           return val.confirmado == undefined && !val.aguardandoConfirmacao;
         }).length;
       }
+    }
+
+    function navigateTo(){
+      GeoService.navigateTo(vm.jogo.endereco);
     }
 
 

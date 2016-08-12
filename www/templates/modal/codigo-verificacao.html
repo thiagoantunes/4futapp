@@ -1,0 +1,86 @@
+<ion-modal-view id="pin-view" hide-nav-bar="true" class="criar-partida" style=" background-color: black;">
+    <div class="bar bar-header" style="background:transparent; border: 0px !important">
+        <button style="color:white" class="button button-icon button-clear ion-android-close" ng-click="modalVerificacao.hide()">
+    </div>
+    <ion-content class="has-header" style="padding: 40px 20px;">
+        <!--<div class="list">
+            <label class="item item-input">
+                <input type="text" ng-model="vm.verificacaoReserva.code">
+            </label>
+        </div>
+        <button ng-click="vm.verificarCodigo();" class="button button-stable">Enviar</button>-->
+        <div>
+            <div class="row" style="text-align: center">
+                <div class="col col-25" style="padding:0px 20px">
+                    <div style="border-bottom: 1px solid white;      min-height: 35px;   padding-bottom: 15px;; font-size: 3em; font-weight: bold;">
+                        {{vm.verificacaoReserva.code.substring(0, 1)}}
+                    </div>
+                </div>
+                <div class="col col-25" style="padding:0px 20px">
+                    <div style="border-bottom: 1px solid white;      min-height: 35px;   padding-bottom: 15px;; font-size: 3em; font-weight: bold;">
+                        {{vm.verificacaoReserva.code.substring(1, 2)}}
+                    </div>
+                </div>
+                <div class="col col-25" style="padding:0px 20px">
+                    <div style="border-bottom: 1px solid white;      min-height: 35px;   padding-bottom: 15px;; font-size: 3em; font-weight: bold;">
+                        {{vm.verificacaoReserva.code.substring(2, 3)}}
+                    </div>
+                </div>
+                <div class="col col-25" style="padding:0px 20px">
+                    <div style="border-bottom: 1px solid white;      min-height: 35px;   padding-bottom: 15px;; font-size: 3em; font-weight: bold;">
+                        {{vm.verificacaoReserva.code.substring(3, 4)}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 20px">
+            <div class="row">
+                <div class="col col-33" style="padding:20px">
+                    <button class="button button-stable button-stretch" ng-click="addPin(1)">1</button>
+                </div>
+                <div class="col col-33" style="padding:20px">
+                    <button class="button button-stable button-stretch" ng-click="addPin(2)">2</button>
+                </div>
+                <div class="col col-33" style="padding:20px">
+                    <button class="button button-stable button-stretch" ng-click="addPin(3)">3</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-33" style="padding:20px">
+                    <button class="button button-stable button-stretch" ng-click="addPin(4)">4</button>
+                </div>
+                <div class="col col-33" style="padding:20px">
+                    <button class="button button-stable button-stretch" ng-click="addPin(5)">5</button>
+                </div>
+                <div class="col col-33" style="padding:20px">
+                    <button class="button button-stable button-stretch" ng-click="addPin(6)">6</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-33" style="padding:20px">
+                    <button class="button button-stable button-stretch" ng-click="addPin(7)">7</button>
+                </div>
+                <div class="col col-33" style="padding:20px">
+                    <button class="button button-stable button-stretch" ng-click="addPin(8)">8</button>
+                </div>
+                <div class="col col-33" style="padding:20px">
+                    <button class="button button-stable button-stretch" ng-click="addPin(9)">9</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-33" style="padding:20px">
+                    <button class="button button-stable button-stretch"></button>
+                </div>
+                <div class="col col-33" style="padding:20px">
+                    <button class="button button-stable button-stretch" ng-click="addPin(0)">0</button>
+                </div>
+                <div class="col col-33" style="padding:20px">
+                    <button class="button icon ion-arrow-left-a button-stable button-stretch" ng-click="deletePin()"></button>
+                </div>
+            </div>
+        </div>
+        <div style="padding: 0px 20px;">
+            <button ng-click="vm.verificarCodigo();" ng-disabled="vm.verificacaoReserva.code.length < 4" class="button button-stretch button-positive">Enviar</button>
+        </div>
+        </ion-content>
+</ion-modal-view>

@@ -50,7 +50,7 @@ angular.module('main')
 
   })
 
-  .controller('ArenaDetailsCtrl', function (ArenasService, UserService, JogosService, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup, $ionicHistory) {
+  .controller('ArenaDetailsCtrl', function (ArenasService, UserService, GeoService, JogosService, SmsVerify, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup, $ionicHistory) {
     var vm = this;
     vm.arena = ArenasService.arenaSelecionada;
     vm.album = ArenasService.getAlbum($stateParams.id);
@@ -65,10 +65,15 @@ angular.module('main')
     vm.openQuadrasModal = openQuadrasModal;
     vm.openEstruturaModal = openEstruturaModal;
     vm.isAndroid = isAndroid;
+    vm.navigateTo = navigateTo;
+    vm.verificarCodigo = verificarCodigo;
 
     activate();
 
     function activate() {
+
+      UserService.getCurrentUserObject().$bindTo($scope, 'currentUser');
+
       vm.quadras.$loaded().then(function () {
         getReservas(new Date());
       });
@@ -229,7 +234,7 @@ angular.module('main')
         horarioExtraDisponivel: getHorarioExtraDisponivel()
       };
       $scope.SalvarReserva = function () {
-        salvarNovaReserva();
+        confirmarReserva();
       };
 
       $ionicModal.fromTemplateUrl('templates/modal/confirma-reserva.html', {
@@ -252,6 +257,75 @@ angular.module('main')
       else {
         return moment.duration(moment(proximasReservas[0].start).diff(vm.horarioSelecionado.start)).asHours();
       }
+    }
+
+    function isAndroid() {
+      return ionic.Platform.isAndroid();
+    }
+
+    function navigateTo() {
+      GeoService.navigateTo(vm.arena.endereco);
+    }
+
+    function confirmarReserva() {
+      var myPopup = $ionicPopup.show({
+        template: '<input style="text-align: center; font-weight: bold; font-size: 1.4em;" type="text" ng-model="currentUser.telefone" ui-br-phone-number>',
+        title: 'Telefone para confirmação',
+        subTitle: 'Enviaremos um código para confirmar sua reserva',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancelar' },
+          {
+            text: '<b>Enviar</b>',
+            type: 'button-positive',
+            onTap: function (e) {
+              if (!$scope.currentUser.telefone) {
+                e.preventDefault();
+              } else {
+                enviarCodigoVerificacao();
+              }
+            }
+          },
+        ]
+      });
+    }
+
+    function enviarCodigoVerificacao() {
+      vm.verificacaoReserva = {};
+      $ionicModal.fromTemplateUrl('templates/modal/codigo-verificacao.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function (modal) {
+        $scope.modalVerificacao = modal;
+        $scope.addPin = function (value) {
+          if (vm.verificacaoReserva.code.length < 4) {
+            vm.verificacaoReserva.code = vm.verificacaoReserva.code + value;
+          }
+        }
+        $scope.deletePin = function () {
+          if (vm.verificacaoReserva.code.length > 0) {
+            vm.verificacaoReserva.code = vm.verificacaoReserva.code.substring(0, vm.verificacaoReserva.code.length - 1);
+          }
+        }
+        $scope.modalVerificacao.show();
+      });
+      SmsVerify.numberVerify({ Number: '55'+$scope.currentUser.telefone, brand: 'Rei da Quadra' }, function (data) {
+        console.log(data);
+        vm.verificacaoReserva = {
+          requestId: data.request_id,
+          code: ''
+        };
+      });
+    }
+
+    function verificarCodigo() {
+      SmsVerify.numberVerifyCheck(vm.verificacaoReserva, function (verification) {
+        console.log(verification);
+        if (verification.status == 0) {
+          salvarNovaReserva();
+          $scope.modalVerificacao.hide();
+        }
+      });
     }
 
     function salvarNovaReserva() {
@@ -293,10 +367,6 @@ angular.module('main')
       }, function (error) {
         console.log(error, novaReserva, 'Ops!');
       });
-    }
-
-    function isAndroid() {
-      return ionic.Platform.isAndroid();
     }
 
     // Set Motion

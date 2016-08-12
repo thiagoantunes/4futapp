@@ -140,7 +140,7 @@ angular.module('main')
                 }
                 else {
                     UserService.enviaNotificacao({
-                        msg: 'Seu time <b>' + data.desafio.desafiado.nome + '</b> foi desafiado pelo time <b>' + data.desafio.desafiante.nome + '</b> ',
+                        msg: 'Seu time ' + data.desafio.desafiado.nome + ' foi desafiado pelo time <b>' + data.desafio.desafiante.nome + '</b> ',
                         img: data.desafio.desafiante.escudo,
                         tipo: 'desafio',
                         lida: false,

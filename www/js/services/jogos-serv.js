@@ -132,7 +132,7 @@ angular.module('main')
         else {
           _.forEach(data.jogadores, function (jogador) {
             UserService.enviaNotificacao({
-              msg: '<b>' + firebase.auth().currentUser.displayName + '</b> te convidou para uma partida',
+              msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
               img: firebase.auth().currentUser.photoURL,
               tipo: 'convitePartida',
               lida: false,
@@ -143,7 +143,7 @@ angular.module('main')
             _.forEach(time.jogadores, function (jogador) {
               if (jogador.id !== firebase.auth().currentUser.uid) {
                 UserService.enviaNotificacao({
-                  msg: '<b>' + firebase.auth().currentUser.displayName + '</b> te convidou para uma partida',
+                  msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
                   img: firebase.auth().currentUser.photoURL,
                   tipo: 'convitePartida',
                   lida: false,
@@ -179,7 +179,7 @@ angular.module('main')
         deferred.resolve(solicitacao);
         if (jogo.aprovacaoManual) {
           UserService.enviaNotificacao({
-            msg: '<b>' + firebase.auth().currentUser.displayName + '</b> solicitou presença na partida <b>' + jogo.nome + '</b>',
+            msg: firebase.auth().currentUser.displayName + ' solicitou presença na partida <b>' + jogo.nome + '</b>',
             img: firebase.auth().currentUser.photoURL,
             tipo: 'solicitacaoPartida',
             lida: false,
@@ -216,7 +216,7 @@ angular.module('main')
 
       Ref.update(conviteData, function () {
         UserService.enviaNotificacao({
-          msg: '<b>' + firebase.auth().currentUser.displayName + '</b> te convidou para uma partida',
+          msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
           img: firebase.auth().currentUser.photoURL,
           tipo: 'convitePartida',
           lida: false,
