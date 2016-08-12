@@ -4,11 +4,15 @@ angular.module('main')
   .controller('NotificacoesCtrl', function ($scope, $state, JogosService, UserService, Enum) {
     var vm = this;
     vm.notificacoes = UserService.notificacoes;
+    vm.meusAmigos = UserService.amigos;
     vm.tiposNotificacoes = Enum.TipoNotificacao;
     vm.acaoClickImagem = acaoClickImagem;
     vm.acaoClickItem = acaoClickItem;
     vm.aprovarSolicitacaoPresenca = aprovarSolicitacaoPresenca;
     vm.solicitacaoPendente = solicitacaoPendente;
+    vm.checkAmizade = checkAmizade;
+    vm.seguirJogador = seguirJogador;
+    vm.deixarDeSeguir = deixarDeSeguir;
 
     $scope.$on('$ionicView.enter', function () {
       _.forEach(vm.notificacoes, function (val) {
@@ -27,7 +31,8 @@ angular.module('main')
         notificacao.tipo == Enum.TipoNotificacao.convitePartida ||
         Enum.TipoNotificacao.solicitacaoPresenca) {
         UserService.getUserProfile(notificacao.userId).$loaded().then(function (jogador) {
-          UserService.openPerfilJogador(jogador);
+          UserService.jogadorSelecionado = jogador;
+        $state.go('main.perfilJogador-tab-notificacoes', {id : jogador.$id});
         });
       }
     }
@@ -62,6 +67,26 @@ angular.module('main')
           return jogador.aguardandoConfirmacao;
         } 
       }
+    }
+
+    function checkAmizade(notificacao) {
+      return _.some(vm.meusAmigos, function (val) {
+        return val.$id == notificacao.userId;
+      });
+    }
+
+    function seguirJogador(notificacao) {
+      UserService.adicionarAmigo(notificacao.userId);
+    }
+
+    function deixarDeSeguir(notificacao) {
+      var options = {
+        'addDestructiveButtonWithLabel' : 'Deixar de seguir',
+        'addCancelButtonWithLabel': 'Cancelar'
+      };
+      window.plugins.actionsheet.show(options, function (_btnIndex) {
+        UserService.removerAmigo(notificacao.userId);
+      });
     }
 
   });

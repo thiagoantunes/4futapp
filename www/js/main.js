@@ -231,6 +231,11 @@ angular.module('main', [
           }]
         }
       })
+      //
+      //
+      //TAB-HOME
+      //
+      //
       .state('main.home', {
         url: '/home?origem',
         views: {
@@ -299,6 +304,32 @@ angular.module('main', [
         }
       })
 
+      .state('main.times', {
+        url: '/times',
+        views: {
+          'tab-home': {
+            templateUrl: 'templates/times.html',
+            controller: 'TimesCtrl as vm',
+          }
+        }
+      })
+
+      .state('main.criarDesafio', {
+        url: '/criar-desafio',
+        views: {
+          'tab-home': {
+            templateUrl: 'templates/criar-desafio.html',
+            controller: 'CriarDesafioCtrl as vm',
+          }
+        }
+      })
+
+      //
+      //
+      //TAB-MEUS-JOGOS
+      //
+      //
+
       .state('main.meus-jogos', {
         url: '/meus-jogos',
         views: {
@@ -339,6 +370,33 @@ angular.module('main', [
         }
       })
 
+      .state('main.listaJogadores-tab-meus-jogos', {
+        url: '/meus-jogos/lista-jogadores/:tipoLista',
+        views: {
+          'tab-meus-jogos': {
+            templateUrl: 'templates/lista-jogadores.html',
+            controller: 'ListaJogadoresCtrl as vm',
+          }
+        }
+      })
+
+      .state('main.perfilJogador-tab-meus-jogos', {
+        url: '/meus-jogos/perfilJogador/:id',
+        views: {
+          'tab-meus-jogos': {
+            templateUrl: 'templates/perfil-jogador.html',
+            controller: 'PerfilJogadorCtrl as vm',
+          }
+        }
+      })
+
+
+      //
+      //
+      //TAB-MEUS-TIMES
+      //
+      //
+
       .state('main.meus-times', {
         url: '/meus-times',
         views: {
@@ -349,35 +407,26 @@ angular.module('main', [
         }
       })
 
-      .state('main.times', {
-        url: '/times',
-        views: {
-          'tab-home': {
-            templateUrl: 'templates/times.html',
-            controller: 'TimesCtrl as vm',
-          }
-        }
-      })
-
-      .state('main.criarDesafio', {
-        url: '/criar-desafio',
-        views: {
-          'tab-home': {
-            templateUrl: 'templates/criar-desafio.html',
-            controller: 'CriarDesafioCtrl as vm',
-          }
-        }
-      })
-
-      .state('main.buscarJogadores', {
-        url: '/buscar-jogadores',
+      .state('main.listaJogadores-tab-meus-times', {
+        url: '/lista-jogadores/:tipoLista',
         views: {
           'tab-meus-times': {
-            templateUrl: 'templates/buscar-jogadores.html',
-            controller: 'BuscarJogadores as vm',
+            templateUrl: 'templates/lista-jogadores.html',
+            controller: 'ListaJogadoresCtrl as vm',
           }
         }
       })
+
+      .state('main.perfilJogador-tab-meus-times', {
+        url: '/meus-times/perfilJogador/:id',
+        views: {
+          'tab-meus-times': {
+            templateUrl: 'templates/perfil-jogador.html',
+            controller: 'PerfilJogadorCtrl as vm',
+          }
+        }
+      })
+      
 
       .state('main.criarTime', {
         url: '/criar-time',
@@ -388,6 +437,12 @@ angular.module('main', [
           }
         }
       })
+
+      //
+      //
+      //TAB-PERFIL
+      //
+      //
 
       .state('main.perfil', {
         url: '/perfil',
@@ -404,6 +459,32 @@ angular.module('main', [
         }
       })
 
+      .state('main.listaJogadores-tab-perfil', {
+        url: '/perfil/lista-jogadores/:tipoLista',
+        views: {
+          'tab-perfil': {
+            templateUrl: 'templates/lista-jogadores.html',
+            controller: 'ListaJogadoresCtrl as vm',
+          }
+        }
+      })
+
+      .state('main.perfilJogador-tab-perfil', {
+        url: '/perfil/meus-times/perfilJogador/:id',
+        views: {
+          'tab-perfil': {
+            templateUrl: 'templates/perfil-jogador.html',
+            controller: 'PerfilJogadorCtrl as vm',
+          }
+        }
+      })
+
+      //
+      //
+      //TAB-NOTIFICACOES
+      //
+      //
+
       .state('main.notificacoes', {
         url: '/notificacoes',
         views: {
@@ -413,7 +494,27 @@ angular.module('main', [
           }
         }
       })
-      
+
+      .state('main.perfilJogador-tab-notificacoes', {
+        url: '/notificacoes/perfilJogador/:id',
+        views: {
+          'tab-notificacoes': {
+            templateUrl: 'templates/perfil-jogador.html',
+            controller: 'PerfilJogadorCtrl as vm',
+          }
+        }
+      })
+
+      .state('main.listaJogadores-tab-notificacoes', {
+        url: '/notificacoes/lista-jogadores/:tipoLista',
+        views: {
+          'tab-notificacoes': {
+            templateUrl: 'templates/lista-jogadores.html',
+            controller: 'ListaJogadoresCtrl as vm',
+          }
+        }
+      })
+
       .state('main.meus-jogos-detail-notificacoes', {
         url: '/meus-jogos-notificacoes/:id',
         views: {
@@ -443,7 +544,15 @@ angular.module('main', [
       'main.criarDesafio',
       'main.times',
       'main.criarTime',
-      'main.meus-jogos-detail-notificacoes'
+      'main.meus-jogos-detail-notificacoes',
+      'main.perfilJogador-tab-meus-times',
+      'main.perfilJogador-tab-notificacoes',
+      'main.listaJogadores-tab-notificacoes',
+      'main.listaJogadores-tab-meus-times',
+      'main.listaJogadores-tab-perfil',
+      'main.perfilJogador-tab-perfil',
+      'main.listaJogadores-tab-meus-jogos',
+      'main.perfilJogador-tab-meus-jogos'
     ];
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);

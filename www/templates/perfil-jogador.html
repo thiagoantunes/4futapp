@@ -1,0 +1,36 @@
+<ion-view hide-nav-bar="true" class="profile-modal">
+  <div class="bar bar-header">
+    <button ng-click="vm.goBack()" class="button button-icon button-clear ion-android-arrow-back"></button>
+    <div style="font-weight:bold" class="title"></div>
+    <button ng-if="vm.checkAmizade();" class="button button-icon button-clear ion-chatbubbles"></button>
+    <button ng-if="!vm.checkAmizade();" ng-click="vm.addAmigo();" class="button button-icon button-clear ion-person-add"></button>
+  </div>
+  <ion-content>
+    <div class="hero slide-up" ">
+      <div class="content ">
+        <div class="avatar " style="background-image: url( '{{vm.jogador.fotoPerfil}}'); "></div>
+        <h4>{{vm.jogador.nome}}
+          <br/>
+          <small><i class="ion-ios-location-outline "></i> Belo Horizonte - MG</small>
+        </h4>
+      </div>
+    </div>
+    <div class="info ">
+        <div class="row ">
+            <div ng-click="vm.openListaJogadores('seguidores')" class="col text-center ">
+                <span>{{ vm.getObjLength(vm.jogador.seguidores) }}</span>
+                <br/> Seguidores
+            </div>
+            <div ng-click="vm.openListaJogadores('seguindo')" class="col text-center ">
+                <span>{{ vm.getObjLength(vm.jogador.seguindo) }} </span>
+                <br/> Seguindo
+            </div>
+            <div  class="col text-center ">
+                <span>0</span>
+                <br/> Partidas
+            </div>
+        </div>
+    </div>
+    <button ng-if="!vm.meuPerfil && vm.checkAmizade();" ng-click="vm.removerAmigo();" class="button button-clear button-positive">Remover</button>
+  </ion-content>
+</ion-view>

@@ -159,6 +159,12 @@ input[readonly]{
     background: #FFF !important;
 }
 
+.button.button-light.button-outline{
+    border-color: $light !important;
+    color: $light !important;
+    box-shadow:  none !important;
+}
+
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic",
         "www/lib/ionic-material/src/scss/index";

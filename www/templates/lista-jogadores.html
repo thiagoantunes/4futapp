@@ -1,0 +1,22 @@
+<ion-view view-title="{{vm.viewTitle}}">
+    <ion-content>
+        <div class="list ">
+            <label class="item item-input" style="border: solid 1px #46687E">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="text" placeholder="Buscar">
+            </label>
+            <div ng-click="vm.openPerfilJogador(usuario);" class="item  item-avatar item-text-wrap item-button-right" ng-repeat="usuario in vm.jogadores">
+                <img style="margin-top:-7px;" src="{{usuario.fotoPerfil | defaultImage}}">
+                <h2>{{usuario.nome}}</h2>
+                <button style="line-height: 30px !important; height: 30px;margin-top: 10px; padding: 0px 24px !important; font-size: 0.7em !important;"
+                    ng-if="!vm.checkAmizade(usuario);" ng-click="vm.seguirJogador(usuario); $event.stopPropagation();" class="button button-light button-outline">
+              SEGUIR
+            </button>
+                <button style="line-height: 30px !important; height: 30px;margin-top: 10px; padding: 0px 20px !important; font-size: 0.7em !important;"
+                    ng-if="vm.checkAmizade(usuario);" ng-click="vm.deixarDeSeguir(usuario); $event.stopPropagation();" class="button button-positive">
+              SEGUINDO
+            </button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

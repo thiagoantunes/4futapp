@@ -18,16 +18,16 @@
     </div>
     <div class="info ">
         <div class="row ">
-            <div ng-click="vm.openQuadrasModal(); " class="col text-center ">
-                <span>24</span>
+            <div ng-click="vm.openListaJogadores('seguidores')" class="col text-center ">
+                <span>{{ vm.getObjLength(vm.jogador.seguidores) }}</span>
                 <br/> Seguidores
             </div>
-            <div ng-click="vm.openEstruturaModal(); " class="col text-center ">
-                <span>12</span>
+            <div g-click="vm.openListaJogadores('seguindo')" class="col text-center ">
+                <span>{{ vm.getObjLength(vm.jogador.seguindo) }} </span>
                 <br/> Seguindo
             </div>
-            <div ng-click="vm.openAlbumModal(); " class="col text-center ">
-                <span>2</span>
+            <div  class="col text-center ">
+                <span>0</span>
                 <br/> Partidas
             </div>
         </div>

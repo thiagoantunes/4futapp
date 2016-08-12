@@ -421,7 +421,7 @@ angular.module('main')
 
   })
 
-  .controller('JogosDetailCtrl', function ($scope, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService) {
+  .controller('JogosDetailCtrl', function ($scope, $state, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService) {
     var vm = this;
     vm.jogo = JogosService.jogoSelecionado;
     vm.amigos = UserService.amigos;
@@ -434,6 +434,7 @@ angular.module('main')
     vm.getNumJogadores = getNumJogadores;
     vm.orderByConfirmacao = orderByConfirmacao;
     vm.navigateTo = navigateTo;
+    vm.openPerfilJogador = openPerfilJogador;
 
     activate();
 
@@ -523,6 +524,13 @@ angular.module('main')
 
     function navigateTo(){
       GeoService.navigateTo(vm.jogo.endereco);
+    }
+
+    function openPerfilJogador(jogador) {
+      UserService.getUserProfile(jogador).$loaded().then(function(val){
+        UserService.jogadorSelecionado = val;
+        $state.go('main.perfilJogador-' + Object.keys($state.current.views)[0], { id: jogador });
+      });
     }
 
 

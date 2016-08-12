@@ -72,7 +72,7 @@ angular.module('main')
 
     function activate() {
 
-      UserService.getCurrentUserObject().$bindTo($scope, 'currentUser');
+      UserService.getUserProfile(firebase.auth().currentUser.uid).$bindTo($scope, 'currentUser');
 
       vm.quadras.$loaded().then(function () {
         getReservas(new Date());

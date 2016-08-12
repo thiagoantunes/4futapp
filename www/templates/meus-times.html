@@ -1,30 +1,23 @@
 <ion-view view-title="MEUS TIMES">
   <ion-nav-buttons side="right">
-    <button ng-click="vm.openAddOptions();" class="button button-icon button-clear icon ion-android-add"></button>
+    <button ui-sref="main.criarTime" class="button button-icon button-clear icon ion-android-add"></button>
   </ion-nav-buttons>
   <ion-content>
-    <div ng-if="vm.amigos.length == 0" class="lista-vazia text-center">
-      <i class="icon zmdi zmdi-run"></i>
-      <h5>Você ainda não adicionou jogadores.</h5>
+    <div ng-if="vm.times.length == 0" class="lista-vazia text-center">
+      <i class="icon ion-ios-football-outline"></i>
+      <h5>Você ainda não esta em um time.</h5>
       <div style="padding:20px">
-        <button ui-sref="main.buscarJogadores" class="button button-full button-positive">Buscar Jogadores</button>
+        <button ui-sref="main.criarTime" class="button button-full button-positive">Criar Time</button>
       </div>
     </div>
     <div class="list">
       <div ng-if="vm.times.length >0" class="item item-divider">
         Times
       </div>
-      <a ng-click="vm.timesService.openPerfilTime(time);" class="item item-avatar item-button-right" ng-repeat="time in vm.times" href="#">
+      <a ng-click="vm.timesService.openPerfilTime(time);" class="item item-avatar item-button-right" ng-repeat="time in vm.times"
+        href="#">
         <img style="margin-top:-7px;" src="{{time.escudo | defaultImage}}">
         <h2>{{time.nome}}</h2>
-      </a>
-      <div ng-if="vm.amigos.length >0" class="item item-divider">
-        Amigos
-      </div>
-      <a ng-click="vm.userService.openPerfilJogador(amigo);" class="item item-avatar item-button-right"
-        ng-repeat="amigo in vm.amigos" href="#">
-        <img style="margin-top:-7px;" src="{{amigo.fotoPerfil | defaultImage}}">
-        <h2>{{amigo.nome}}</h2>
       </a>
     </div>
   </ion-content>

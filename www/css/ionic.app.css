@@ -65,6 +65,11 @@ input[readonly] {
 .swiper-pagination-bullet {
   background: #FFF !important; }
 
+.button.button-light.button-outline {
+  border-color: #AABDC2 !important;
+  color: #AABDC2 !important;
+  box-shadow: none !important; }
+
 /*!
   Ionicons, v2.0.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/
@@ -17810,6 +17815,20 @@ For example, you might change some of the default colors:
     background: transparent; }
     #grupo-modal .info-grupo label input {
       border-bottom: 1px solid #1A5463; }
+
+.button-follow {
+  line-height: 30px !important;
+  height: 30px;
+  margin-top: 10px;
+  padding: 0px 20px !important;
+  font-size: 0.7em !important; }
+
+.button-follow {
+  line-height: 30px !important;
+  height: 30px;
+  margin-top: 10px;
+  padding: 0px 25px !important;
+  font-size: 0.7em !important; }
 
 .cards-view .bar-header {
   background: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.5));

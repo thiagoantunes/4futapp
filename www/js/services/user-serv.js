@@ -1,6 +1,6 @@
 'use strict';
 angular.module('main')
-  .factory('UserService', function (Ref, $firebaseObject, Enum, PushNotification, $firebaseArray, $q, $timeout, $http, $ionicModal, $resource) {
+  .factory('UserService', function (Ref, $firebaseObject, $state, Enum, PushNotification, $firebaseArray, $q, $timeout, $http, $ionicModal, $resource) {
     var service = {
       jogos: [],
       amigos: [],
@@ -13,10 +13,9 @@ angular.module('main')
 
       getUserProfile: getUserProfile,
       getCurrentUser: getCurrentUser,
-      getCurrentUserObject: getCurrentUserObject,
       getMeusAmigos: getMeusAmigos,
-      getAmigosUsuarioLight: getAmigosUsuarioLight,
-      getUsers: getUsers,
+      getJogadoresRegiao: getJogadoresRegiao,
+      getListaJogadores: getListaJogadores,
       getNotificacoes: getNotificacoes,
       verificaAmizade: verificaAmizade,
       verificaAmizadeDeAmizades: verificaAmizadeDeAmizades,
@@ -24,15 +23,10 @@ angular.module('main')
       adicionarAmigo: adicionarAmigo,
       removerAmigo: removerAmigo,
       enviaNotificacao: enviaNotificacao,
-      openPerfilJogador: openPerfilJogador,
       salvarDeviceToken: salvarDeviceToken
     };
 
     return service;
-
-    function getCurrentUserObject() {
-      return $firebaseObject(service.ref.child(firebase.auth().currentUser.uid));
-    }
 
     function getCurrentUser() {
       var deferred = $q.defer();
@@ -59,13 +53,14 @@ angular.module('main')
 
     function adicionarAmigo(id) {
       var amigoData = {};
-      amigoData['users/' + firebase.auth().currentUser.uid + '/amigos/' + id] = true;
-      amigoData['users/' + id + '/amigos/' + firebase.auth().currentUser.uid] = false;
+      amigoData['users/' + firebase.auth().currentUser.uid + '/seguindo/' + id] = id;
+      amigoData['users/' + id + '/seguidores/' + firebase.auth().currentUser.uid] = firebase.auth().currentUser.uid;
 
       Ref.update(amigoData, function () {
         enviaNotificacao({
           msg: firebase.auth().currentUser.displayName + ' começou a te seguir',
           img: firebase.auth().currentUser.photoURL,
+          userId: firebase.auth().currentUser.uid,
           tipo: Enum.TipoNotificacao.solicitacaoAmizade,
           lida: false,
           dateTime: new Date().getTime()
@@ -110,74 +105,62 @@ angular.module('main')
 
     function removerAmigo(id) {
       var amigoData = {};
-      amigoData['users/' + firebase.auth().currentUser.uid + '/amigos/' + id] = null;
+      amigoData['users/' + firebase.auth().currentUser.uid + '/seguindo/' + id] = null;
 
       Ref.update(amigoData);
     }
 
     function getMeusAmigos() {
-      service.ref.child(firebase.auth().currentUser.uid + '/amigos').on('child_added', function (snap) {
+      service.ref.child(firebase.auth().currentUser.uid + '/seguindo').on('child_added', function (snap) {
         service.ref.child(snap.key).on('value', function (snapUser) {
           var data = snapUser.val();
-          data.id = snap.key;
+          data.$id = snap.key;
           $timeout(function () {
-            _.remove(service.amigos, { 'id': snap.key });
+            _.remove(service.amigos, { '$id': snap.key });
             service.amigos.push(data);
           });
         });
       });
 
-      service.ref.child(firebase.auth().currentUser.uid + '/amigos').on('child_removed', function (oldChild) {
+      service.ref.child(firebase.auth().currentUser.uid + '/seguindo').on('child_removed', function (oldChild) {
         $timeout(function () {
-          _.remove(service.amigos, { 'id': oldChild.key });
+          _.remove(service.amigos, { '$id': oldChild.key });
         });
       });
     }
 
-    function getAmigosUsuarioLight(amigos) {
-      amigos.list = [];
-      $timeout(function () {
-        for (var i in amigos) {
-          var key = i;
-          if (amigos[i]) {
-            service.ref.child(key + '/fotoPerfil').on('value', function (snapUser) {
-              if (snapUser.val()) {
-                amigos.list.push({
-                  fotoPerfil: snapUser.val(),
-                  id: key
-                });
-              }
-            });
-          }
-        }
-      });
-    }
-
-    function getUsers() {
+    function getJogadoresRegiao() {
       return $firebaseArray(service.ref.orderByChild('usuarioComum').startAt(true).endAt(true));
     }
 
-    function openPerfilJogador(jogador) {
-      service.jogadorSelecionado.data = jogador;
-      $ionicModal.fromTemplateUrl('templates/modal/perfil-jogador.html', {
-        animation: 'slide-in-up'
-      }).then(function (modal) {
-        service.jogadorSelecionado.modal = modal;
-        modal.show();
+    function getListaJogadores(ids) {
+      var listaJogadores = [];
+      var deferred = $q.defer();
+      var promises = [];
+      _.forEach(ids, function (id) {
+        var promise = service.ref.child(id).once('value');
+        promises.push(promise);
       });
+      $q.all(promises).then(function (requests) {
+        _.forEach(requests, function (snapUser) {
+          var data = snapUser.val();
+          data.$id = snapUser.key;
+          listaJogadores.push(data);
+        });
+        deferred.resolve(listaJogadores);
+      });
+      return deferred.promise;
     }
 
     function verificaAmizadeDeAmizades(user) {
       var deferred = $q.defer();
-      service.ref.child(user + '/amigos/').once('value').then(function (snapshot) {
+      service.ref.child(user + '/seguindo/').once('value').then(function (snapshot) {
         var amigos = Object.keys(snapshot.val()).map(function (key) {
-          if (snapshot.val()[key]) {
-            return key;
-          }
+          return snapshot.val()[key];
         });
         var promises = [];
         _.forEach(amigos, function (amigo) {
-          var promise = service.ref.child(amigo + '/amigos/' + firebase.auth().currentUser.uid).once('value');
+          var promise = service.ref.child(amigo + '/seguindo/' + firebase.auth().currentUser.uid).once('value');
           promises.push(promise);
         });
         $q.all(promises).then(function (requests) {
@@ -196,7 +179,7 @@ angular.module('main')
 
     function verificaAmizade(userId) {
       var deferred = $q.defer();
-      service.ref.child(userId + '/amigos/' + firebase.auth().currentUser.uid).once('value').then(function (snapshot) {
+      service.ref.child(userId + '/seguindo/' + firebase.auth().currentUser.uid).once('value').then(function (snapshot) {
         deferred.resolve(snapshot.val());
       });
       return deferred.promise;

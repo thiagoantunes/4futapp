@@ -2,7 +2,7 @@
 'use strict';
 angular.module('main')
 
-    .controller('TimesCtrl', function(TimesService, UserService, $timeout, $ionicModal) {
+    .controller('TimesCtrl', function (TimesService, UserService, $timeout, $ionicModal) {
         var vm = this;
         vm.timesService = TimesService;
         vm.meusTimes = UserService.times;
@@ -18,9 +18,9 @@ angular.module('main')
             if (_.some(time.jogadores, { id: firebase.auth().currentUser.uid })) {
                 return false;
             }
-            return _.some(time.modalidades, function(mod) {
-                return _.some(UserService.times, function(meuTime) {
-                    return _.some(meuTime.modalidades, function(minhaModalidade) {
+            return _.some(time.modalidades, function (mod) {
+                return _.some(UserService.times, function (meuTime) {
+                    return _.some(meuTime.modalidades, function (minhaModalidade) {
                         return minhaModalidade == mod;
                     });
                 });
@@ -29,50 +29,18 @@ angular.module('main')
 
     })
 
-    .controller('MeusTimesCtrl', function($state, TimesService, UserService, $timeout, $ionicActionSheet, $ionicModal) {
+    .controller('MeusTimesCtrl', function (UserService, TimesService) {
         var vm = this;
         vm.timesService = TimesService;
-        vm.userService = UserService;
-        vm.amigos = UserService.amigos;
         vm.times = UserService.times;
-        vm.openAddOptions = openAddOptions;
 
         activate();
 
         function activate() {
         }
-
-        function openAddOptions() {
-            var hideSheet = $ionicActionSheet.show({
-                buttons: [
-                    { text: 'Buscar Jogadores' },
-                    { text: 'Criar Time' }
-                ],
-                cancelText: 'Fechar',
-                cancel: function() {
-                    // add cancel code..
-                },
-                buttonClicked: function(index) {
-                    if (index == 0) {
-                        $state.go('main.buscarJogadores');
-                        return true;
-                    }
-                    else if (index == 1) {
-                        $state.go('main.criarTime');
-                        return true;
-                    }
-                }
-            });
-
-            $timeout(function() {
-                hideSheet();
-            }, 4000);
-
-        }
-
     })
 
-    .controller('PerfilTimeCtrl', function(TimesService, UserService, $state, $timeout, ionicMaterialMotion, ionicMaterialInk, $ionicPopup) {
+    .controller('PerfilTimeCtrl', function (TimesService, UserService, $state, $timeout, ionicMaterialMotion, ionicMaterialInk, $ionicPopup) {
         var vm = this;
         vm.time = TimesService.timeSelecionado.data;
         vm.closeModal = closeModal;
@@ -94,14 +62,14 @@ angular.module('main')
                     buttons: [{
                         text: 'Fechar',
                         type: 'button-stable',
-                        onTap: function(e) {
+                        onTap: function (e) {
                             popup.close();
                         }
                     },
                         {
                             text: 'Criar Time',
                             type: 'button-positive',
-                            onTap: function(e) {
+                            onTap: function (e) {
                                 popup.close();
                                 closeModal();
                             }
@@ -115,7 +83,7 @@ angular.module('main')
         }
 
         // Set Motion
-        $timeout(function() {
+        $timeout(function () {
             ionicMaterialMotion.slideUp({
                 selector: '.slide-up'
             });
@@ -126,7 +94,7 @@ angular.module('main')
 
     })
 
-    .controller('CriarTimeCtrl', function($scope, TimesService, UserService, RegionService, $ionicHistory, $ionicSlideBoxDelegate, $ionicModal) {
+    .controller('CriarTimeCtrl', function ($scope, TimesService, UserService, RegionService, $ionicHistory, $ionicSlideBoxDelegate, $ionicModal) {
         var vm = this;
         vm.amigos = UserService.amigos;
         vm.checkMembroTime = checkMembroTime;
@@ -136,6 +104,7 @@ angular.module('main')
         vm.criarTime = criarTime;
         vm.selecionadorEscudo = selecionadorEscudo;
         vm.openRegiaoModal = openRegiaoModal;
+        vm.goBack = goBack;
 
         activate();
 
@@ -179,6 +148,10 @@ angular.module('main')
             return !(vm.novoTime.nome && vm.novoTime.jogadores.length > 0);
         }
 
+        function goBack() {
+            $ionicHistory.goBack();
+        }
+
         function criarTime() {
             var novoTime = {
                 nome: vm.novoTime.nome,
@@ -187,7 +160,7 @@ angular.module('main')
                 modalidades: vm.novoTime.modalidades,
                 escudo: vm.novoTime.escudo
             };
-            TimesService.criarTime(novoTime, vm.novoTime.jogadores, vm.locationNovoTime).then(function() {
+            TimesService.criarTime(novoTime, vm.novoTime.jogadores, vm.locationNovoTime).then(function () {
                 $ionicHistory.goBack(-1);
             });
         }
@@ -196,7 +169,7 @@ angular.module('main')
             $ionicModal.fromTemplateUrl('templates/modal/selecionar-regiao.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
-            }).then(function(modal) {
+            }).then(function (modal) {
                 $scope.modalLocal = modal;
                 $scope.modalLocal.show();
             });
@@ -208,17 +181,17 @@ angular.module('main')
                 quert: '',
                 justSelected: false,
             };
-            $scope.$watch('search.query', function(newValue) {
+            $scope.$watch('search.query', function (newValue) {
                 if (newValue && !$scope.search.justSelected) {
-                    RegionService.searchAddress(newValue).then(function(result) {
+                    RegionService.searchAddress(newValue).then(function (result) {
                         $scope.search.error = null;
                         $scope.search.suggestions = result;
-                    }, function(status) {
+                    }, function (status) {
                         $scope.search.error = 'Nenhuma região encontrada';
                     });
                 }
-                $scope.choosePlace = function(place) {
-                    RegionService.getDetails(place.place_id).then(function(location) {
+                $scope.choosePlace = function (place) {
+                    RegionService.getDetails(place.place_id).then(function (location) {
                         vm.novoTime.regiao = location.formatted_address;
                         vm.locationNovoTime = [location.geometry.location.lat(), location.geometry.location.lng()];
                         $scope.search.query = location.formatted_address;
@@ -236,7 +209,7 @@ angular.module('main')
                 'buttonLabels': ['Tirar foto', 'Selecionar da galeria'],
                 'addCancelButtonWithLabel': 'Cancelar'
             };
-            window.plugins.actionsheet.show(options, function(_btnIndex) {
+            window.plugins.actionsheet.show(options, function (_btnIndex) {
                 var picOptions = {
                     destinationType: navigator.camera.DestinationType.FILE_URI,
                     quality: 65,
@@ -254,7 +227,7 @@ angular.module('main')
                 navigator.camera.getPicture(onSuccess, onError, picOptions);
 
                 function onSuccess(imageUrl) {
-                    $scope.$apply(function() {
+                    $scope.$apply(function () {
                         vm.novoTime.escudo = imageUrl;
                     });
                 }
@@ -264,28 +237,4 @@ angular.module('main')
                 }
             });
         }
-    })
-
-    .controller('BuscarJogadores', function(UserService, $ionicHistory) {
-        var vm = this;
-        //TODO !!!!!!!!!!!!!
-        vm.usuarios = UserService.getUsers();
-        vm.amigos = UserService.amigos;
-        vm.checkAmizade = checkAmizade;
-
-        activate();
-
-        function activate() {
-            vm.novoTime = {
-                jogadores: []
-            };
-        }
-
-        function checkAmizade(usuario) {
-            return _.some(vm.amigos, function(val) {
-                return val.id == firebase.auth().currentUser.uid
-                    || val.id == usuario.$id;
-            });
-        }
-
     });
