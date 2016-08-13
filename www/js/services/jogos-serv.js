@@ -32,7 +32,7 @@ angular.module('main')
       service.ref.child(jogoId).on('value', function (snapJogo) {
         getJogadoresJogo(jogoId).$loaded().then(function (val) {
           var data = snapJogo.val();
-          data.id = jogoId;
+          data.$id = jogoId;
           data.jogadores = val;
           deferred.resolve(data);
         });
@@ -47,7 +47,7 @@ angular.module('main')
             getJogadoresJogo(key).$loaded().then(function (val) {
               var jogo = snapshot.val();
               jogo.distance = distance;
-              jogo.id = key;
+              jogo.$id = key;
               jogo.latitude = location[0];
               jogo.longitude = location[1];
               jogo.jogadores = val;
@@ -105,20 +105,20 @@ angular.module('main')
         confirmado: true
       };
       _.forEach(data.jogadores, function (jogador) {
-        jogoData['jogosJogadores/' + jogoId + '/' + jogador.id] = {
+        jogoData['jogosJogadores/' + jogoId + '/' + jogador.$id] = {
           fotoPerfil: jogador.fotoPerfil,
-          id: jogador.id
+          id: jogador.$id
         };
-        jogoData['usersJogos/' + jogador.id + '/' + jogoId] = true;
+        jogoData['usersJogos/' + jogador.$id + '/' + jogoId] = true;
       });
       _.forEach(data.times, function (time) {
         _.forEach(time.jogadores, function (jogador) {
-          if (jogador.id !== firebase.auth().currentUser.uid) {
-            jogoData['jogosJogadores/' + jogoId + '/' + jogador.id] = {
+          if (jogador.$id !== firebase.auth().currentUser.uid) {
+            jogoData['jogosJogadores/' + jogoId + '/' + jogador.$id] = {
               fotoPerfil: jogador.fotoPerfil,
-              id: jogador.id
+              id: jogador.$id
             };
-            jogoData['usersJogos/' + jogador.id + '/' + jogoId] = true;
+            jogoData['usersJogos/' + jogador.$id + '/' + jogoId] = true;
           }
         });
       });
@@ -138,18 +138,18 @@ angular.module('main')
               tipo: Enum.TipoNotificacao.convitePartida,
               lida: false,
               dateTime: new Date().getTime()
-            }, jogador.id);
+            }, jogador.$id);
           });
           _.forEach(data.times, function (time) {
             _.forEach(time.jogadores, function (jogador) {
-              if (jogador.id !== firebase.auth().currentUser.uid) {
+              if (jogador.$id !== firebase.auth().currentUser.uid) {
                 UserService.enviaNotificacao({
                   msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
                   img: firebase.auth().currentUser.photoURL,
                   tipo: Enum.TipoNotificacao.convitePartida,
                   lida: false,
                   dateTime: new Date().getTime()
-                }, jogador.id);
+                }, jogador.$id);
               }
             });
           });
@@ -173,8 +173,8 @@ angular.module('main')
       if (jogo.aprovacaoManual) {
         solicitacao.aguardandoConfirmacao = true;
       }
-      conviteData['jogosJogadores/' + jogo.id + '/' + firebase.auth().currentUser.uid] = solicitacao;
-      conviteData['usersJogos/' + firebase.auth().currentUser.uid + '/' + jogo.id] = true;
+      conviteData['jogosJogadores/' + jogo.$id + '/' + firebase.auth().currentUser.uid] = solicitacao;
+      conviteData['usersJogos/' + firebase.auth().currentUser.uid + '/' + jogo.$id] = true;
 
       Ref.update(conviteData, function () {
         deferred.resolve(solicitacao);
@@ -183,7 +183,7 @@ angular.module('main')
             msg: firebase.auth().currentUser.displayName + ' solicitou presença na partida ' + jogo.nome,
             img: firebase.auth().currentUser.photoURL,
             userId: firebase.auth().currentUser.uid,
-            jogoId: jogo.id,
+            jogoId: jogo.$id,
             tipo: Enum.TipoNotificacao.solicitacaoPresenca,
             lida: false,
             dateTime: new Date().getTime()
@@ -198,7 +198,7 @@ angular.module('main')
         service.ref.child(snap.key).on('value', function (snapJogo) {
           getJogadoresJogo(snap.key).$loaded().then(function (val) {
             var data = snapJogo.val();
-            data.id = snap.key;
+            data.$id = snap.key;
             data.jogadores = val;
             $timeout(function () {
               _.remove(UserService.jogos, { 'id': snap.key });
@@ -228,11 +228,11 @@ angular.module('main')
 
     function convidarAmigo(amigo, jogoId) {
       var conviteData = {};
-      conviteData['jogosJogadores/' + jogoId + '/' + amigo.id] = {
+      conviteData['jogosJogadores/' + jogoId + '/' + amigo.$id] = {
         nome: amigo.nome,
         fotoPerfil: amigo.fotoPerfil
       };
-      conviteData['usersJogos/' + amigo.id + '/' + jogoId] = true;
+      conviteData['usersJogos/' + amigo.$id + '/' + jogoId] = true;
 
       Ref.update(conviteData, function () {
         UserService.enviaNotificacao({
@@ -243,14 +243,14 @@ angular.module('main')
           tipo: Enum.TipoNotificacao.convitePartida,
           lida: false,
           dateTime: new Date().getTime()
-        }, amigo.id);
+        }, amigo.$id);
       });
     }
 
     function desconvidarAmigo(amigo, jogoId) {
       var conviteData = {};
-      conviteData['jogosJogadores/' + jogoId + '/' + amigo.id] = null;
-      conviteData['usersJogos/' + amigo.id + '/' + jogoId] = null;
+      conviteData['jogosJogadores/' + jogoId + '/' + amigo.$id] = null;
+      conviteData['usersJogos/' + amigo.$id + '/' + jogoId] = null;
 
       Ref.update(conviteData);
     }

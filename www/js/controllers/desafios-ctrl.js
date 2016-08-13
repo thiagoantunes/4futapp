@@ -39,7 +39,7 @@ angular.module('main')
       var meuTime = {};
       if (vm.meusTimes.length == 1) {
         meuTime = {
-          id: vm.meusTimes[0].id,
+          id: vm.meusTimes[0].$id,
           escudo: vm.meusTimes[0].escudo,
           nome: vm.meusTimes[0].nome
         };
@@ -51,7 +51,7 @@ angular.module('main')
         data: {
           desafiante: meuTime,
           desafiado: {
-            id: vm.timeDesafiado.id,
+            id: vm.timeDesafiado.$id,
             escudo: vm.timeDesafiado.escudo,
             nome: vm.timeDesafiado.nome
           }
@@ -93,7 +93,7 @@ angular.module('main')
       vm.minhasModalidades = time.modalidades;
       getModalidades();
       vm.novoDesafio.data.desafiante  = {
-        id: time.id,
+        id: time.$id,
         escudo: time.escudo,
         nome: time.nome
       };

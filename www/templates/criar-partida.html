@@ -40,7 +40,7 @@
                 </div>
                 <ion-scroll style="height: 50vh;" zooming="false" direction="y">
                     <div class="list card" style="background: transparent !important; margin:0px;">
-                        <a ng-repeat="arena in vm.arenas | orderBy:'distance'" ng-click="vm.abrirArena(arena);" ui-sref="main.arenas-detail-partida({id: arena.id})">
+                        <a ng-repeat="arena in vm.arenas | orderBy:'distance'" ng-click="vm.abrirArena(arena);" ui-sref="main.arenas-detail-partida({id: arena.$id})">
                             <div class="list-arena" style="background-image: url('{{arena.fotoPerfil | defaultImage}}');">
                                 <div class="item">
                                     <div class="title">

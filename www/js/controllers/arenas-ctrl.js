@@ -40,7 +40,7 @@ angular.module('main')
     }
 
     function selecionaQuadraMapa(marker, eventName, model) {
-      vm.arenaService.arenaSelecionada = _.find(vm.arenas, { id: model.id });
+      vm.arenaService.arenaSelecionada = _.find(vm.arenas, { $id: model.$id });
       vm.map.center = {
         latitude: vm.arenaService.arenaSelecionada.latitude,
         longitude: vm.arenaService.arenaSelecionada.longitude
@@ -54,8 +54,8 @@ angular.module('main')
     var vm = this;
     vm.arena = ArenasService.arenaSelecionada;
     vm.album = ArenasService.getAlbum($stateParams.id);
-    vm.quadras = ArenasService.getQuadrasArena(vm.arena.id);
-    vm.estrutura = ArenasService.getEstrutura(vm.arena.id);
+    vm.quadras = ArenasService.getQuadrasArena(vm.arena.$id);
+    vm.estrutura = ArenasService.getEstrutura(vm.arena.$id);
     vm.intervaloSelecionado = {};
     vm.horariosPorQuadra = [];
     vm.reservas = [];
@@ -340,12 +340,12 @@ angular.module('main')
         title: firebase.auth().currentUser.displayName,
         status: 'agendado'
       };
-      ReservasService.criarReservaAvulsa(novaReserva, vm.arena.id).then(function (reserva) {
+      ReservasService.criarReservaAvulsa(novaReserva, vm.arena.$id).then(function (reserva) {
         if (vm.arena.criacaoPartidaAndamento) {
-          JogosService.novaPartida.data.reserva = reserva.id;
+          JogosService.novaPartida.data.reserva = reserva.$id;
           JogosService.novaPartida.data.dia = moment(reserva.start).format('DD/MM/YYYY');
           JogosService.novaPartida.data.hora = moment(reserva.start).format('HH:mm');
-          JogosService.novaPartida.arenaReserva = vm.arena.id;
+          JogosService.novaPartida.arenaReserva = vm.arena.$id;
           JogosService.novaPartida.arenaReservaCallback = true;
           JogosService.novaPartida.localSelecionado = {
             nome: vm.arena.nome,

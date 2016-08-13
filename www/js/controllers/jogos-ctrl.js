@@ -38,7 +38,7 @@ angular.module('main')
 
     function selecionaJogoMapa(marker, eventName, model) {
       if (model.visivel) {
-        vm.jogosService.jogoSelecionado = _.find(vm.jogosRegiao, { id: model.id });
+        vm.jogosService.jogoSelecionado = _.find(vm.jogosRegiao, { $id: model.$id });
         vm.map.center = {
           latitude: vm.jogosService.jogoSelecionado.latitude,
           longitude: vm.jogosService.jogoSelecionado.longitude

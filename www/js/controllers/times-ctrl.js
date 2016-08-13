@@ -15,7 +15,7 @@ angular.module('main')
         }
 
         function filtrarModalidades(time) {
-            if (_.some(time.jogadores, { id: firebase.auth().currentUser.uid })) {
+            if (_.some(time.jogadores, { $id: firebase.auth().currentUser.uid })) {
                 return false;
             }
             return _.some(time.modalidades, function (mod) {
@@ -119,7 +119,7 @@ angular.module('main')
         }
 
         function toggleMembroTime(amigo) {
-            if (_.some(vm.novoTime.jogadores, { 'id': amigo.id })) {
+            if (_.some(vm.novoTime.jogadores, { '$id': amigo.$id })) {
                 var index = vm.novoTime.jogadores.indexOf(amigo);
                 if (index > -1) {
                     vm.novoTime.jogadores.splice(index, 1);
@@ -141,7 +141,7 @@ angular.module('main')
         }
 
         function checkMembroTime(amigo) {
-            return _.some(vm.novoTime.jogadores, { 'id': amigo.id });
+            return _.some(vm.novoTime.jogadores, { '$id': amigo.$id });
         }
 
         function validForm() {

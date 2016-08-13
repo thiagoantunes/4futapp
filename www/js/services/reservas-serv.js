@@ -53,7 +53,7 @@ angular.module('main')
               deferred.reject('Erro ao cadastrar nova turma');
             }
             else {
-              novaReserva.id = reservaId;
+              novaReserva.$id = reservaId;
               novaReserva.arenaId = arena;
               deferred.resolve(novaReserva);
             }
@@ -95,7 +95,7 @@ angular.module('main')
         getReserva(snap.val(), snap.key).on('value', function (snapReservaData) {
           Ref.child('arenas/' + snap.val() + '/nome').on('value', function (snapNomeArena) {
             var data = snapReservaData.val();
-            data.id = snap.key;
+            data.$id = snap.key;
             data.arenaId = snap.val();
             data.arenaNome = snapNomeArena.val();
             $timeout(function () {

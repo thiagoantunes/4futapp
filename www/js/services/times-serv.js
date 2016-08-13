@@ -23,7 +23,7 @@ angular.module('main')
             service.refJogador.child(firebase.auth().currentUser.uid + '/times').on('child_added', function(snap) {
                 service.ref.child(snap.key).on('value', function(snapUser) {
                     var data = snapUser.val();
-                    data.id = snap.key;
+                    data.$id = snap.key;
                     data.modalidades = Object.keys(data.modalidades).map(function(key) {
                         return key;
                     });
@@ -43,7 +43,7 @@ angular.module('main')
                 service.ref.child(key).on('value', function(snapshot) {
                     var time = snapshot.val();
                     time.distance = distance;
-                    time.id = key;
+                    time.$id = key;
                     time.modalidades = Object.keys(time.modalidades).map(function(key) {
                         return key;
                     });
@@ -88,9 +88,9 @@ angular.module('main')
                             timeData['times/' + timeId] = time;
                             timeData['times/' + timeId].jogadores = {};
                             _.forEach(jogadores, function(val) {
-                                timeData['times/' + timeId].jogadores[val.id] = {
+                                timeData['times/' + timeId].jogadores[val.$id] = {
                                     fotoPerfil: val.fotoPerfil,
-                                    id: val.id
+                                    id: val.$id
                                 };
                             });
                             timeData['times/' + timeId].jogadores[firebase.auth().currentUser.uid] = {
@@ -98,7 +98,7 @@ angular.module('main')
                                 id: firebase.auth().currentUser.uid
                             };
                             _.forEach(jogadores, function(val) {
-                                timeData['users/' + val.id + '/times/' + timeId] = true;
+                                timeData['users/' + val.$id + '/times/' + timeId] = true;
                             });
                             timeData['users/' + firebase.auth().currentUser.uid + '/times/' + timeId] = true;
 
@@ -126,8 +126,8 @@ angular.module('main')
 
             var desafioId = service.ref.push().key;
             var desafioData = {};
-            desafioData['times/' + data.desafio.desafiante.id + '/desafios/' + desafioId] = true;
-            desafioData['times/' + data.desafio.desafiado.id + '/desafios/' + desafioId] = false;
+            desafioData['times/' + data.desafio.desafiante.$id + '/desafios/' + desafioId] = true;
+            desafioData['times/' + data.desafio.desafiado.$id + '/desafios/' + desafioId] = false;
             desafioData['desafios/' + desafioId] = data.desafio;
 
             if (data.desafio.reserva && data.arenaId) {

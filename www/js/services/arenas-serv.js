@@ -31,7 +31,7 @@ angular.module('main')
                 service.ref.child(key).once('value').then(function(snapshot) {
                     var arena = snapshot.val();
                     arena.distance = distance;
-                    arena.id = key;
+                    arena.$id = key;
                     arena.latitude = location[0];
                     arena.longitude = location[1];
                     arena.icon = 'img/pin.png';
@@ -88,7 +88,7 @@ angular.module('main')
                 service.refArenaBasica.child(key).once('value').then(function(snapshot) {
                     if (snapshot.val()) {
                         var arena = snapshot.val();
-                        arena.id = key;
+                        arena.$id = key;
                         arena.latitude = location[0];
                         arena.longitude = location[1];
                         $timeout(function() {

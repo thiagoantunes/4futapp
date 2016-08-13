@@ -19,7 +19,7 @@ angular.module('main')
     }
 
     function openReservamodal(reserva) {
-      var arena = _.find(ArenasService.arenas, { 'id': reserva.arenaId });
+      var arena = _.find(ArenasService.arenas, { '$id': reserva.arenaId });
       ReservasService.openReservaModal(reserva, arena);
     }
 
@@ -72,7 +72,7 @@ angular.module('main')
             text: 'Sim',
             type: 'button-assertive',
             onTap: function (e) {
-              ReservasService.cancelarReserva(vm.reservaSelecionada.arenaId, vm.reservaSelecionada.id);
+              ReservasService.cancelarReserva(vm.reservaSelecionada.arenaId, vm.reservaSelecionada.$id);
               vm.modal.hide();
             }
           }]
@@ -82,7 +82,7 @@ angular.module('main')
     function criaPartida() {
       JogosService.novaPartida = {
         data: {
-          reserva: vm.reservaSelecionada.id,
+          reserva: vm.reservaSelecionada.$id,
           dia: moment(vm.reservaSelecionada.start).format('DD/MM/YYYY'),
           hora: moment(vm.reservaSelecionada.start).format('HH:mm'),
         },
@@ -101,9 +101,9 @@ angular.module('main')
 
     function idParaPartida() {
       closeModal();
-      var partida = _.find(UserService.jogos, { 'id': vm.reservaSelecionada.partida });
+      var partida = _.find(UserService.jogos, { '$id': vm.reservaSelecionada.partida });
       JogosService.jogoSelecionado = partida;
-      $state.go('main.meus-jogos-detail', { 'id': partida.id });
+      $state.go('main.meus-jogos-detail', { '$id': partida.$id });
     }
 
     function isAndroid() {
@@ -222,7 +222,7 @@ angular.module('main')
     }
 
     function toggleJogador(amigo) {
-      if (_.some(vm.jogadores, { 'id': amigo.id })) {
+      if (_.some(vm.jogadores, { '$id': amigo.$id })) {
         var index = vm.jogadores.indexOf(amigo);
         if (index > -1) {
           vm.jogadores.splice(index, 1);
@@ -239,11 +239,11 @@ angular.module('main')
     }
 
     function checkJogadorPartida(amigo) {
-      return _.some(vm.jogadores, { 'id': amigo.id });
+      return _.some(vm.jogadores, { '$id': amigo.$id });
     }
 
     function toggleTime(time) {
-      if (_.some(vm.times, { 'id': time.id })) {
+      if (_.some(vm.times, { '$id': time.$id })) {
         var index = vm.times.indexOf(time);
         if (index > -1) {
           vm.times.splice(index, 1);
@@ -255,7 +255,7 @@ angular.module('main')
     }
 
     function checkTime(time) {
-      return _.some(vm.times, { 'id': time.id });
+      return _.some(vm.times, { '$id': time.$id });
     }
 
     function openTimePicker() {
@@ -481,15 +481,15 @@ angular.module('main')
     }
 
     function checkPresencaAmigo(amigo) {
-      return _.some(vm.jogo.jogadores, { '$id': amigo.id });
+      return _.some(vm.jogo.jogadores, { '$id': amigo.$id });
     }
 
     function convidarAmigo(amigo) {
-      JogosService.convidarAmigo(amigo, vm.jogo.id);
+      JogosService.convidarAmigo(amigo, vm.jogo.$id);
     }
 
     function desconvidarAmigo(amigo) {
-      JogosService.desconvidarAmigo(amigo, vm.jogo.id);
+      JogosService.desconvidarAmigo(amigo, vm.jogo.$id);
     }
 
     function orderByConfirmacao(jogador) {

@@ -2,11 +2,11 @@
   <!-- do you want padding? -->
   <ion-content scroll="false" class="map-container" >
     <ui-gmap-google-map center='vm.map.center' pan="true" events="vm.map.mapEvents" options='vm.map.options' zoom='vm.map.zoom'>
-      <ui-gmap-markers events="vm.map.markersEvents" models="vm.jogosRegiao" icon="'icon'" coords="'self'" '>
+      <ui-gmap-markers events="vm.map.markersEvents" type="cluster" models="vm.jogosRegiao" idkey="'$id'" icon="'icon'" coords="'self'" '>
       </ui-gmap-markers>
     </ui-gmap-google-map>
     <div class="item-animate jogo-card" ng-show="vm.showDetails">
-        <a href="#/main/jogos/{{vm.jogosService.jogoSelecionado.id}}">
+        <a href="#/main/jogos/{{vm.jogosService.jogoSelecionado.$id}}">
           <div class="card">
             <div class="row">
               <div class="col col-nome">{{vm.jogosService.jogoSelecionado.nome}}</div>

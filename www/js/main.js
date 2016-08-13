@@ -324,6 +324,26 @@ angular.module('main', [
         }
       })
 
+      .state('main.listaJogadores-tab-home', {
+        url: '/jogos/lista-jogadores/:tipoLista',
+        views: {
+          'tab-home': {
+            templateUrl: 'templates/lista-jogadores.html',
+            controller: 'ListaJogadoresCtrl as vm',
+          }
+        }
+      })
+  
+      .state('main.perfilJogador-tab-home', {
+        url: '/jogos/perfilJogador/:id',
+        views: {
+          'tab-home': {
+            templateUrl: 'templates/perfil-jogador.html',
+            controller: 'PerfilJogadorCtrl as vm',
+          }
+        }
+      })
+
       //
       //
       //TAB-MEUS-JOGOS
@@ -552,7 +572,9 @@ angular.module('main', [
       'main.listaJogadores-tab-perfil',
       'main.perfilJogador-tab-perfil',
       'main.listaJogadores-tab-meus-jogos',
-      'main.perfilJogador-tab-meus-jogos'
+      'main.perfilJogador-tab-meus-jogos',
+      'main.perfilJogador-tab-home',
+      'main.listaJogadores-tab-home'
     ];
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);

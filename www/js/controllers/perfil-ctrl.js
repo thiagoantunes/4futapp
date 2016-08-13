@@ -167,7 +167,7 @@ angular.module('main')
 
     function openPerfilJogador(jogador) {
       UserService.jogadorSelecionado = jogador;
-      $state.go('main.perfilJogador-' + Object.keys($state.current.views)[0], { id: jogador.$id });
+      $state.go('main.perfilJogador-' + Object.keys($state.current.views)[0], { $id: jogador.$id });
     }
 
     function checkAmizade(usuario) {

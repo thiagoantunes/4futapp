@@ -8,7 +8,7 @@
   <ion-content>
     <div ng-if="!actrl.mapView">
       <div class="card-2" ng-repeat="arena in actrl.arenas | orderBy:'distance'">
-        <a ng-click="actrl.arenaService.arenaSelecionada = arena;" href="#/main/arenas/{{arena.id}}">
+        <a ng-click="actrl.arenaService.arenaSelecionada = arena;" href="#/main/arenas/{{arena.$id}}">
           <div class="list card">
             <div class="row card-outer">
               <div class="col col-50 card-image">
@@ -31,12 +31,12 @@
     </div>
     <div ng-if="actrl.mapView" class="map-container" data-tap-disabled="true">
       <ui-gmap-google-map center='actrl.map.center' pan="true" events="actrl.map.mapEvents" options='actrl.map.options' zoom='actrl.map.zoom'>
-        <ui-gmap-markers events="actrl.map.markersEvents" models="actrl.arenas" icon="'icon'" coords="'self'" '>
+        <ui-gmap-markers events="actrl.map.markersEvents" models="actrl.arenas" idkey="'$id'" icon="'icon'" coords="'self'" '>
         </ui-gmap-markers>
       </ui-gmap-google-map>
       <div class="item-animate" ng-show="actrl.showDetails">
         <div class="card-2" style="width:100%">
-          <a  href="#/main/arenas/{{actrl.arenaService.arenaSelecionada.id}}">
+          <a  href="#/main/arenas/{{actrl.arenaService.arenaSelecionada.$id}}">
             <div class="list card">
               <div class="row card-outer">
                 <div class="col col-50 card-image">
