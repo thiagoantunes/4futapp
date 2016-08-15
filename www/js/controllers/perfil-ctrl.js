@@ -56,6 +56,7 @@ angular.module('main')
     vm.goBack = goBack;
     vm.getObjLength = getObjLength;
     vm.openListaJogadores = openListaJogadores;
+    vm.openChat = openChat;
 
     activate();
 
@@ -103,6 +104,10 @@ angular.module('main')
       $state.go('main.listaJogadores-' + Object.keys($state.current.views)[0], { tipoLista: tipoLista });
     }
 
+    function openChat(){
+      $state.go('main.chatJogador-' + Object.keys($state.current.views)[0], { id: vm.jogador.$id });
+    }
+
     // Set Motion
     $timeout(function () {
       ionicMaterialMotion.slideUp({
@@ -126,7 +131,7 @@ angular.module('main')
     vm.deixarDeSeguir = deixarDeSeguir;
 
     activate();
-    
+
     function activate() {
       switch ($stateParams.tipoLista) {
         case 'seguidores':
@@ -186,7 +191,7 @@ angular.module('main')
     function deixarDeSeguir(jogador) {
       var options = {
         'title': 'Deixar de seguir ' + jogador.nome + '?',
-        'addDestructiveButtonWithLabel' : 'Deixar de seguir',
+        'addDestructiveButtonWithLabel': 'Deixar de seguir',
         'addCancelButtonWithLabel': 'Cancelar'
       };
       window.plugins.actionsheet.show(options, function (_btnIndex) {
@@ -194,5 +199,200 @@ angular.module('main')
       });
     }
 
-  });
+  })
 
+
+  .controller('ChatJogadorCtrl', function ($scope, ChatService, UserService, $rootScope, $state, $stateParams, $ionicActionSheet, $ionicHistory, $ionicPopup, $ionicScrollDelegate, $timeout, $interval) {
+    var vm = this;
+    vm.jogador = UserService.jogadorSelecionado;
+    vm.currentUser = UserService.getUserProfile(firebase.auth().currentUser.uid);
+
+    vm.enviarMensagem = enviarMensagem;
+    vm.onMessageHold = onMessageHold;
+    vm.goBack = goBack;
+
+    activate();
+
+    function activate() {
+      getChat();
+      vm.input = {
+        message: localStorage['userMessage-' + vm.jogador.$id] || ''
+      };
+    }
+
+    var messageCheckTimer;
+    var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
+    var footerBar; // gets set in $ionicView.enter
+    var scroller;
+    var txtInput; // ^^^
+
+    function getChat() {
+      // the service is mock but you would probably pass the toUser's GUID here
+      ChatService.getChat(vm.jogador.$id).then(function () {
+        ChatService.chatSelecionado.$loaded().then(function (data) {
+          $scope.doneLoading = true;
+          vm.mensagens = data;
+
+          $timeout(function () {
+            viewScroll.scrollBottom();
+          }, 0);
+        });
+      });
+    }
+
+    function enviarMensagem() {
+      var message = {
+        toId: vm.jogador.$id,
+        text: vm.input.message
+      };
+
+      keepKeyboardOpen();
+
+      vm.input.message = '';
+
+      message.date = new Date().getTime();
+      message.userId = vm.currentUser.$id;
+
+      vm.mensagens.$add(message).then(function () {
+        UserService.sendPushNotification(vm.jogador.$id, firebase.auth().currentUser.displayName + ': ' + message.text );
+      });
+
+      $timeout(function () {
+        keepKeyboardOpen();
+        viewScroll.scrollBottom(true);
+      }, 0);
+    }
+
+    function keepKeyboardOpen() {
+      console.log('keepKeyboardOpen');
+      txtInput.one('blur', function () {
+        console.log('textarea blur, focus back on it');
+        txtInput[0].focus();
+      });
+    }
+
+    function onMessageHold(e, itemIndex, message) {
+      console.log('onMessageHold');
+      console.log('message: ' + JSON.stringify(message, null, 2));
+      $ionicActionSheet.show({
+        buttons: [{
+          text: 'Copy Text'
+        }, {
+            text: 'Delete Message'
+          }],
+        buttonClicked: function (index) {
+          switch (index) {
+            case 0: // Copy Text
+              //cordova.plugins.clipboard.copy(message.text);
+
+              break;
+            case 1: // Delete
+              // no server side secrets here :~)
+              vm.mensagens.$remove(message);
+              $timeout(function () {
+                viewScroll.resize();
+              }, 0);
+
+              break;
+          }
+
+          return true;
+        }
+      });
+    }
+
+    function goBack() {
+      $ionicHistory.goBack();
+    }
+
+    $scope.$on('$ionicView.enter', function () {
+      $timeout(function () {
+        footerBar = document.body.querySelector('#chat-view .bar-footer');
+        scroller = document.body.querySelector('#chat-view .scroll-content');
+        txtInput = angular.element(footerBar.querySelector('textarea'));
+      }, 0);
+
+      messageCheckTimer = $interval(function () {
+        // here you could check for new messages if your app doesn't use push notifications or user disabled them
+      }, 20000);
+    });
+
+    $scope.$on('$ionicView.leave', function () {
+      console.log('leaving UserMessages view, destroying interval');
+      // Make sure that the interval is destroyed
+      if (angular.isDefined(messageCheckTimer)) {
+        $interval.cancel(messageCheckTimer);
+        messageCheckTimer = undefined;
+      }
+    });
+
+    // I emit this event from the monospaced.elastic directive, read line 480
+    $scope.$on('taResize', function (e, ta) {
+      console.log('taResize');
+      if (!ta) return;
+
+      var taHeight = ta[0].offsetHeight;
+      console.log('taHeight: ' + taHeight);
+
+      if (!footerBar) return;
+
+      var newFooterHeight = taHeight + 10;
+      newFooterHeight = (newFooterHeight > 44) ? newFooterHeight : 44;
+
+      footerBar.style.height = newFooterHeight + 'px';
+      scroller.style.bottom = newFooterHeight + 'px';
+    });
+
+  })
+
+  // fitlers
+  .filter('nl2br', ['$filter',
+    function ($filter) {
+      return function (data) {
+        if (!data) return data;
+        return data.replace(/\n\r?/g, '<br />');
+      };
+    }
+  ])
+
+  // directives
+  .directive('autolinker', ['$timeout',
+    function ($timeout) {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+          $timeout(function () {
+            var eleHtml = element.html();
+
+            if (eleHtml === '') {
+              return false;
+            }
+
+            var text = Autolinker.link(eleHtml, {
+              className: 'autolinker',
+              newWindow: false
+            });
+
+            element.html(text);
+
+            var autolinks = element[0].getElementsByClassName('autolinker');
+
+            for (var i = 0; i < autolinks.length; i++) {
+              angular.element(autolinks[i]).bind('click', function (e) {
+                var href = e.target.href;
+                console.log('autolinkClick, href: ' + href);
+
+                if (href) {
+                  //window.open(href, '_system');
+                  window.open(href, '_blank');
+                }
+
+                e.preventDefault();
+                return false;
+              });
+            }
+          }, 0);
+        }
+      }
+    }
+  ])

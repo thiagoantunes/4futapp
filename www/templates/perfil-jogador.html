@@ -2,7 +2,7 @@
   <div class="bar bar-header">
     <button ng-click="vm.goBack()" class="button button-icon button-clear ion-android-arrow-back"></button>
     <div style="font-weight:bold" class="title"></div>
-    <button ng-if="vm.checkAmizade();" class="button button-icon button-clear ion-chatbubbles"></button>
+    <button ng-if="vm.checkAmizade();" ng-click="vm.openChat();"  class="button button-icon button-clear ion-chatbubbles"></button>
     <button ng-if="!vm.checkAmizade();" ng-click="vm.addAmigo();" class="button button-icon button-clear ion-person-add"></button>
   </div>
   <ion-content>

@@ -1,6 +1,6 @@
 'use strict';
 angular.module('main')
-  .factory('UserService', function (Ref, $firebaseObject, $state, Enum, PushNotification, $firebaseArray, $q, $timeout, $http, $ionicModal, $resource) {
+  .factory('UserService', function (Ref, $firebaseObject, $state, Enum, $firebaseArray, $q, $timeout, $http, $ionicModal, $resource) {
     var service = {
       jogos: [],
       amigos: [],
@@ -23,6 +23,7 @@ angular.module('main')
       adicionarAmigo: adicionarAmigo,
       removerAmigo: removerAmigo,
       enviaNotificacao: enviaNotificacao,
+      sendPushNotification: sendPushNotification,
       salvarDeviceToken: salvarDeviceToken
     };
 
@@ -200,17 +201,4 @@ angular.module('main')
       });
     }
 
-  })
-
-  .factory('PushNotification', function ($resource) {
-
-    var serviceBase = 'http://rdqapi.azurewebsites.net/api/';
-
-    return $resource(serviceBase + 'notifications/', {}, {
-      query: { method: 'POST' },
-      sendNotification: {
-        url: serviceBase + 'notifications/SendNotification',
-        method: 'POST',
-      }
-    });
-  })
+  });

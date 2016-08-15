@@ -22,6 +22,9 @@ angular.module('main')
         options: {
           disableDefaultUI: true,
         },
+        clusterOptions: {
+          nearbyDistance : 2,
+        },
         mapEvents: {
           click: function () {
             $scope.$apply(function () {

@@ -23,7 +23,9 @@ angular.module('main', [
   'ionic-datepicker',
   'ionic-cache-src',
   'ngResource',
-  'ui.utils.masks'
+  'ui.utils.masks',
+  'angularMoment',
+  'monospaced.elastic'
 ])
 
   .run(function ($ionicPlatform, $ionicAnalytics, $state, Ref, $rootScope, UserService) {
@@ -333,13 +335,23 @@ angular.module('main', [
           }
         }
       })
-  
+
       .state('main.perfilJogador-tab-home', {
         url: '/jogos/perfilJogador/:id',
         views: {
           'tab-home': {
             templateUrl: 'templates/perfil-jogador.html',
             controller: 'PerfilJogadorCtrl as vm',
+          }
+        }
+      })
+
+      .state('main.chatJogador-tab-home', {
+        url: 'jogos/chatJogador/:id',
+        views: {
+          'tab-home': {
+            templateUrl: 'templates/chat-jogador.html',
+            controller: 'ChatJogadorCtrl as vm',
           }
         }
       })
@@ -410,6 +422,16 @@ angular.module('main', [
         }
       })
 
+      .state('main.chatJogador-tab-meus-jogos', {
+        url: '/meus-jogos/chatJogador/:id',
+        views: {
+          'tab-meus-jogos': {
+            templateUrl: 'templates/chat-jogador.html',
+            controller: 'ChatJogadorCtrl as vm',
+          }
+        }
+      })
+
 
       //
       //
@@ -446,7 +468,17 @@ angular.module('main', [
           }
         }
       })
-      
+
+      .state('main.chatJogador-tab-meus-times', {
+        url: '/meus-times/chatJogador/:id',
+        views: {
+          'tab-meus-times': {
+            templateUrl: 'templates/chat-jogador.html',
+            controller: 'ChatJogadorCtrl as vm',
+          }
+        }
+      })
+
 
       .state('main.criarTime', {
         url: '/criar-time',
@@ -499,6 +531,16 @@ angular.module('main', [
         }
       })
 
+      .state('main.chatJogador-tab-perfil', {
+        url: '/perfil/meus-times/chatJogador/:id',
+        views: {
+          'tab-perfil': {
+            templateUrl: 'templates/chat-jogador.html',
+            controller: 'ChatJogadorCtrl as vm',
+          }
+        }
+      })
+
       //
       //
       //TAB-NOTIFICACOES
@@ -531,6 +573,16 @@ angular.module('main', [
           'tab-notificacoes': {
             templateUrl: 'templates/lista-jogadores.html',
             controller: 'ListaJogadoresCtrl as vm',
+          }
+        }
+      })
+
+      .state('main.chatJogador-tab-notificacoes', {
+        url: '/notificacoes/meus-times/chatJogador/:id',
+        views: {
+          'tab-notificacoes': {
+            templateUrl: 'templates/chat-jogador.html',
+            controller: 'ChatJogadorCtrl as vm',
           }
         }
       })
@@ -574,7 +626,12 @@ angular.module('main', [
       'main.listaJogadores-tab-meus-jogos',
       'main.perfilJogador-tab-meus-jogos',
       'main.perfilJogador-tab-home',
-      'main.listaJogadores-tab-home'
+      'main.listaJogadores-tab-home',
+      'main.chatJogador-tab-perfil',
+      'main.chatJogador-tab-notificacoes',
+      'main.chatJogador-tab-meus-times',
+      'main.chatJogador-tab-meus-jogos',
+      'main.chatJogador-tab-home'
     ];
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);
