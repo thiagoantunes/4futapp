@@ -3,7 +3,7 @@
     <div class="list ">
       <div ng-click="vm.acaoClickItem(notificacao);" class="item  item-avatar item-text-wrap item-button-right" ng-repeat="notificacao in vm.notificacoes | orderBy: '-dateTime'">
         <img ng-click="vm.acaoClickImagem(notificacao); $event.stopPropagation();" style="margin-top:-7px;" src="{{notificacao.img | defaultImage}}">
-        <div style="font-size: 0.85em; padding-right: 10px;" ng-bind-html="notificacao.msg"></div> 
+        <div style="font-size: 0.85em; padding-right: 30px;" ng-bind-html="notificacao.msg"></div> 
         <button style="line-height: 30px !important; height: 30px;margin-top: 10px; font-size: 0.7em !important;"
           ng-if="notificacao.tipo == vm.tiposNotificacoes.solicitacaoAmizade && !vm.checkAmizade(notificacao);" ng-click="vm.seguirJogador(notificacao); $event.stopPropagation();" class="button button-light button-outline">
               SEGUIR

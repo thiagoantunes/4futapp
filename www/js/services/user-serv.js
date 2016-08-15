@@ -98,7 +98,11 @@ angular.module('main')
               }
             }
           };
-          $http(req);
+          $http(req).then(function (val){
+            console.log(val);
+          }, function (err) {
+            console.log(err);
+          });
         }
       });
     }
