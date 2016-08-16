@@ -1,21 +1,22 @@
 <ion-tabs class="tabs-icon tabs-background-positive tabs-color-dark" ng-class="{ 'tabs-item-hide': $root.hideTabs }">
-  <ion-tab icon-off="ion-tshirt-outline" icon-on="ion-tshirt" ui-sref="main.meus-times">
-    <ion-nav-view name="tab-meus-times"></ion-nav-view>
+  
+  <ion-tab icon-off="ion-ios-home-outline" icon-on="ion-ios-home" ui-sref="main.home">
+    <ion-nav-view name="tab-home"></ion-nav-view>
   </ion-tab>
 
   <ion-tab  icon-off="ion-ios-football-outline" icon-on="ion-ios-football" ui-sref="main.meus-jogos">
     <ion-nav-view name="tab-meus-jogos"></ion-nav-view>
   </ion-tab>
 
-  <ion-tab icon-off="ion-ios-home-outline" icon-on="ion-ios-home" ui-sref="main.home">
-    <ion-nav-view name="tab-home"></ion-nav-view>
+  <ion-tab icon-off="meus-times-outline" icon-on="meus-times" ui-sref="main.meus-times">
+    <ion-nav-view name="tab-meus-times"></ion-nav-view>
   </ion-tab>
 
-  <ion-tab icon-off="ion-android-notifications-none" badge="menu.notificacoes.length" badge-style="badge-assertive" icon-on="ion-android-notifications" ui-sref="main.notificacoes">
+  <ion-tab icon-off="notificacoes-outline" badge="menu.notificacoes.length" badge-style="badge-assertive" icon-on="notificacoes" ui-sref="main.notificacoes">
     <ion-nav-view name="tab-notificacoes"></ion-nav-view>
   </ion-tab>
 
-  <ion-tab icon-off="ion-ios-person-outline " icon-on="ion-person " ui-sref="main.perfil">
+  <ion-tab icon-off="perfil-outline " icon-on="perfil" ui-sref="main.perfil">
     <ion-nav-view name="tab-perfil"></ion-nav-view> 
   </ion-tab>
 </ion-tabs>

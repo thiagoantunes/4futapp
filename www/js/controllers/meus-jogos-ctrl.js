@@ -435,6 +435,7 @@ angular.module('main')
     vm.orderByConfirmacao = orderByConfirmacao;
     vm.navigateTo = navigateTo;
     vm.openPerfilJogador = openPerfilJogador;
+    vm.openChat = openChat;
 
     activate();
 
@@ -531,6 +532,10 @@ angular.module('main')
         UserService.jogadorSelecionado = val;
         $state.go('main.perfilJogador-' + Object.keys($state.current.views)[0], { id: jogador });
       });
+    }
+
+    function openChat() {
+      $state.go('main.chat-' + Object.keys($state.current.views)[0], { id: vm.jogo.$id , tipoChat: 'partida' });
     }
 
 

@@ -104,8 +104,8 @@ angular.module('main')
       $state.go('main.listaJogadores-' + Object.keys($state.current.views)[0], { tipoLista: tipoLista });
     }
 
-    function openChat(){
-      $state.go('main.chatJogador-' + Object.keys($state.current.views)[0], { id: vm.jogador.$id });
+    function openChat() {
+      $state.go('main.chat-' + Object.keys($state.current.views)[0], { id: vm.jogador.$id, tipoChat: 'jogador' });
     }
 
     // Set Motion
@@ -202,35 +202,54 @@ angular.module('main')
   })
 
 
-  .controller('ChatJogadorCtrl', function ($scope, ChatService, UserService, $rootScope, $state, $stateParams, $ionicActionSheet, $ionicHistory, $ionicPopup, $ionicScrollDelegate, $timeout, $interval) {
+  .controller('ChatCtrl', function ($scope, ChatService, JogosService, UserService, $rootScope, $state, $stateParams, $ionicActionSheet, $ionicHistory, $ionicScrollDelegate, $timeout, $interval) {
     var vm = this;
-    vm.jogador = UserService.jogadorSelecionado;
+    var messageCheckTimer;
+    var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
+    var footerBar;
+    var scroller;
+    var txtInput;
     vm.currentUser = UserService.getUserProfile(firebase.auth().currentUser.uid);
-
+    vm.jogadores = [];
     vm.enviarMensagem = enviarMensagem;
     vm.onMessageHold = onMessageHold;
+    vm.getUserData = getUserData;
     vm.goBack = goBack;
 
     activate();
 
     function activate() {
-      getChat();
-      vm.input = {
-        message: localStorage['userMessage-' + vm.jogador.$id] || ''
-      };
+      switch ($stateParams.tipoChat) {
+        case 'jogador':
+          getChatJogador();
+          break;
+        case 'partida':
+          getChatPartida();
+          break;
+      }
+
     }
 
-    var messageCheckTimer;
-    var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
-    var footerBar; // gets set in $ionicView.enter
-    var scroller;
-    var txtInput; // ^^^
+    function getChatPartida() {
+      vm.jogadores = JogosService.jogoSelecionado.jogadores;
 
-    function getChat() {
-      // the service is mock but you would probably pass the toUser's GUID here
-      ChatService.getChat(vm.jogador.$id).then(function () {
+      ChatService.getChatPartida(JogosService.jogoSelecionado.$id);
+      ChatService.chatSelecionado.$loaded().then(function (data) {
+        vm.doneLoading = true;
+        vm.mensagens = data;
+
+        $timeout(function () {
+          viewScroll.scrollBottom();
+        }, 0);
+      });
+    }
+
+    function getChatJogador() {
+      vm.jogadores.push(UserService.jogadorSelecionado);
+
+      ChatService.getChatJogador(vm.jogadores[0].$id).then(function () {
         ChatService.chatSelecionado.$loaded().then(function (data) {
-          $scope.doneLoading = true;
+          vm.doneLoading = true;
           vm.mensagens = data;
 
           $timeout(function () {
@@ -242,19 +261,18 @@ angular.module('main')
 
     function enviarMensagem() {
       var message = {
-        toId: vm.jogador.$id,
-        text: vm.input.message
+        text: vm.input.message,
+        date: new Date().getTime(),
+        userId: vm.currentUser.$id
       };
 
       keepKeyboardOpen();
-
       vm.input.message = '';
 
-      message.date = new Date().getTime();
-      message.userId = vm.currentUser.$id;
-
       vm.mensagens.$add(message).then(function () {
-        UserService.sendPushNotification(vm.jogador.$id, firebase.auth().currentUser.displayName + ': ' + message.text );
+        _.forEach(vm.jogadores, function (jogador) {
+          UserService.sendPushNotification(jogador.$id, firebase.auth().currentUser.displayName + ': ' + message.text);
+        })
       });
 
       $timeout(function () {
@@ -265,7 +283,7 @@ angular.module('main')
 
     function keepKeyboardOpen() {
       console.log('keepKeyboardOpen');
-      txtInput.one('blur', function () {
+      txtInput.on('blur', function () {
         console.log('textarea blur, focus back on it');
         txtInput[0].focus();
       });
@@ -305,6 +323,10 @@ angular.module('main')
       $ionicHistory.goBack();
     }
 
+    function getUserData(id) {
+      return _.find(vm.jogadores, { $id: id });
+    }
+
     $scope.$on('$ionicView.enter', function () {
       $timeout(function () {
         footerBar = document.body.querySelector('#chat-view .bar-footer');
@@ -326,7 +348,6 @@ angular.module('main')
       }
     });
 
-    // I emit this event from the monospaced.elastic directive, read line 480
     $scope.$on('taResize', function (e, ta) {
       console.log('taResize');
       if (!ta) return;
@@ -343,56 +364,4 @@ angular.module('main')
       scroller.style.bottom = newFooterHeight + 'px';
     });
 
-  })
-
-  // fitlers
-  .filter('nl2br', ['$filter',
-    function ($filter) {
-      return function (data) {
-        if (!data) return data;
-        return data.replace(/\n\r?/g, '<br />');
-      };
-    }
-  ])
-
-  // directives
-  .directive('autolinker', ['$timeout',
-    function ($timeout) {
-      return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-          $timeout(function () {
-            var eleHtml = element.html();
-
-            if (eleHtml === '') {
-              return false;
-            }
-
-            var text = Autolinker.link(eleHtml, {
-              className: 'autolinker',
-              newWindow: false
-            });
-
-            element.html(text);
-
-            var autolinks = element[0].getElementsByClassName('autolinker');
-
-            for (var i = 0; i < autolinks.length; i++) {
-              angular.element(autolinks[i]).bind('click', function (e) {
-                var href = e.target.href;
-                console.log('autolinkClick, href: ' + href);
-
-                if (href) {
-                  //window.open(href, '_system');
-                  window.open(href, '_blank');
-                }
-
-                e.preventDefault();
-                return false;
-              });
-            }
-          }, 0);
-        }
-      }
-    }
-  ])
+  });

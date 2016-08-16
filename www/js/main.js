@@ -135,18 +135,22 @@ angular.module('main', [
               fotoPerfil: providerData.photoURL,
               email: providerData.email,
               usuarioComum: true
+            }, function () {
+              UserService.setLocalizacaoJogador(currentUser.uid);
             });
             currentUser.updateProfile({
               displayName: providerData.displayName,
               photoURL: providerData.photoURL
             });
-            $state.go('wizard.intro');
+            //$state.go('wizard.intro');
           }
           else {
             providerData = _.find(currentUser.providerData, { 'providerId': 'facebook.com' });
             var user = snap.val();
             user.fotoPerfil = providerData.photoURL;
-            Ref.child('users/' + currentUser.uid).set(user);
+            Ref.child('users/' + currentUser.uid).set(user, function () {
+              UserService.setLocalizacaoJogador(currentUser.uid);
+            });
             currentUser.updateProfile({
               displayName: providerData.displayName,
               photoURL: providerData.photoURL,
@@ -346,12 +350,12 @@ angular.module('main', [
         }
       })
 
-      .state('main.chatJogador-tab-home', {
-        url: 'jogos/chatJogador/:id',
+      .state('main.chat-tab-home', {
+        url: 'jogos/chat/:id/:tipoChat',
         views: {
           'tab-home': {
             templateUrl: 'templates/chat-jogador.html',
-            controller: 'ChatJogadorCtrl as vm',
+            controller: 'ChatCtrl as vm',
           }
         }
       })
@@ -422,12 +426,12 @@ angular.module('main', [
         }
       })
 
-      .state('main.chatJogador-tab-meus-jogos', {
-        url: '/meus-jogos/chatJogador/:id',
+      .state('main.chat-tab-meus-jogos', {
+        url: '/meus-jogos/chat/:id/:tipoChat',
         views: {
           'tab-meus-jogos': {
             templateUrl: 'templates/chat-jogador.html',
-            controller: 'ChatJogadorCtrl as vm',
+            controller: 'ChatCtrl as vm',
           }
         }
       })
@@ -469,12 +473,12 @@ angular.module('main', [
         }
       })
 
-      .state('main.chatJogador-tab-meus-times', {
-        url: '/meus-times/chatJogador/:id',
+      .state('main.chat-tab-meus-times', {
+        url: '/meus-times/chat/:id/:tipoChat',
         views: {
           'tab-meus-times': {
             templateUrl: 'templates/chat-jogador.html',
-            controller: 'ChatJogadorCtrl as vm',
+            controller: 'ChatCtrl as vm',
           }
         }
       })
@@ -531,12 +535,12 @@ angular.module('main', [
         }
       })
 
-      .state('main.chatJogador-tab-perfil', {
-        url: '/perfil/meus-times/chatJogador/:id',
+      .state('main.chat-tab-perfil', {
+        url: '/perfil/meus-times/chat/:id/:tipoChat',
         views: {
           'tab-perfil': {
             templateUrl: 'templates/chat-jogador.html',
-            controller: 'ChatJogadorCtrl as vm',
+            controller: 'ChatCtrl as vm',
           }
         }
       })
@@ -577,12 +581,12 @@ angular.module('main', [
         }
       })
 
-      .state('main.chatJogador-tab-notificacoes', {
-        url: '/notificacoes/meus-times/chatJogador/:id',
+      .state('main.chat-tab-notificacoes', {
+        url: '/notificacoes/meus-times/chat/:id/:tipoChat',
         views: {
           'tab-notificacoes': {
             templateUrl: 'templates/chat-jogador.html',
-            controller: 'ChatJogadorCtrl as vm',
+            controller: 'ChatCtrl as vm',
           }
         }
       })
@@ -627,11 +631,11 @@ angular.module('main', [
       'main.perfilJogador-tab-meus-jogos',
       'main.perfilJogador-tab-home',
       'main.listaJogadores-tab-home',
-      'main.chatJogador-tab-perfil',
-      'main.chatJogador-tab-notificacoes',
-      'main.chatJogador-tab-meus-times',
-      'main.chatJogador-tab-meus-jogos',
-      'main.chatJogador-tab-home'
+      'main.chat-tab-perfil',
+      'main.chat-tab-notificacoes',
+      'main.chat-tab-meus-times',
+      'main.chat-tab-meus-jogos',
+      'main.chat-tab-home'
     ];
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);

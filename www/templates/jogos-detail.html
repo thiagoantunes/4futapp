@@ -1,5 +1,6 @@
 <ion-view id="jogos-detail" view-title="{{vm.jogo.nome}}">
   <ion-nav-buttons side="right">
+    <button ng-if="vm.minhaPresenca" ng-click="vm.openChat();"  class="button button-icon button-clear ion-chatbubbles"></button>
     <button ng-click="modal.show();" class="button button-icon button-clear ion-android-person-add"></button>
   </ion-nav-buttons>
   <ion-content>

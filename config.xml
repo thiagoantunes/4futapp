@@ -86,6 +86,5 @@
     <icon src="resources/ios/icon/icon-small@3x.png" width="87" height="87"/>
   </platform>
   <plugin name="cordova-plugin-whitelist" spec="~1.2.2"/>
-  <plugin name="Geolocation" value="org.apache.cordova.GeoBroker"/>
   <icon src="resources/android/icon/drawable-xhdpi-icon.png"/>
 </widget>

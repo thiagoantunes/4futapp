@@ -11,12 +11,9 @@
       </div>
     </div>
     <div class="list">
-      <div ng-if="vm.times.length >0" class="item item-divider">
-        Times
-      </div>
       <a ng-click="vm.timesService.openPerfilTime(time);" class="item item-avatar item-button-right" ng-repeat="time in vm.times"
         href="#">
-        <img style="margin-top:-7px;" src="{{time.escudo | defaultImage}}">
+        <img style="margin-top:-7px;" encode-uri="false" cache-src="{{time.escudo | defaultImage}}">
         <h2>{{time.nome}}</h2>
       </a>
     </div>

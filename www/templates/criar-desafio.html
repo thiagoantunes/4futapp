@@ -14,7 +14,7 @@
                     </div>
                     <div class="list">
                         <div style="background-color: rgba(255,255,255,0.2) !important; margin-bottom: 10px;" ng-click="vm.selecionaTime(time);" ion-wizard-next class="item item-avatar item-button-right" ng-repeat="time in vm.meusTimes">
-                            <img style="margin-top:-7px; margin-left:10px;" cache-src="{{time.escudo | defaultImage}}">
+                            <img style="margin-top:-7px; margin-left:10px;" encode-uri="false" cache-src="{{time.escudo | defaultImage}}">
                             <h2 style="margin-left:20px">{{time.nome}}</h2>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
             <ion-content class="has-header">
                 <div class="row" style="margin-top:60px; padding:30px">
                     <div style="text-align:center" class="col-33">
-                        <img style="height: 100px; width:100px; border-radius:50%" cache-src="{{vm.novoDesafio.data.desafiante.escudo | defaultImage}}">
+                        <img style="height: 100px; width:100px; border-radius:50%" encode-uri="false" cache-src="{{vm.novoDesafio.data.desafiante.escudo | defaultImage}}">
                         <br/>
                         <b>{{vm.novoDesafio.data.desafiante.nome}}</b>
                     </div>
@@ -40,7 +40,7 @@
                         X
                     </div>
                     <div style="text-align:center" class="col-33">
-                        <img style="height: 100px; width:100px; border-radius:50%" cache-src="{{vm.novoDesafio.data.desafiado.escudo | defaultImage}}">
+                        <img style="height: 100px; width:100px; border-radius:50%" encode-uri="false" cache-src="{{vm.novoDesafio.data.desafiado.escudo | defaultImage}}">
                         <br/>
                         <b>{{vm.novoDesafio.data.desafiado.nome}}</b>
                     </div>
@@ -53,7 +53,7 @@
                     <div class="list">
                         <div style="background-color: rgba(255,255,255,0.2) !important; margin-bottom: 10px;" ng-click="vm.novoDesafio.data.modalidade = modalidade"
                             ion-wizard-next class="item item-avatar item-button-right" ng-repeat="modalidade in vm.modalidadesCombinadas;">
-                            <img style="margin-top:-7px; margin-left:10px;" cache-src="{{modalidade.escudo | defaultImage}}">
+                            <img style="margin-top:-7px; margin-left:10px;" encode-uri="false" cache-src="{{modalidade.escudo | defaultImage}}">
                             <h2 style="margin-left:20px">{{modalidade}}</h2>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
                 <div style="margin-top: 50px; padding: 0px 30px;">
                     <div class="row" style="margin-bottom: 40px;">
                         <div style="text-align:center" class="col-33">
-                            <img style="height: 100px; width:100px; border-radius:50%" cache-src="{{vm.novoDesafio.data.desafiante.escudo | defaultImage}}">
+                            <img style="height: 100px; width:100px; border-radius:50%" encode-uri="false" cache-src="{{vm.novoDesafio.data.desafiante.escudo | defaultImage}}">
                             <br/>
                             <b>{{vm.novoDesafio.data.desafiante.nome}}</b>
                         </div>
@@ -116,7 +116,7 @@
                             X
                         </div>
                         <div style="text-align:center" class="col-33">
-                            <img style="height: 100px; width:100px; border-radius:50%" cache-src="{{vm.novoDesafio.data.desafiado.escudo | defaultImage}}">
+                            <img style="height: 100px; width:100px; border-radius:50%" encode-uri="false" cache-src="{{vm.novoDesafio.data.desafiado.escudo | defaultImage}}">
                             <br/>
                             <b>{{vm.novoDesafio.data.desafiado.nome}}</b>
                         </div>

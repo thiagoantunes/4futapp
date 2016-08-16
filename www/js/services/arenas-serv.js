@@ -116,7 +116,7 @@ angular.module('main')
             var posOptions = { timeout: 10000, enableHighAccuracy: false };
             var watchOptions = { timeout: 3000, enableHighAccuracy: false };
             //$ionicPlatform.ready(function () {
-            $cordovaGeolocation.getCurrentPosition(posOptions).then(function(position) {
+            navigator.geolocation.getCurrentPosition(function(position) {
                 service.position = [position.coords.latitude, position.coords.longitude];
 
                 ArenasService.geoQuery = ArenasService.geoFire.query({
@@ -140,28 +140,33 @@ angular.module('main')
                 });
 
                 deferred.resolve(service.position);
-            });
+            }, function (err) {
+                console.log(err);
+            }, posOptions);
 
-            $cordovaGeolocation.watchPosition(watchOptions).then(function(position) {
+            navigator.geolocation.watchPosition(function(position) {
                 service.position = [position.coords.latitude, position.coords.longitude];
 
                 ArenasService.geoQuery.updateCriteria({
-                    center: [position[0], position[1]],
+                    center: service.position,
                     radius: 100
                 });
 
                 JogosService.geoQuery.updateCriteria({
-                    center: [position[0], position[1]],
+                    center: service.position,
                     radius: 100
                 });
 
                 TimesService.geoQuery.updateCriteria({
-                    center: [position[0], position[1]],
+                    center: service.position,
                     radius: 100
                 });
 
 
-            });
+            }, function (err) {
+                console.log(err);
+            }, watchOptions);
+
             //});
 
             return deferred.promise;

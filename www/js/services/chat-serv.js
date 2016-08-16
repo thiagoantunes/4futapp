@@ -6,20 +6,17 @@ angular.module('main')
       ref: Ref.child('usersChats'),
       refUsers: Ref.child('users'),
 
-      getChat: getChat
+      getChatJogador: getChatJogador,
+      getChatPartida: getChatPartida
     };
 
     return service;
 
-    // function enviarMensagem(msg, chatId) {
-    //   var chatId = service.ref.push().key;
-    //   var chatData = {};
-    //   chatData['usersChats/' + chatId] = { "_id": "54764399ab43d1d4113abfd1", "text": "Am I dreaming?", "userId": "534b8e5aaa5e7afc1b23e69b", "date": "2014-11-26T21:18:17.591Z", "read": true, "readDate": "2014-12-01T06:27:38.337Z" };
+    function getChatPartida(partidaId) {
+      service.chatSelecionado = $firebaseArray(service.ref.child(partidaId));
+    }
 
-    //   Ref.update(chatData);
-    // }
-
-    function getChat(userId) {
+    function getChatJogador(userId) {
       var deferred = $q.defer();
       service.refUsers.child(firebase.auth().currentUser.uid + '/chats/' + userId).once('value', function (snap) {
         if (snap.val()) {

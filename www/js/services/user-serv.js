@@ -10,6 +10,7 @@ angular.module('main')
       jogadorSelecionado: {},
       ref: Ref.child('users'),
       refNotificacoes: Ref.child('usersNotificacoes'),
+      refLocalizacao: Ref.child('usersLocalizacao'),
 
       getUserProfile: getUserProfile,
       getCurrentUser: getCurrentUser,
@@ -24,7 +25,8 @@ angular.module('main')
       removerAmigo: removerAmigo,
       enviaNotificacao: enviaNotificacao,
       sendPushNotification: sendPushNotification,
-      salvarDeviceToken: salvarDeviceToken
+      salvarDeviceToken: salvarDeviceToken,
+      setLocalizacaoJogador: setLocalizacaoJogador
     };
 
     return service;
@@ -99,7 +101,7 @@ angular.module('main')
               }
             }
           };
-          $http(req).then(function (val){
+          $http(req).then(function (val) {
             console.log(val);
           }, function (err) {
             console.log(err);
@@ -198,6 +200,31 @@ angular.module('main')
           update['users/' + user.uid + '/token/'] = token;
           Ref.update(update);
         }
+      });
+    }
+
+    function setLocalizacaoJogador(userId) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        console.log('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + position.coords.latitude + ',' + position.coords.longitude + '&result_type=administrative_area_level_2&key=AIzaSyCMgDkKuk3uMRhfIhcWTCgaCmOAqhDOoIY');
+        var resource = $resource('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + position.coords.latitude + ',' + position.coords.longitude + '&result_type=administrative_area_level_2&key=AIzaSyCMgDkKuk3uMRhfIhcWTCgaCmOAqhDOoIY', {}, {
+          query: { method: 'GET', isArray: false }
+        });
+        resource.query(function (data) {
+          if (data.results.length > 0) {
+            var locationData = {};
+            locationData['users/' + userId + '/localizacao/'] = data.results[0].formatted_address;
+            Ref.update(locationData, function (error) {
+              if (error) {
+                console.log('Erro ao definir local');
+              }
+              else {
+                var geo = new GeoFire(service.refLocalizacao);
+                geo.set(userId, [position.coords.latitude , position.coords.longitude]);
+              }
+            });
+          }
+          console.log(data);
+        });
       });
     }
 

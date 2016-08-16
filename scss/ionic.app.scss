@@ -349,10 +349,56 @@ hr{
 }
 
 
-.tabs .tab-item .icon.time {
+.tabs .tab-item .icon.notificacoes {
   background-repeat: no-repeat;
   background-position: 50%;
-  height: 100%;
-  background-image: url('https://raw.github.com/driftyco/ionic-site/gh-pages/img/docs/mcfly.jpg');
+  height: 85%;
+  margin-top: 5px;
+  background-image: url('../img/icons/notificacoes-active.png');
+  background-size:contain;
+}
+
+.tabs .tab-item .icon.notificacoes-outline {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 85%;
+  margin-top: 5px;
+  background-image: url('../img/icons/notificacoes.png');
+  background-size:contain;
+}
+
+.tabs .tab-item .icon.meus-times {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  margin-top: 7px;
+  background-image: url('../img/icons/meus-times.png');
+  background-size:contain;
+}
+
+.tabs .tab-item .icon.meus-times-outline {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  margin-top: 7px;
+  background-image: url('../img/icons/meus-times-outline.png');
+  background-size:contain;
+}
+
+.tabs .tab-item .icon.perfil {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  margin-top: 7px;
+  background-image: url('../img/icons/perfil.png');
+  background-size:contain;
+}
+
+.tabs .tab-item .icon.perfil-outline {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  margin-top: 7px;
+  background-image: url('../img/icons/perfil-outline.png');
   background-size:contain;
 }
