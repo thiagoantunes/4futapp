@@ -109,7 +109,7 @@ angular.module('main', [
     } ());
 
     function checkLogin(currentUser) {
-      $ionicLoading.show({template: 'Carregando...' });
+      $ionicLoading.show({ template: 'Carregando...' });
       if (!currentUser) {
         $ionicLoading.hide();
         $state.go('login');
@@ -117,9 +117,9 @@ angular.module('main', [
       else {
         $state.go('main.home');
         var providerData = {};
-        Ref.child('users/' + currentUser.uid + '/usuarioComum').once('value', function (snap) {
+        Ref.child('users/' + currentUser.uid).once('value', function (snap) {
           $ionicLoading.hide();
-          if (snap.val() === null) {
+          if (snap.val() === null || !snap.val().usuarioComum) {
             providerData = _.find(currentUser.providerData, { 'providerId': 'facebook.com' });
             Ref.child('users/' + currentUser.uid).set({
               nome: providerData.displayName,
@@ -632,19 +632,22 @@ angular.module('main', [
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);
     });
 
-    if($cordovaNetwork.isOffline()){
-      $window.alert('Voce está offline');
+
+    if (window.cordova) {
+      if ($cordovaNetwork.isOffline()) {
+        $window.alert('Voce está offline');
+      }
+
+      // listen for Online event
+      $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
+        $window.alert('Voce está online');
+      });
+
+      // listen for Offline event
+      $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
+        $window.alert('Voce está offline');
+      });
     }
-
-    // listen for Online event
-    $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
-      $window.alert('Voce está online');
-    })
-
-    // listen for Offline event
-    $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
-      $window.alert('Voce está offline');
-    })
 
     ReservasService.getMinhasReservas();
     JogosService.getMeusJogos();
