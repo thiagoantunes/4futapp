@@ -50,7 +50,7 @@ angular.module('main')
 
   })
 
-  .controller('ArenaDetailsCtrl', function (ArenasService, UserService, GeoService, JogosService, SmsVerify, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup, $ionicHistory) {
+  .controller('ArenaDetailsCtrl', function (ArenasService, UserService, GeoService, JogosService, SmsVerify, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup, $ionicHistory, $ionicLoading) {
     var vm = this;
     vm.arena = ArenasService.arenaSelecionada;
     vm.album = ArenasService.getAlbum($stateParams.id);
@@ -309,7 +309,9 @@ angular.module('main')
         }
         $scope.modalVerificacao.show();
       });
+      $ionicLoading.show({template: 'Carregando...' });
       SmsVerify.numberVerify({ Number: '55'+$scope.currentUser.telefone, brand: 'Rei da Quadra' }, function (data) {
+        $ionicLoading.hide();
         console.log(data);
         vm.verificacaoReserva = {
           requestId: data.request_id,
@@ -319,7 +321,9 @@ angular.module('main')
     }
 
     function verificarCodigo() {
+      $ionicLoading.show({template: 'Carregando...' });
       SmsVerify.numberVerifyCheck(vm.verificacaoReserva, function (verification) {
+        $ionicLoading.hide();
         console.log(verification);
         if (verification.status == 0) {
           salvarNovaReserva();
@@ -340,7 +344,9 @@ angular.module('main')
         title: firebase.auth().currentUser.displayName,
         status: 'agendado'
       };
+      $ionicLoading.show({template: 'Carregando...' });
       ReservasService.criarReservaAvulsa(novaReserva, vm.arena.$id).then(function (reserva) {
+        $ionicLoading.hide();
         if (vm.arena.criacaoPartidaAndamento) {
           JogosService.novaPartida.data.reserva = reserva.$id;
           JogosService.novaPartida.data.dia = moment(reserva.start).format('DD/MM/YYYY');

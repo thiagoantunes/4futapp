@@ -1,12 +1,13 @@
 'use strict';
 angular.module('main')
-  .factory('UserService', function (Ref, $firebaseObject, $state, Enum, $firebaseArray, $q, $timeout, $http, $ionicModal, $resource) {
+  .factory('UserService', function (Ref, $firebaseObject, $state, Enum, $firebaseArray, $q, $timeout, $http, $ionicModal, $resource, $ionicPlatform) {
     var service = {
       jogos: [],
       amigos: [],
       times: [],
       reservas: [],
       notificacoes: [],
+      deviceToken: '',
       jogadorSelecionado: {},
       ref: Ref.child('users'),
       refNotificacoes: Ref.child('usersNotificacoes'),
@@ -25,8 +26,8 @@ angular.module('main')
       removerAmigo: removerAmigo,
       enviaNotificacao: enviaNotificacao,
       sendPushNotification: sendPushNotification,
-      salvarDeviceToken: salvarDeviceToken,
-      setLocalizacaoJogador: setLocalizacaoJogador
+      setLocalizacaoJogador: setLocalizacaoJogador,
+      setConexao: setConexao
     };
 
     return service;
@@ -35,6 +36,8 @@ angular.module('main')
       var deferred = $q.defer();
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
+          setConexao(user.uid);
+          setDeviceToken(user.uid);
           deferred.resolve(user);
         }
         else {
@@ -192,14 +195,19 @@ angular.module('main')
       return deferred.promise;
     }
 
-    function salvarDeviceToken(token) {
-      console.log(token);
-      var update = {};
-      firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-          update['users/' + user.uid + '/token/'] = token;
-          Ref.update(update);
-        }
+    function setDeviceToken(id) {
+      $ionicPlatform.ready(function () {
+        var push = new Ionic.Push({
+          "debug": true
+        });
+
+        var token = '';
+        push.register(function (token) {
+          service.deviceToken = token.token;
+          service.ref.child(id + '/token').set(token.token);
+          console.log('token:' + token);
+          push.saveToken(token);
+        });
       });
     }
 
@@ -219,12 +227,33 @@ angular.module('main')
               }
               else {
                 var geo = new GeoFire(service.refLocalizacao);
-                geo.set(userId, [position.coords.latitude , position.coords.longitude]);
+                geo.set(userId, [position.coords.latitude, position.coords.longitude]);
               }
             });
           }
           console.log(data);
         });
+      });
+    }
+
+    function setConexao(id) {
+      var myConnectionsRef = service.ref.child(id + '/connections');
+      var lastOnlineRef = service.ref.child(id + '/lastOnline');
+
+      var connectedRef = Ref.child('.info/connected');
+      connectedRef.on('value', function (snap) {
+        if (snap.val() === true) {
+          // We're connected (or reconnected)! Do anything here that should happen only if online (or on reconnect)
+
+          // add this device to my connections list
+          // this value could contain info about the device or a timestamp too
+          var con = myConnectionsRef.push(true);
+          // when I disconnect, remove this device
+          con.onDisconnect().remove();
+
+          // when I disconnect, update the last time I was seen online
+          lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+        }
       });
     }
 

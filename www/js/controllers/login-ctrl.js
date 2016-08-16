@@ -1,7 +1,7 @@
 /*global firebase firebaseui _*/
 'use strict';
 angular.module('main')
-  .controller('LoginCtrl', function ($state, $facebook, Ref, $ionicPlatform, $cordovaOauth) {
+  .controller('LoginCtrl', function ($state, $facebook, Ref, $ionicPlatform, $cordovaOauth, $ionicLoading) {
     var vm = this;
     vm.facebookLogin = facebookLogin;
     vm.googleLogin = googleLogin;
@@ -16,17 +16,26 @@ angular.module('main')
 
 
     function facebookLogin() {
+      $ionicLoading.show({ template: 'Carregando...' });
       if (window.cordova) {
         $ionicPlatform.ready(function () {
-          $cordovaOauth.facebook('908423235912952', []).then(function (result) {
+          // facebookConnectPlugin.login([], function (result) {
+          //   var credential = firebase.auth.FacebookAuthProvider.credential(result.access_token);
+          //   firebase.auth().signInWithCredential(credential).catch(function (error) {
+          //     var errorCode = error.code;
+          //     var errorMessage = error.message;
+          //     var email = error.email;
+          //     var credential = error.credential;
+          //   });
+          //   console.log(result);
+          // }, function (error) {
+          //   console.log("Error -> " + error);
+          // });
+          $cordovaOauth.facebook('1834143436814148', ['email']).then(function (result) {
             var credential = firebase.auth.FacebookAuthProvider.credential(result.access_token);
-            firebase.auth().signInWithCredential(credential).catch(function (error) {
-              var errorCode = error.code;
-              var errorMessage = error.message;
-              var email = error.email;
-              var credential = error.credential;
+            firebase.auth().signInWithCredential(credential).then(function () {
+              $ionicLoading.hide();
             });
-            console.log(result);
           }, function (error) {
             console.log("Error -> " + error);
           });
@@ -34,11 +43,8 @@ angular.module('main')
       } else {
         $facebook.login().then(function (result) {
           var credential = firebase.auth.FacebookAuthProvider.credential(result.authResponse.accessToken);
-          firebase.auth().signInWithCredential(credential).catch(function (error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            var email = error.email;
-            var credential = error.credential;
+          firebase.auth().signInWithCredential(credential).then(function () {
+            $ionicLoading.hide();
           });
         });
       }

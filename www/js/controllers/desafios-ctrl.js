@@ -13,7 +13,7 @@ angular.module('main')
 
   })
 
-  .controller('CriarDesafioCtrl', function (TimesService, $scope, $state, $ionicHistory, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService) {
+  .controller('CriarDesafioCtrl', function (TimesService, $scope, $state, $ionicHistory, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService, $ionicLoading) {
     var vm = this;
     vm.arenas = ArenasService.arenas;
     vm.meusTimes = UserService.times;
@@ -66,9 +66,11 @@ angular.module('main')
         coords: [vm.novoDesafio.localSelecionado.latitude, vm.novoDesafio.localSelecionado.longitude],
         arenaId: vm.novoDesafio.arenaReserva
       }
+      $ionicLoading.show({template: 'Carregando...' });
       TimesService.criarDesafio(novoDesafioData)
         .then(function (desafioId) {
           TimesService.getDesafio(desafioId).then(function (val) {
+            $ionicLoading.hide();
             TimesService.desafioSelecionado = val;
             $state.go('main.meus-desafios-detail', { id: desafioId });
           });

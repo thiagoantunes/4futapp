@@ -28,7 +28,7 @@ angular.module('main', [
   'monospaced.elastic'
 ])
 
-  .run(function ($ionicPlatform, $ionicAnalytics, $state, Ref, $rootScope, UserService) {
+  .run(function ($ionicPlatform, $ionicAnalytics, $state, Ref, $rootScope, UserService, $ionicLoading) {
     firebase.auth().onAuthStateChanged(checkLogin);
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
@@ -55,18 +55,6 @@ angular.module('main', [
         StatusBar.styleLightContent();
         //StatusBar.styleDefault();
       }
-
-      var push = new Ionic.Push({
-        "debug": true
-      });
-
-      var token = '';
-
-      push.register(function (token) {
-        UserService.salvarDeviceToken(token.token);
-        console.log('token:' + token);
-        push.saveToken(token);
-      });
 
       var deploy = new Ionic.Deploy();
       deploy.watch().then(
@@ -121,13 +109,16 @@ angular.module('main', [
     } ());
 
     function checkLogin(currentUser) {
+      $ionicLoading.show({template: 'Carregando...' });
       if (!currentUser) {
+        $ionicLoading.hide();
         $state.go('login');
       }
       else {
         $state.go('main.home');
         var providerData = {};
-        Ref.child('users/' + currentUser.uid).once('value', function (snap) {
+        Ref.child('users/' + currentUser.uid + '/usuarioComum').once('value', function (snap) {
+          $ionicLoading.hide();
           if (snap.val() === null) {
             providerData = _.find(currentUser.providerData, { 'providerId': 'facebook.com' });
             Ref.child('users/' + currentUser.uid).set({
@@ -166,7 +157,7 @@ angular.module('main', [
   .config(function ($stateProvider, $urlRouterProvider, tmhDynamicLocaleProvider, $ionicConfigProvider, $facebookProvider, ionicTimePickerProvider, ionicDatePickerProvider) {
     //$ionicConfigProvider.tabs.style('standard');
     //$ionicConfigProvider.tabs.position('top');
-    $facebookProvider.setAppId('908423235912952');
+    $facebookProvider.setAppId('1834143436814148');
     tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-locale-pt-br/angular-locale_pt-br.js');
 
     var timePickerObj = {
@@ -243,7 +234,7 @@ angular.module('main', [
       //
       //
       .state('main.home', {
-        url: '/home?origem',
+        url: '/?origem',
         views: {
           'tab-home': {
             templateUrl: 'templates/home.html',
@@ -602,7 +593,7 @@ angular.module('main', [
       });
   })
 
-  .controller('MenuCtrl', function ($state, $rootScope, ArenasService, UserService, ReservasService, JogosService, TimesService, $ionicHistory) {
+  .controller('MenuCtrl', function ($state, $window, $rootScope, ArenasService, UserService, ReservasService, JogosService, TimesService, $ionicHistory, $cordovaNetwork) {
     var vm = this;
     var hideTabsStates = [
       'main.arenas',
@@ -641,6 +632,19 @@ angular.module('main', [
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);
     });
 
+    if($cordovaNetwork.isOffline()){
+      $window.alert('Voce está offline');
+    }
+
+    // listen for Online event
+    $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+      $window.alert('Voce está online');
+    })
+
+    // listen for Offline event
+    $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+      $window.alert('Voce está offline');
+    })
 
     ReservasService.getMinhasReservas();
     JogosService.getMeusJogos();
@@ -662,6 +666,7 @@ angular.module('main', [
         console.log(error);
       });
     };
+
   })
 
 

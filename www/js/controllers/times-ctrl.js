@@ -94,7 +94,7 @@ angular.module('main')
 
     })
 
-    .controller('CriarTimeCtrl', function ($scope, TimesService, UserService, RegionService, $ionicHistory, $ionicSlideBoxDelegate, $ionicModal) {
+    .controller('CriarTimeCtrl', function ($scope, TimesService, UserService, RegionService, $ionicHistory, $ionicSlideBoxDelegate, $ionicModal, $ionicLoading) {
         var vm = this;
         vm.amigos = UserService.amigos;
         vm.checkMembroTime = checkMembroTime;
@@ -160,7 +160,9 @@ angular.module('main')
                 modalidades: vm.novoTime.modalidades,
                 escudo: vm.novoTime.escudo
             };
+            $ionicLoading.show({template: 'Carregando...' });
             TimesService.criarTime(novoTime, vm.novoTime.jogadores, vm.locationNovoTime).then(function () {
+                $ionicLoading.hide();
                 $ionicHistory.goBack(-1);
             });
         }

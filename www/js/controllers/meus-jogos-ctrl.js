@@ -144,7 +144,7 @@ angular.module('main')
 
   })
 
-  .controller('NovaPartidaCtrl', function ($scope, $state, $ionicHistory, Enum, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService) {
+  .controller('NovaPartidaCtrl', function ($scope, $state, $ionicHistory, Enum, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService, $ionicLoading) {
     var vm = this;
     vm.jogadores = [];
     vm.times = [];
@@ -196,10 +196,12 @@ angular.module('main')
         jogadores: vm.jogadores,
         times: vm.times
       }
+      $ionicLoading.show({template: 'Carregando...' });
       JogosService.criarJogo(novaPartidaData)
         .then(function (jogoId) {
           //goBack();
           JogosService.getJogo(jogoId).then(function (val) {
+            $ionicLoading.hide();
             JogosService.jogoSelecionado = val;
             JogosService.jogoSelecionado.novoJogo = true;
             if (vm.novaPartida.arenaReserva) {
@@ -292,7 +294,7 @@ angular.module('main')
                 var selectedTime = new Date(val * 1000);
                 var hora = moment(new Date(val * 1000)).add(moment(new Date(val * 1000))._d.getTimezoneOffset(), 'm').format('HH:mm');
 
-                vm.novaPartida.data.inicio = moment(vm.novaPartida.data.inicio+ hora, 'DD/MM/YYYYHH:mm')._d.getTime();
+                vm.novaPartida.data.inicio = moment(vm.novaPartida.data.inicio + hora, 'DD/MM/YYYYHH:mm')._d.getTime();
                 vm.novaPartida.dataFormatada = moment(vm.novaPartida.data.inicio).format('DD/MM/YYYY') + ' às ' + moment(vm.novaPartida.data.inicio).format('HH:mm');
               }
             }
@@ -324,12 +326,12 @@ angular.module('main')
               if (activeElement) {
                 activeElement.blur();
               }
-              if(ionic.Platform.isAndroid()){
+              if (ionic.Platform.isAndroid()) {
                 vm.novaPartida.data.inicio = moment(date).format('DD/MM/YYYY');
                 openTimePicker();
               }
-              else{
-                vm.novaPartida.data.inicio =  moment(date)._d.getTime();
+              else {
+                vm.novaPartida.data.inicio = moment(date)._d.getTime();
                 vm.novaPartida.dataFormatada = moment(date).format('DD/MM/YYYY') + ' às ' + moment(date).format('HH:mm');
               }
             });
@@ -337,7 +339,7 @@ angular.module('main')
         }
         else {
           var ipObj1 = {
-            callback: function (val) {  
+            callback: function (val) {
               openTimePicker();
               vm.novaPartida.data.inicio = moment(val).format('DD/MM/YYYY');
             },
@@ -523,19 +525,19 @@ angular.module('main')
       }
     }
 
-    function navigateTo(){
+    function navigateTo() {
       GeoService.navigateTo(vm.jogo.endereco);
     }
 
     function openPerfilJogador(jogador) {
-      UserService.getUserProfile(jogador).$loaded().then(function(val){
+      UserService.getUserProfile(jogador).$loaded().then(function (val) {
         UserService.jogadorSelecionado = val;
         $state.go('main.perfilJogador-' + Object.keys($state.current.views)[0], { id: jogador });
       });
     }
 
     function openChat() {
-      $state.go('main.chat-' + Object.keys($state.current.views)[0], { id: vm.jogo.$id , tipoChat: 'partida' });
+      $state.go('main.chat-' + Object.keys($state.current.views)[0], { id: vm.jogo.$id, tipoChat: 'partida' });
     }
 
 
