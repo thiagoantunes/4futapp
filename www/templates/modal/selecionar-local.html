@@ -1,28 +1,27 @@
-<ion-modal-view>
-    <ion-header-bar class="bar-positive">
-        <h1 class="title">LOCAL</h1>
-        <div class="buttons">
-            <button class="button button-icon button-clear ion-android-close" ng-click="modalLocal.hide()">
-        </button>
-        </div>
-    </ion-header-bar>
-    <ion-content>
+<ion-modal-view hide-nav-bar="true" class="criar-partida" style=" background-image: url('img/wizardbg.jpg');">
+    <div class="bar bar-header" style="background:transparent; border: 0px !important">
+        <button style="color:white" class="button button-icon button-clear ion-android-close" ng-click="modalLocal.hide()"></button>
+        <div class="title">PROCURAR LOCAL</div>
+        <button style="color:white" class="button button-icon button-clear ion-android-add icon" ng-click="vm.openCriaLocalModal();"></button>
+    </div>
+    <ion-content class="has-header step-local">
         <div class="list">
-
-            <label class="item item-input" style="border: solid 1px #46687E">
+            <label class="item item-input" style="border-top: solid 1px rgba(255,255,255,0.6) !important">
                 <i class="icon ion-search placeholder-icon"></i>
-                <input type="text" placeholder="Busque por nome ou endereço da quadra">
+                <input type="text" ng-model="searchText" placeholder="Buscar">
             </label>
-            <div class="item item-divider item-button-right">
-                Cadastrar novo local
-                <button ng-click="vm.openCriaLocalModal();" class="button button-small button-positive">
-                    <i class="icon ion-android-add"></i>
-                </button>
-            </div>
-            <a class="item" ng-click="vm.selecionaArenaBasica(arenaBasica);" ng-repeat="arenaBasica in vm.arenasBasicas">
-                <h2>{{arenaBasica.nome}}</h2>
-                <p>{{arenaBasica.endereco}}</p>
+            <a ng-repeat="arenaBasica in arenasFiltradas = (vm.arenasBasicas | filter:searchText)" class="item" style="background-color: rgba(255,255,255,0.2) !important; margin-bottom: 10px;"
+                ng-click="vm.selecionaArenaBasica(arenaBasica);">
+                <h2 style="font-size:1.2em">{{arenaBasica.nome}}</h2>
+                <p style="color: white !important; font-weight: bold;">{{arenaBasica.endereco}}</p>
             </a>
+        </div>
+        <div ng-if="arenasFiltradas.length == 0" class="lista-vazia text-center">
+            <i class="icon ion-ios-location-outline"></i>
+            <h5>Nenhum local encontrado</h5>
+            <div style="padding:20px">
+                <button  ng-click="vm.openCriaLocalModal();" class="button button-full button-positive">CRIAR LOCAL</button>
+            </div>
         </div>
     </ion-content>
 </ion-modal-view>

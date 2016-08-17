@@ -1,32 +1,25 @@
-<ion-modal-view>
-  <ion-header-bar class="bar-positive">
-    <h1 class="title">CRIAR LOCAL</h1>
-    <div class="buttons">
-      <button class="button button-icon button-clear ion-android-close" ng-click="modalCriaLocal.hide()">
-        </button>
+<ion-modal-view hide-nav-bar="true" class="criar-partida" style=" background-image: url('img/wizardbg.jpg');">
+    <div class="bar bar-header" style="background:transparent; border: 0px !important">
+        <button style="color:white" class="button button-icon button-clear ion-android-close" ng-click="modalCriaLocal.hide()"></button>
+        <div style="font-weight:bold" class="title"></div>
+        <button ng-disabled="!search.nome || !location" ng-click="salvarNovoLocal();" style="color: white;" class="button button-clear">CRIAR LOCAL</button>
     </div>
-  </ion-header-bar>
-  <ion-content>
-    <div class="list">
-      <label class="item item-input item-stacked-label">
-        <span class="input-label">None da partida</span>
-        <input ng-model="search.nome" type="text" >
-      </label>
-      <label class="item item-input item-stacked-label">
-        <span class="input-label">Endereço</span>
-        <input ng-model="search.query" ng-focus="search.query = ''; search.justSelected = false;" type="text" >
-      </label>
-      <ion-list>
-        <ion-item ng-show="search.error">
-          {{search.error}}
-        </ion-item>
-        <ion-item ng-repeat="suggestion in search.suggestions" ng-click="choosePlace(suggestion)">
-          {{suggestion.description}}
-        </ion-item>
-      </ion-list>
-    </div>
-    <div class="padding">
-      <button ng-click="salvarNovoLocal();" class="button button-block button-positive">Criar Local</button>
-    </div>
-  </ion-content>
+    <ion-content class="has-header step-local">
+      <div class="form" style="padding-top:30px">
+          <div class="local-input">
+              <div style="margin-bottom: 10px; font-size:1.4em; font-weight: 200;">None do local</div>
+              <input  ng-model="search.nome" type="text">
+              <div style="margin-bottom: 10px; margin-top:25px; font-size:1.4em; font-weight: 200;">Endereço</div>
+              <input ng-model="search.query" ng-focus="search.query = ''; search.justSelected = false;" type="text" >
+              <ion-list>
+                <ion-item ng-show="search.error">
+                  {{search.error}}
+                </ion-item>
+                <ion-item style="background-color: rgba(255,255,255,0.2) !important; margin-bottom: 10px;" ng-repeat="suggestion in search.suggestions" ng-click="choosePlace(suggestion)">
+                  {{suggestion.description}}
+                </ion-item>
+              </ion-list>
+          </div>
+      </div>
+    </ion-content>
 </ion-modal-view>

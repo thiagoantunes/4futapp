@@ -56,6 +56,7 @@ $button-light-border:             $base-background-color !default;
 
 $toggle-off-bg-color:              $button-stable-bg !default;
 $toggle-off-border-color:          darken($button-stable-bg, 10%) !default;
+$input-color-placeholder:          $light !default;
 
 .item{
     font-size: 16px !important;
@@ -63,7 +64,7 @@ $toggle-off-border-color:          darken($button-stable-bg, 10%) !default;
 }
 
 .placeholder-icon{
-    color: lighten($dark, 40%)!important;
+    color: $light!important;
 }
 
 
@@ -201,6 +202,10 @@ input[readonly]{
 //     left: 0px!important;
 // }
 
+.back-button{
+    padding-right: 40px !important;
+}
+
 .back-text{
     display: none !important;
 }
@@ -220,11 +225,11 @@ input[readonly]{
 
     .tabs-background-positive .tabs, .tabs-background-positive > .tabs{
         background: $dark !important;
-        border-top: 1px solid $positive !important;
+        border-top: 1px solid $stable !important;
     }  
     
     .bar.bar-header{
-        border-bottom: 1px solid $positive !important;
+        border-bottom: 1px solid $stable !important;
     }
 
     .bar.bar-positive .title{
@@ -244,7 +249,12 @@ input[readonly]{
     }
 }
 
+.platform-android.under-status-bar .app-header-bar  {
+    padding-top: 25px;
+}
+
 .platform-android{
+
     .bar-custom{
         background: $positive;
     }
@@ -348,57 +358,114 @@ hr{
     border-radius: 20px 0px 0px 20px !important;
 }
 
+.platform-android{
+    .tabs .tab-item .icon.notificacoes {
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 85%;
+      margin-top: 5px;
+      background-image: url('../img/icons/android/notificacoes-active.png');
+      background-size:contain;
+    }
 
-.tabs .tab-item .icon.notificacoes {
-  background-repeat: no-repeat;
-  background-position: 50%;
-  height: 85%;
-  margin-top: 5px;
-  background-image: url('../img/icons/notificacoes-active.png');
-  background-size:contain;
+    .tabs .tab-item .icon.notificacoes-outline {
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 85%;
+      margin-top: 5px;
+      background-image: url('../img/icons/android/notificacoes.png');
+      background-size:contain;
+    }
+
+    .tabs .tab-item .icon.meus-times {
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 70%;
+      margin-top: 7px;
+      background-image: url('../img/icons/android/meus-times.png');
+      background-size:contain;
+    }
+
+    .tabs .tab-item .icon.meus-times-outline {
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 70%;
+      margin-top: 7px;
+      background-image: url('../img/icons/android/meus-times-outline.png');
+      background-size:contain;
+    }
+
+    .tabs .tab-item .icon.perfil {
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 70%;
+      margin-top: 7px;
+      background-image: url('../img/icons/android/perfil.png');
+      background-size:contain;
+    }
+
+    .tabs .tab-item .icon.perfil-outline {
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 70%;
+      margin-top: 7px;
+      background-image: url('../img/icons/android/perfil-outline.png');
+      background-size:contain;
+    }
 }
 
-.tabs .tab-item .icon.notificacoes-outline {
-  background-repeat: no-repeat;
-  background-position: 50%;
-  height: 85%;
-  margin-top: 5px;
-  background-image: url('../img/icons/notificacoes.png');
-  background-size:contain;
-}
-
-.tabs .tab-item .icon.meus-times {
-  background-repeat: no-repeat;
-  background-position: 50%;
-  height: 70%;
-  margin-top: 7px;
-  background-image: url('../img/icons/meus-times.png');
-  background-size:contain;
-}
-
-.tabs .tab-item .icon.meus-times-outline {
-  background-repeat: no-repeat;
-  background-position: 50%;
-  height: 70%;
-  margin-top: 7px;
-  background-image: url('../img/icons/meus-times-outline.png');
-  background-size:contain;
-}
-
-.tabs .tab-item .icon.perfil {
-  background-repeat: no-repeat;
-  background-position: 50%;
-  height: 70%;
-  margin-top: 7px;
-  background-image: url('../img/icons/perfil.png');
-  background-size:contain;
-}
-
-.tabs .tab-item .icon.perfil-outline {
-  background-repeat: no-repeat;
-  background-position: 50%;
-  height: 70%;
-  margin-top: 7px;
-  background-image: url('../img/icons/perfil-outline.png');
-  background-size:contain;
+.platform-ios{
+    .tabs .tab-item .icon.notificacoes {
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 85%;
+      margin-top: 5px;
+      background-image: url('../img/icons/notificacoes-active.png');
+      background-size:contain;
+    }
+    
+    .tabs .tab-item .icon.notificacoes-outline {
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 85%;
+      margin-top: 5px;
+      background-image: url('../img/icons/notificacoes.png');
+      background-size:contain;
+    }
+    
+    .tabs .tab-item .icon.meus-times {
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 70%;
+      margin-top: 7px;
+      background-image: url('../img/icons/meus-times.png');
+      background-size:contain;
+    }
+    
+    .tabs .tab-item .icon.meus-times-outline {
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 70%;
+      margin-top: 7px;
+      background-image: url('../img/icons/meus-times-outline.png');
+      background-size:contain;
+    }
+    
+    .tabs .tab-item .icon.perfil {
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 70%;
+      margin-top: 7px;
+      background-image: url('../img/icons/perfil.png');
+      background-size:contain;
+    }
+    
+    .tabs .tab-item .icon.perfil-outline {
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 70%;
+      margin-top: 7px;
+      background-image: url('../img/icons/perfil-outline.png');
+      background-size:contain;
+    }
 }

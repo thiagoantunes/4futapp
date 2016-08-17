@@ -1,11 +1,9 @@
 <ion-modal-view class="modal-arena">
-  <div class="header">
-      <button class="button button-clear button-primary ion-close-round" ng-click="modalAlbum.hide()"></button>
-      <div class="title">
-        <h1>Imagens</h1>
-      </div>
-    </div>
-  <ion-content>
+  <div class="bar bar-header" style="background:transparent; border: 0px !important">
+    <button style="color:white" class="button button-icon button-clear ion-android-close" ng-click="modalAlbum.hide()"></button>
+    <div style="font-weight:bold" class="title">Imagens</div>
+  </div>
+  <ion-content class="has-header">
     <ion-gallery ion-gallery-items="albumArena"></ion-gallery>
   </ion-content>
 </ion-modal-view>

@@ -4,7 +4,7 @@
   color: #F1F7E9; }
 
 .placeholder-icon {
-  color: #0acbff !important; }
+  color: #AABDC2 !important; }
 
 .small_button {
   height: 30px !important;
@@ -7820,11 +7820,11 @@ input[type="color"] {
 textarea {
   padding-left: 0; }
   textarea::-moz-placeholder {
-    color: #0acbff; }
+    color: #AABDC2; }
   textarea:-ms-input-placeholder {
-    color: #0acbff; }
+    color: #AABDC2; }
   textarea::-webkit-input-placeholder {
-    color: #0acbff;
+    color: #AABDC2;
     text-indent: -3px; }
 
 textarea {
@@ -7873,15 +7873,15 @@ input[type="file"] {
 
 input::-moz-placeholder,
 textarea::-moz-placeholder {
-  color: #0acbff; }
+  color: #AABDC2; }
 
 input:-ms-input-placeholder,
 textarea:-ms-input-placeholder {
-  color: #0acbff; }
+  color: #AABDC2; }
 
 input::-webkit-input-placeholder,
 textarea::-webkit-input-placeholder {
-  color: #0acbff;
+  color: #AABDC2;
   text-indent: 0; }
 
 input[disabled],
@@ -17393,8 +17393,11 @@ For example, you might change some of the default colors:
   .platform-ios .modal-arena .subheader h1, .platform-ios .modal-arena .subheader h2, .platform-ios .modal-arena .subheader h3, .platform-ios .modal-arena .subheader h4, .platform-ios .modal-arena .subheader h5, .platform-ios .modal-arena .subheader h6 {
     color: #F1F7E9; }
 
+.gallery-view .image-container {
+  border: 5px solid rgba(0, 36, 46, 0.9) !important; }
+
 .modal-arena {
-  background-color: #00242E; }
+  background-color: rgba(0, 36, 46, 0.9) !important; }
   .modal-arena .subheader {
     background-color: #AAF502;
     padding: 20px 30px 10px 20px; }
@@ -17554,7 +17557,7 @@ For example, you might change some of the default colors:
     display: none !important; }
   .criar-partida .step-nome .nome-input {
     padding: 30px;
-    margin-top: 30%; }
+    margin-top: 30px; }
     .criar-partida .step-nome .nome-input label {
       font-size: 4em;
       font-weight: lighter;
@@ -17605,7 +17608,7 @@ For example, you might change some of the default colors:
       font-weight: 300;
       background: transparent !important; }
   .criar-partida .step-jogadores {
-    padding-top: 20px; }
+    padding-top: 5px; }
     .criar-partida .step-jogadores hr {
       border-top-color: #fff; }
     .criar-partida .step-jogadores .label {
@@ -17613,7 +17616,8 @@ For example, you might change some of the default colors:
       line-height: 1em;
       color: white !important;
       font-weight: 200;
-      font-size: 1.5em !important; }
+      font-size: 1.2em !important;
+      background: rgba(255, 255, 255, 0.2); }
   .criar-partida .step-meu-time .meu-time-input {
     padding: 30px;
     margin-top: 20%; }
@@ -18019,6 +18023,9 @@ For example, you might change some of the default colors:
 .bar .title {
   font-size: 17px !important; }
 
+.back-button {
+  padding-right: 40px !important; }
+
 .back-text {
   display: none !important; }
 
@@ -18034,10 +18041,10 @@ For example, you might change some of the default colors:
 
 .platform-ios .tabs-background-positive .tabs, .platform-ios .tabs-background-positive > .tabs {
   background: #00303D !important;
-  border-top: 1px solid #AAF502 !important; }
+  border-top: 1px solid #1A5463 !important; }
 
 .platform-ios .bar.bar-header {
-  border-bottom: 1px solid #AAF502 !important; }
+  border-bottom: 1px solid #1A5463 !important; }
 
 .platform-ios .bar.bar-positive .title {
   color: #AAF502 !important; }
@@ -18050,6 +18057,9 @@ For example, you might change some of the default colors:
 
 .platform-ios .bar-positive .button.button-clear {
   color: #AAF502 !important; }
+
+.platform-android.under-status-bar .app-header-bar {
+  padding-top: 25px; }
 
 .platform-android .bar-custom {
   background: #AAF502; }
@@ -18128,7 +18138,55 @@ hr {
 .button-bar > .button:first-child {
   border-radius: 20px 0px 0px 20px !important; }
 
-.tabs .tab-item .icon.notificacoes {
+.platform-android .tabs .tab-item .icon.notificacoes {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 85%;
+  margin-top: 5px;
+  background-image: url("../img/icons/android/notificacoes-active.png");
+  background-size: contain; }
+
+.platform-android .tabs .tab-item .icon.notificacoes-outline {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 85%;
+  margin-top: 5px;
+  background-image: url("../img/icons/android/notificacoes.png");
+  background-size: contain; }
+
+.platform-android .tabs .tab-item .icon.meus-times {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  margin-top: 7px;
+  background-image: url("../img/icons/android/meus-times.png");
+  background-size: contain; }
+
+.platform-android .tabs .tab-item .icon.meus-times-outline {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  margin-top: 7px;
+  background-image: url("../img/icons/android/meus-times-outline.png");
+  background-size: contain; }
+
+.platform-android .tabs .tab-item .icon.perfil {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  margin-top: 7px;
+  background-image: url("../img/icons/android/perfil.png");
+  background-size: contain; }
+
+.platform-android .tabs .tab-item .icon.perfil-outline {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  margin-top: 7px;
+  background-image: url("../img/icons/android/perfil-outline.png");
+  background-size: contain; }
+
+.platform-ios .tabs .tab-item .icon.notificacoes {
   background-repeat: no-repeat;
   background-position: 50%;
   height: 85%;
@@ -18136,7 +18194,7 @@ hr {
   background-image: url("../img/icons/notificacoes-active.png");
   background-size: contain; }
 
-.tabs .tab-item .icon.notificacoes-outline {
+.platform-ios .tabs .tab-item .icon.notificacoes-outline {
   background-repeat: no-repeat;
   background-position: 50%;
   height: 85%;
@@ -18144,7 +18202,7 @@ hr {
   background-image: url("../img/icons/notificacoes.png");
   background-size: contain; }
 
-.tabs .tab-item .icon.meus-times {
+.platform-ios .tabs .tab-item .icon.meus-times {
   background-repeat: no-repeat;
   background-position: 50%;
   height: 70%;
@@ -18152,7 +18210,7 @@ hr {
   background-image: url("../img/icons/meus-times.png");
   background-size: contain; }
 
-.tabs .tab-item .icon.meus-times-outline {
+.platform-ios .tabs .tab-item .icon.meus-times-outline {
   background-repeat: no-repeat;
   background-position: 50%;
   height: 70%;
@@ -18160,7 +18218,7 @@ hr {
   background-image: url("../img/icons/meus-times-outline.png");
   background-size: contain; }
 
-.tabs .tab-item .icon.perfil {
+.platform-ios .tabs .tab-item .icon.perfil {
   background-repeat: no-repeat;
   background-position: 50%;
   height: 70%;
@@ -18168,7 +18226,7 @@ hr {
   background-image: url("../img/icons/perfil.png");
   background-size: contain; }
 
-.tabs .tab-item .icon.perfil-outline {
+.platform-ios .tabs .tab-item .icon.perfil-outline {
   background-repeat: no-repeat;
   background-position: 50%;
   height: 70%;

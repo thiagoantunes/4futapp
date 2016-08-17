@@ -13,7 +13,7 @@ angular.module('main')
 
   })
 
-  .controller('CriarDesafioCtrl', function (TimesService, $scope, $state, $ionicHistory, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService, $ionicLoading) {
+  .controller('CriarDesafioCtrl', function (TimesService, $scope, $window, $state, $ionicHistory, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService, $ionicLoading) {
     var vm = this;
     vm.arenas = ArenasService.arenas;
     vm.meusTimes = UserService.times;
@@ -74,6 +74,10 @@ angular.module('main')
             TimesService.desafioSelecionado = val;
             $state.go('main.meus-desafios-detail', { id: desafioId });
           });
+        } , function(err){
+          $ionicLoading.hide();
+          console.log(err);
+          $window.alert('Ocorreu um erro ao criar o desafio. Tente novamente mais tarde.');
         });
     }
 

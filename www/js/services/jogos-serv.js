@@ -113,10 +113,10 @@ angular.module('main')
       });
       _.forEach(data.times, function (time) {
         _.forEach(time.jogadores, function (jogador) {
-          if (jogador.$id !== firebase.auth().currentUser.uid) {
-            jogoData['jogosJogadores/' + jogoId + '/' + jogador.$id] = {
+          if (jogador.id !== firebase.auth().currentUser.uid) {
+            jogoData['jogosJogadores/' + jogoId + '/' + jogador.id] = {
               fotoPerfil: jogador.fotoPerfil,
-              id: jogador.$id
+              id: jogador.id
             };
             jogoData['usersJogos/' + jogador.$id + '/' + jogoId] = true;
           }
@@ -142,14 +142,14 @@ angular.module('main')
           });
           _.forEach(data.times, function (time) {
             _.forEach(time.jogadores, function (jogador) {
-              if (jogador.$id !== firebase.auth().currentUser.uid) {
+              if (jogador.id !== firebase.auth().currentUser.uid) {
                 UserService.enviaNotificacao({
                   msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
                   img: firebase.auth().currentUser.photoURL,
                   tipo: Enum.TipoNotificacao.convitePartida,
                   lida: false,
                   dateTime: new Date().getTime()
-                }, jogador.$id);
+                }, jogador.id);
               }
             });
           });
@@ -157,6 +157,8 @@ angular.module('main')
           geo.set(jogoId, data.coords);
           deferred.resolve(jogoId);
         }
+      }, function(err){
+        deferred.reject(err);
       });
 
       return deferred.promise;

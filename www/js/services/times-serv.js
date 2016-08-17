@@ -31,7 +31,7 @@ angular.module('main')
                         return data.jogadores[key];
                     });
                     $timeout(function() {
-                        _.remove(UserService.times, { 'id': snap.key });
+                        _.remove(UserService.times, { '$id': snap.key });
                         UserService.times.push(data);
                     });
                 });
@@ -51,14 +51,14 @@ angular.module('main')
                         return time.jogadores[key];
                     });
                     $timeout(function() {
-                        _.remove(service.timesRegiao, { 'id': key });
+                        _.remove(service.timesRegiao, { '$id': key });
                         service.timesRegiao.push(time);
                     });
                 });
             });
 
             service.geoQuery.on("key_exited", function(key, location, distance) {
-                _.remove(service.timesRegiao, { 'id': key });
+                _.remove(service.timesRegiao, { '$id': key });
             });
         }
 
@@ -150,6 +150,8 @@ angular.module('main')
                     geo.set(desafioId, data.coords);
                     deferred.resolve(desafioId);
                 }
+            }, function (err){
+                deferred.reject(err);
             });
 
             return deferred.promise;

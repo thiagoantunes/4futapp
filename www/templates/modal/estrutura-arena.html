@@ -1,11 +1,9 @@
 <ion-modal-view class="modal-arena">
-  <div class="header">
-    <button class="button button-clear button-primary ion-close-round" ng-click="modalEstrutura.hide()"></button>
-    <div class="title">
-      <h1>Estrutura</h1>
-    </div>
+  <div class="bar bar-header" style="background:transparent; border: 0px !important">
+    <button style="color:white" class="button button-icon button-clear ion-android-close" ng-click="modalEstrutura.hide()"></button>
+    <div style="font-weight:bold" class="title">Estrutura</div>
   </div>
-  <ion-content>
+  <ion-content class="has-header">
     <div class="row" ng-repeat="item in estrutura | orderBy: 'ordem'" ng-if="$index % 2 === 0">
       <div style="padding: 5px;" ng-if="$index < estrutura.length" class="col-50">
         <div class="estrutura-item">

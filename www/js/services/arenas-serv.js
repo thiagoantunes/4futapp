@@ -101,7 +101,7 @@ angular.module('main')
 
     })
 
-    .factory('GeoService', function($q, $ionicPlatform, $cordovaGeolocation, ArenasService, JogosService, TimesService) {
+    .factory('GeoService', function($q, $ionicPlatform, ArenasService, JogosService, TimesService) {
         var service = {
             position: [],
 
@@ -113,59 +113,82 @@ angular.module('main')
 
         function getPosition() {
             var deferred = $q.defer();
-            var posOptions = { timeout: 10000, enableHighAccuracy: false };
-            var watchOptions = { timeout: 3000, enableHighAccuracy: false };
+            var posOptions = { timeout: 30000 };
+            var watchOptions = { timeout: 3000 };
             //$ionicPlatform.ready(function () {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                service.position = [position.coords.latitude, position.coords.longitude];
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    service.position = [position.coords.latitude, position.coords.longitude];
 
-                ArenasService.geoQuery = ArenasService.geoFire.query({
-                    center: service.position,
-                    radius: 100
-                });
+                    ArenasService.geoQuery = ArenasService.geoFire.query({
+                        center: service.position,
+                        radius: 100
+                    });
 
-                ArenasService.geoArenasBasicasQuery = ArenasService.geoArenaBasica.query({
-                    center: service.position,
-                    radius: 100
-                });
+                    ArenasService.geoArenasBasicasQuery = ArenasService.geoArenaBasica.query({
+                        center: service.position,
+                        radius: 100
+                    });
 
-                JogosService.geoQuery = JogosService.geoFire.query({
-                    center: service.position,
-                    radius: 100
-                });
+                    JogosService.geoQuery = JogosService.geoFire.query({
+                        center: service.position,
+                        radius: 100
+                    });
 
-                TimesService.geoQuery = TimesService.geoFire.query({
-                    center: service.position,
-                    radius: 100
-                });
+                    TimesService.geoQuery = TimesService.geoFire.query({
+                        center: service.position,
+                        radius: 100
+                    });
 
-                deferred.resolve(service.position);
-            }, function (err) {
-                console.log(err);
-            }, posOptions);
+                    deferred.resolve(service.position);
+                }, function (err) {
+                    $window.alert('Ative a localizaçao');
+                }, posOptions);
 
-            navigator.geolocation.watchPosition(function(position) {
-                service.position = [position.coords.latitude, position.coords.longitude];
+                navigator.geolocation.watchPosition(function(position) {
+                    service.position = [position.coords.latitude, position.coords.longitude];
 
-                ArenasService.geoQuery.updateCriteria({
-                    center: service.position,
-                    radius: 100
-                });
+                    if(_.isEmpty(ArenasService.geoQuery)){
+                        ArenasService.geoQuery = ArenasService.geoFire.query({
+                            center: service.position,
+                            radius: 100
+                        });
+                    }
+                    else{
+                        ArenasService.geoQuery.updateCriteria({
+                            center: service.position,
+                            radius: 100
+                        });
+                    }
 
-                JogosService.geoQuery.updateCriteria({
-                    center: service.position,
-                    radius: 100
-                });
+                    if(_.isEmpty(TimesService.geoQuery) ){
+                        TimesService.geoQuery = TimesService.geoFire.query({
+                            center: service.position,
+                            radius: 100
+                        });
+                    }
+                    else{
+                        TimesService.geoQuery.updateCriteria({
+                            center: service.position,
+                            radius: 100
+                        });
+                    }
 
-                TimesService.geoQuery.updateCriteria({
-                    center: service.position,
-                    radius: 100
-                });
+                    if(_.isEmpty(JogosService.geoQuery)){
+                        JogosService.geoQuery = JogosService.geoFire.query({
+                            center: service.position,
+                            radius: 100
+                        });
+                    }
+                    else{
+                        JogosService.geoQuery.updateCriteria({
+                            center: service.position,
+                            radius: 100
+                        });
+                    }
 
-
-            }, function (err) {
-                console.log(err);
-            }, watchOptions);
+                }, function (err) {
+                    $window.alert('Ative a localizaçao');
+                }, watchOptions);
 
             //});
 

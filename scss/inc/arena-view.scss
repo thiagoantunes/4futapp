@@ -160,9 +160,12 @@
     }
 } 
 
+.gallery-view .image-container{
+    border: 5px solid rgba($base-background-color, .9) !important;
+}
 
 .modal-arena{
-        background-color: $base-background-color;
+        background-color: rgba($base-background-color, .9) !important;
 
         .subheader{
             background-color: $positive;

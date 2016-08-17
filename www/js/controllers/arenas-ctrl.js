@@ -50,7 +50,7 @@ angular.module('main')
 
   })
 
-  .controller('ArenaDetailsCtrl', function (ArenasService, UserService, GeoService, JogosService, SmsVerify, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup, $ionicHistory, $ionicLoading) {
+  .controller('ArenaDetailsCtrl', function (ArenasService, UserService, GeoService, JogosService, SmsVerify, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup, $ionicHistory, $ionicLoading, $window) {
     var vm = this;
     vm.arena = ArenasService.arenaSelecionada;
     vm.album = ArenasService.getAlbum($stateParams.id);
@@ -317,6 +317,10 @@ angular.module('main')
           requestId: data.request_id,
           code: ''
         };
+      }, function (err){
+        console.log(err);
+        $ionicLoading.hide();
+        $window.alert('Erro ao enviar mensagem de verificação. Tente novamente mais tarde.')
       });
     }
 
@@ -329,6 +333,10 @@ angular.module('main')
           salvarNovaReserva();
           $scope.modalVerificacao.hide();
         }
+      }, function(err){
+        console.log(err);
+        $ionicLoading.hide();
+        $window.alert('Erro ao verificar código. Tente novamente mais tarde.')
       });
     }
 
@@ -371,7 +379,8 @@ angular.module('main')
           ReservasService.openReservaModal(reserva, vm.arena);
         }
       }, function (error) {
-        console.log(error, novaReserva, 'Ops!');
+        $ionicLoading.hide();
+        $window.alert('Ops! ' + error);
       });
     }
 

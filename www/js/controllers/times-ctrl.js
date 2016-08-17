@@ -94,7 +94,7 @@ angular.module('main')
 
     })
 
-    .controller('CriarTimeCtrl', function ($scope, TimesService, UserService, RegionService, $ionicHistory, $ionicSlideBoxDelegate, $ionicModal, $ionicLoading) {
+    .controller('CriarTimeCtrl', function ($scope, TimesService, UserService, RegionService, $ionicHistory, $ionicSlideBoxDelegate, $ionicModal, $ionicLoading, $window) {
         var vm = this;
         vm.amigos = UserService.amigos;
         vm.checkMembroTime = checkMembroTime;
@@ -114,7 +114,6 @@ angular.module('main')
                 jogadores: [],
                 modalidades: {}
             };
-            //templat 
             //vm.novoTime.escudo = 'http://cianortefc.com.br/img/logo_cianorte_fc.png';
         }
 
@@ -164,7 +163,11 @@ angular.module('main')
             TimesService.criarTime(novoTime, vm.novoTime.jogadores, vm.locationNovoTime).then(function () {
                 $ionicLoading.hide();
                 $ionicHistory.goBack(-1);
-            });
+            }, function(err){
+                $ionicLoading.hide();
+                console.log(err);
+                $window.alert('Ops! Ocorreu um erro ao criar o time. Tente novamente mais tarde.');
+            } );
         }
 
         function openRegiaoModal() {

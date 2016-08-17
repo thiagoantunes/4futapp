@@ -1,5 +1,4 @@
 /*global Ionic cordova StatusBar firebase*/
-/*eslint no-undef: "error"*/
 
 'use strict';
 angular.module('main', [
@@ -37,9 +36,28 @@ angular.module('main', [
       }
     });
 
+    $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
+        console.log(error);
+    });
+
     $ionicPlatform.onHardwareBackButton(function () {
       console.log('back button');
     });
+
+    // if (window.cordova) {
+    //   AndroidFullScreen.showUnderStatusBar(function (){
+    //     $rootScope.underStatusBar = true;
+    //     console.info("showUnderStatusBar");
+    //   }, function(){
+    //     console.error(error);
+    //   });
+
+    //   AndroidFullScreen.immersiveWidth(function(height){
+    //     console.log(height);
+    //   }, function(){
+    //     console.error(error);
+    //   });
+    // }
 
     $ionicPlatform.ready(function () {
       $ionicAnalytics.register();
@@ -121,6 +139,7 @@ angular.module('main', [
           $ionicLoading.hide();
           if (snap.val() === null || !snap.val().usuarioComum) {
             providerData = _.find(currentUser.providerData, { 'providerId': 'facebook.com' });
+            console.log(providerData);
             Ref.child('users/' + currentUser.uid).set({
               nome: providerData.displayName,
               fotoPerfil: providerData.photoURL,
@@ -133,10 +152,11 @@ angular.module('main', [
               displayName: providerData.displayName,
               photoURL: providerData.photoURL
             });
-            //$state.go('wizard.intro');
+            $state.go('main.home');
           }
           else {
             providerData = _.find(currentUser.providerData, { 'providerId': 'facebook.com' });
+            console.log(providerData);
             var user = snap.val();
             user.fotoPerfil = providerData.photoURL;
             Ref.child('users/' + currentUser.uid).set(user, function () {
@@ -148,13 +168,14 @@ angular.module('main', [
             });
           }
         }, function (errorObject) {
+          $ionicLoading.hide();
           console.log('The read failed: ' + errorObject.code);
         });
       }
     }
   })
 
-  .config(function ($stateProvider, $urlRouterProvider, tmhDynamicLocaleProvider, $ionicConfigProvider, $facebookProvider, ionicTimePickerProvider, ionicDatePickerProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, tmhDynamicLocaleProvider, $ionicConfigProvider, $facebookProvider, ionicTimePickerProvider, ionicDatePickerProvider, ionGalleryConfigProvider) {
     //$ionicConfigProvider.tabs.style('standard');
     //$ionicConfigProvider.tabs.position('top');
     $facebookProvider.setAppId('1834143436814148');
@@ -185,6 +206,15 @@ angular.module('main', [
       closeOnSelect: true
     };
     ionicDatePickerProvider.configDatePicker(datePickerObj);
+
+    ionGalleryConfigProvider.setGalleryConfig({
+      action_label: 'Fechar',
+      // template_gallery: 'gallery.html',
+      // template_slider: 'slider.html',
+      // toggle: false,
+      row_size: 2,
+      fixed_row_size: true
+    });
 
     // ROUTING with ui.router
     //$urlRouterProvider.otherwise('/login');
@@ -222,9 +252,6 @@ angular.module('main', [
         resolve: {
           currentUser: ['UserService', function (UserService) {
             return UserService.getCurrentUser();
-          }],
-          position: ['GeoService', function (GeoService) {
-            return GeoService.getPosition();
           }]
         }
       })
@@ -593,7 +620,7 @@ angular.module('main', [
       });
   })
 
-  .controller('MenuCtrl', function ($state, $window, $rootScope, ArenasService, UserService, ReservasService, JogosService, TimesService, $ionicHistory, $cordovaNetwork) {
+  .controller('MenuCtrl', function ($state, $window, $rootScope, GeoService, ArenasService, UserService, ReservasService, JogosService, TimesService, $ionicHistory, $cordovaNetwork) {
     var vm = this;
     var hideTabsStates = [
       'main.arenas',
@@ -640,22 +667,25 @@ angular.module('main', [
 
       // listen for Online event
       $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
-        $window.alert('Voce está online');
+        $window.alert('Sem conexão com a internet.');
       });
 
       // listen for Offline event
       $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
-        $window.alert('Voce está offline');
+        //$window.alert('Voce está offline');
       });
     }
 
+    GeoService.getPosition().then(function(){
+      JogosService.getJogosRegiao();
+      ArenasService.getArenas();
+      TimesService.getTimesRegiao();
+    });
+
     ReservasService.getMinhasReservas();
     JogosService.getMeusJogos();
-    JogosService.getJogosRegiao();
-    ArenasService.getArenas();
     UserService.getMeusAmigos();
     UserService.getNotificacoes();
-    TimesService.getTimesRegiao();
     TimesService.getMeusTimes();
 
     UserService.notificacoesNaoLidas.$loaded().then(function (val) {

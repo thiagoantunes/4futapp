@@ -16,7 +16,7 @@
 
     .step-nome{
         .nome-input{
-            padding:30px; margin-top:30%;
+            padding:30px; margin-top:30px;
             label{
                 font-size:4em; font-weight: lighter; line-height:1.2em;
             }
@@ -92,7 +92,7 @@
     }
 
     .step-jogadores{
-        padding-top: 20px;
+        padding-top: 5px;
         hr{
             border-top-color: #fff;
         }
@@ -100,7 +100,8 @@
             padding: 15px;
             line-height: 1em; color: white !important;
             font-weight: 200;
-            font-size: 1.5em !important;
+            font-size: 1.2em !important;
+            background: rgba(255,255,255,0.2);
         }
     }
 
