@@ -116,7 +116,7 @@ input[readonly]{
 .item{
     background-color: $dark !important;
     p{
-        color: darken($base-color, 20%) !important;
+        color: $base-color !important;
     }
 }
 

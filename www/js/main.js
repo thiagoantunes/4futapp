@@ -561,6 +561,16 @@ angular.module('main', [
         }
       })
 
+      .state('main.listaChats', {
+        url: '/perfil/lista-chats',
+        views: {
+          'tab-perfil': {
+            templateUrl: 'templates/lista-chats.html',
+            controller: 'ChatsListCtrl as vm',
+          }
+        }
+      })
+
       .state('main.listaJogadores-tab-perfil', {
         url: '/perfil/lista-jogadores/:tipoLista',
         views: {

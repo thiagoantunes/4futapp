@@ -308,7 +308,7 @@ angular.module('main')
       vm.jogadores = JogosService.jogoSelecionado.jogadores;
 
       ChatService.getChatPartida(JogosService.jogoSelecionado.$id);
-      ChatService.chatSelecionado.$loaded().then(function (data) {
+      ChatService.mensagensChatSelecionado.$loaded().then(function (data) {
         vm.doneLoading = true;
         vm.mensagens = data;
 
@@ -322,7 +322,7 @@ angular.module('main')
       vm.jogadores.push(UserService.jogadorSelecionado);
 
       ChatService.getChatJogador(vm.jogadores[0].$id).then(function () {
-        ChatService.chatSelecionado.$loaded().then(function (data) {
+        ChatService.mensagensChatSelecionado.$loaded().then(function (data) {
           vm.doneLoading = true;
           vm.mensagens = data;
 
@@ -343,11 +343,20 @@ angular.module('main')
       keepKeyboardOpen();
       vm.input.message = '';
 
-      vm.mensagens.$add(message).then(function () {
-        _.forEach(vm.jogadores, function (jogador) {
-          UserService.sendPushNotification(jogador.$id, firebase.auth().currentUser.displayName + ': ' + message.text);
-        })
-      });
+      // vm.mensagens.$add(message).then(function () {
+      //   _.forEach(vm.jogadores, function (jogador) {
+      //     UserService.sendPushNotification(jogador.$id, firebase.auth().currentUser.displayName + ': ' + message.text);
+      //   });
+      // });
+
+      switch ($stateParams.tipoChat) {
+        case 'jogador':
+          ChatService.enviaMensagemJogador(vm.jogadores[0], message);
+          break;
+        case 'partida':
+          ChatService.enviaMensagemPartida();
+          break;
+      }
 
       $timeout(function () {
         keepKeyboardOpen();
@@ -409,11 +418,19 @@ angular.module('main')
       }, 0);
 
       messageCheckTimer = $interval(function () {
+        switch ($stateParams.tipoChat) {
+          case 'jogador':
+            ChatService.marcarComoLidasJogador(vm.jogadores[0].$id);
+            break;
+          case 'partida':
+            ChatService.enviaMensagemPartida();
+            break;
+        }
         // here you could check for new messages if your app doesn't use push notifications or user disabled them
       }, 20000);
     });
 
-    $scope.$on('$ionicView.leave', function () {
+    $scope.$on('$ionicNavView.leave', function () {
       console.log('leaving UserMessages view, destroying interval');
       // Make sure that the interval is destroyed
       if (angular.isDefined(messageCheckTimer)) {
@@ -437,6 +454,25 @@ angular.module('main')
       footerBar.style.height = newFooterHeight + 'px';
       scroller.style.bottom = newFooterHeight + 'px';
     });
+
+  })
+
+  .controller('ChatsListCtrl', function ($scope, $state, ChatService, UserService) {
+    var vm = this;
+    vm.chats = [];
+
+    vm.openChat = openChat;
+
+    activate();
+
+    function activate() {
+      vm.chats = ChatService.getListaChats();
+    }
+
+    function openChat(jogador) {
+      //UserService.jogadorSelecionado = jogador;
+      $state.go('main.chat-' + Object.keys($state.current.views)[0], { id: jogador.id, tipoChat: 'jogador' });
+    }
 
   })
 

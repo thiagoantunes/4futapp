@@ -1,0 +1,28 @@
+<ion-view view-title="Chat">
+    <!--<ion-nav-buttons side="right">
+      <button ng-click="vm.openListaJogadores( 'regiao') " class="button button-icon button-clear ion-android-person-add"></button>
+    </ion-nav-buttons>-->
+    <ion-content>
+
+        <div class="list">
+            <a class="item item-avatar" ng-click="vm.openChat(chat.destinatario);" ng-repeat="chat in vm.chats">
+                <img ng-src="{{chat.destinatario.fotoPerfil}}">
+                <div class="row">
+                    <div class="col-50" style="font-weightt:bold">{{chat.destinatario.nome}}</div>
+                    <div class="col-50" style="text-align: right; margin-top: -3px;">
+                        <span style="font-size: 0.8em; font-style: italic;"  am-time-ago="chat.date"></span>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:3px;">
+                    <div class="col-50">
+                        <p>{{chat.ultimaMsg}}</p>
+                    </div>
+                    <div class="col-50" style="text-align: right;">
+                        <span ng-if="chat.naoLidas > 0" style="top: 43px; right: 20px;" class="badge badge-positive">{{chat.naoLidas}}</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </ion-content>
+</ion-view>
