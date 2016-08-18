@@ -146,13 +146,21 @@ angular.module('main', [
               email: providerData.email,
               usuarioComum: true
             }, function () {
+              UserService.refConfig.child(currentUser.uid).set({
+                notificacoes : {
+                  confirmacaoPresenca : true,
+                  convitePartida: true,
+                  solicitacaoAmizade: true,
+                  promocoesProximas: true,
+                  partidasProximas: true
+                }
+              });
               UserService.setLocalizacaoJogador(currentUser.uid);
             });
             currentUser.updateProfile({
               displayName: providerData.displayName,
               photoURL: providerData.photoURL
             });
-            $state.go('main.home');
           }
           else {
             providerData = _.find(currentUser.providerData, { 'providerId': 'facebook.com' });
@@ -529,6 +537,26 @@ angular.module('main', [
                 return UserService.getUserProfile(firebase.auth().currentUser.uid).$loaded();
               }]
             }
+          }
+        }
+      })
+
+      .state('main.seguindoSeguidores', {
+        url: '/perfil/seguindo-seguidores',
+        views: {
+          'tab-perfil': {
+            templateUrl: 'templates/seguindo-seguidores.html',
+            controller: 'SeguindoSeguidoresCtrl as vm',
+          }
+        }
+      })
+
+      .state('main.config', {
+        url: '/perfil/configuracoes',
+        views: {
+          'tab-perfil': {
+            templateUrl: 'templates/configuracoes.html',
+            controller: 'ConfigCtrl as vm',
           }
         }
       })

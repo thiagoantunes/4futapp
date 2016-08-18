@@ -6,7 +6,9 @@ angular.module('main')
     vm.user = selectedUser;
     vm.meusAmigos = UserService.amigos;
     vm.getObjLength = getObjLength;
-    vm.openListaJogadores = openListaJogadores;
+    vm.openSeguindoSeguidores = openSeguindoSeguidores;
+    vm.isAndroid = isAndroid;
+    vm.logOut = logOut;
 
     activate();
 
@@ -22,28 +24,101 @@ angular.module('main')
       }
     }
 
-    function openListaJogadores(tipoLista) {
+    function openSeguindoSeguidores() {
       UserService.jogadorSelecionado = vm.user;
-      $state.go('main.listaJogadores-' + Object.keys($state.current.views)[0], { tipoLista: tipoLista });
+      $state.go('main.seguindoSeguidores');
     }
 
-    vm.logOut = function () {
+    function isAndroid() {
+      return ionic.Platform.isAndroid();
+    }
+
+    function logOut() {
       firebase.auth().signOut().then(function () {
         $state.go('login');
       }, function (error) {
         console.log(error);
       });
     };
+  })
 
-    // Set Motion
-    $timeout(function () {
-      ionicMaterialMotion.slideUp({
-        selector: '.slide-up'
+  .controller('SeguindoSeguidoresCtrl', function ($state, UserService, $stateParams, $ionicHistory) {
+    var vm = this;
+    vm.seguindo = [];
+    vm.seguidores = [];
+    vm.amigos = UserService.amigos;
+    vm.checkAmizade = checkAmizade;
+    vm.userService = UserService;
+    vm.openPerfilJogador = openPerfilJogador;
+    vm.seguirJogador = seguirJogador;
+    vm.deixarDeSeguir = deixarDeSeguir;
+    vm.openListaJogadores = openListaJogadores;
+
+    activate();
+
+    function activate() {
+      vm.verSeguindo = true;
+      getSeguidores();
+      getSeguindo();
+    }
+
+    function getSeguidores() {
+      if (UserService.jogadorSelecionado.seguidores) {
+        var ids = Object.keys(UserService.jogadorSelecionado.seguidores).map(function (key) {
+          return UserService.jogadorSelecionado.seguidores[key];
+        });
+        UserService.getListaJogadores(ids).then(function (list) {
+          vm.seguidores = list;
+        });
+      }
+    }
+
+    function getSeguindo() {
+      if (UserService.jogadorSelecionado.seguindo) {
+        var ids = Object.keys(UserService.jogadorSelecionado.seguindo).map(function (key) {
+          return UserService.jogadorSelecionado.seguindo[key];
+        });
+        UserService.getListaJogadores(ids).then(function (list) {
+          vm.seguindo = list;
+        });
+      }
+    }
+
+    function openListaJogadores(tipoLista) {
+      UserService.jogadorSelecionado = vm.user;
+      $state.go('main.listaJogadores-' + Object.keys($state.current.views)[0], { tipoLista: tipoLista });
+    }
+
+    function openPerfilJogador(jogador) {
+      UserService.jogadorSelecionado = jogador;
+      $state.go('main.perfilJogador-' + Object.keys($state.current.views)[0], { $id: jogador.$id });
+    }
+
+    function seguirJogador(jogador) {
+      UserService.adicionarAmigo(jogador.$id);
+    }
+
+    function deixarDeSeguir(jogador) {
+      var options = {
+        'title': 'Deixar de seguir ' + jogador.nome + '?',
+        'addDestructiveButtonWithLabel': 'Deixar de seguir',
+        'addCancelButtonWithLabel': 'Cancelar'
+      };
+      window.plugins.actionsheet.show(options, function (_btnIndex) {
+        UserService.removerAmigo(jogador.$id);
       });
-    }, 300);
+    }
 
-    // Set Ink
-    ionicMaterialInk.displayEffect();
+
+    function checkAmizade(usuario) {
+      if (usuario.$id == firebase.auth().currentUser.uid) {
+        return true;
+      }
+      return _.some(vm.amigos, function (val) {
+        return val.$id == usuario.$id;
+      });
+    }
+
   })
 
   .controller('PerfilJogadorCtrl', function ($state, $timeout, ionicMaterialMotion, ionicMaterialInk, UserService, $ionicPopup, $ionicModal, $ionicHistory) {
@@ -200,7 +275,6 @@ angular.module('main')
     }
 
   })
-
 
   .controller('ChatCtrl', function ($scope, ChatService, JogosService, UserService, $rootScope, $state, $stateParams, $ionicActionSheet, $ionicHistory, $ionicScrollDelegate, $timeout, $interval) {
     var vm = this;
@@ -363,5 +437,15 @@ angular.module('main')
       footerBar.style.height = newFooterHeight + 'px';
       scroller.style.bottom = newFooterHeight + 'px';
     });
+
+  })
+
+  .controller('ConfigCtrl', function ($scope, UserService) {
+
+    activate();
+
+    function activate() {
+      UserService.getConfiguracao().$bindTo($scope, 'config');
+    }
 
   });

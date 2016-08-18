@@ -1,38 +1,40 @@
-<ion-view view-title="REI DA QUADRA">
-  <!--<ion-nav-buttons side="right">
-    <button ng-click="vm.criarGrupo();" class="button button-clear button-positive">Editar Perfil</button>
-  </ion-nav-buttons>-->
-  <ion-content>
-    <div class="hero has-mask slide-up" ">
-      <div class="content ">
-        <div class="avatar " style="background-image: url( '{{vm.user.fotoPerfil}}'); "></div>
-        <h4>{{vm.user.nome}}
-          <br/>
-          <small><i class="ion-ios-location-outline "></i> Belo Horizonte - MG</small>
-        </h4>
-      </div>
-    </div>
-    <div class="info ">
-        <div class="row ">
-            <div ng-click="vm.openListaJogadores( 'seguidores') " class="col text-center ">
-                <span>{{ vm.getObjLength(vm.user.seguidores) }}</span>
-                <br/> Seguidores
-            </div>
-            <div ng-click="vm.openListaJogadores( 'seguindo') " class="col text-center ">
-                <span>{{ vm.getObjLength(vm.user.seguindo) }} </span>
-                <br/> Seguindo
-            </div>
-            <div  class="col text-center ">
-                <span>0</span>
-                <br/> Partidas
+<ion-view hide-nav-bar="!vm.isAndroid();" view-title="REI DA QUADRA">
+    <ion-content>
+        <div class="hero" style="box-shadow:none">
+            <div class="content ">
+                <div class="avatar " style="background-image: url( '{{vm.user.fotoPerfil}}'); "></div>
+                <h4>{{vm.user.nome}}
+                </h4>
             </div>
         </div>
-    </div>
-    <button class="button button-full button-clear button-positive " ng-click="vm.openListaJogadores( 'regiao') " >
+        <div class="list" style="margin:50px 0px 40px 0px">
+
+
+            <a class="item item-icon-left" style="background-color: transparent !important; color: #AABDC2; padding-left:70px;" href="#">
+                <i style="font-size:1.4em; padding-left:10px" class="icon ion-android-notifications"></i> Notificações
+                <span style="right:40px;" class="badge badge-assertive">0</span>
+            </a>
+
+            <a class="item item-icon-left" style="background-color: transparent !important; color: #AABDC2; padding-left:70px;" href="#">
+                <i style="font-size:1.4em; padding-left:10px" class="icon ion-chatbubbles"></i> Chat
+                <span style="right:40px;" class="badge badge-assertive">0</span>
+            </a>
+
+            <a ng-click="vm.openSeguindoSeguidores();" class="item item-icon-left" style="background-color: transparent !important; color: #AABDC2; padding-left:70px;" href="#">
+                <i style="font-size:1.4em; padding-left:10px" class="icon ion-person-stalker"></i> Seguindo / Seguidores
+            </a>
+
+            <a class="item item-icon-left" ui-sref="main.config" style="background-color: transparent !important; color: #AABDC2; padding-left:70px;" href="#">
+                <i style="font-size:1.4em; padding-left:10px" class="icon ion-android-options"></i> Configurações
+            </a>
+
+
+        </div>
+        <!--<button class="button button-full button-clear button-positive " ng-click="vm.openListaJogadores( 'regiao') ">
         <i class="icon ion-log-out "></i> Buscar Jogadores
-    </button>
-    <button class="button button-full button-clear button-positive " ng-click="vm.logOut(); ">
+    </button>-->
+        <button class="button button-full button-clear button-positive " ng-click="vm.logOut(); ">
         <i class="icon ion-log-out "></i> Sair
     </button>
-  </ion-content>
+    </ion-content>
 </ion-view>

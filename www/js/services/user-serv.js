@@ -10,6 +10,7 @@ angular.module('main')
       deviceToken: '',
       jogadorSelecionado: {},
       ref: Ref.child('users'),
+      refConfig: Ref.child('usersConfig'),
       refNotificacoes: Ref.child('usersNotificacoes'),
       refLocalizacao: Ref.child('usersLocalizacao'),
 
@@ -19,6 +20,7 @@ angular.module('main')
       getJogadoresRegiao: getJogadoresRegiao,
       getListaJogadores: getListaJogadores,
       getNotificacoes: getNotificacoes,
+      getConfiguracao: getConfiguracao,
       verificaAmizade: verificaAmizade,
       verificaAmizadeDeAmizades: verificaAmizadeDeAmizades,
 
@@ -27,7 +29,7 @@ angular.module('main')
       enviaNotificacao: enviaNotificacao,
       sendPushNotification: sendPushNotification,
       setLocalizacaoJogador: setLocalizacaoJogador,
-      setConexao: setConexao
+      setConexao: setConexao,
     };
 
     return service;
@@ -55,6 +57,10 @@ angular.module('main')
 
     function getUserProfile(id) {
       return $firebaseObject(service.ref.child(id));
+    }
+
+    function getConfiguracao() {
+      return $firebaseObject(service.refConfig.child(firebase.auth().currentUser.uid));
     }
 
     function adicionarAmigo(id) {
@@ -196,19 +202,20 @@ angular.module('main')
     }
 
     function setDeviceToken(id) {
-      $ionicPlatform.ready(function () {
-        var push = new Ionic.Push({
-          "debug": true
-        });
+      if (window.cordova) {
+        $ionicPlatform.ready(function () {
+          var push = new Ionic.Push({
+            "debug": true
+          });
 
-        var token = '';
-        push.register(function (token) {
-          service.deviceToken = token.token;
-          service.ref.child(id + '/token').set(token.token);
-          console.log('token:' + token);
-          push.saveToken(token);
+          push.register(function (token) {
+            service.deviceToken = token.token;
+            service.ref.child(id + '/token').set(token.token);
+            console.log('token:' + token);
+            push.saveToken(token);
+          });
         });
-      });
+      }
     }
 
     function setLocalizacaoJogador(userId) {

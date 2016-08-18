@@ -1,0 +1,54 @@
+<ion-view view-title="CONFIGURAÇÕES">
+    <ion-content>
+        <ul class="list">
+          <div class="item item-divider">
+            Notificações
+          </div>
+          <li class="item item-toggle">
+             Confirmação de presença em partida
+             <label class="toggle toggle-positive">
+               <input ng-model="config.notificacoes.confirmacaoPresenca" type="checkbox">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+             </label>
+          </li>
+          <li class="item item-toggle">
+             Convite para partida
+             <label class="toggle toggle-positive">
+               <input ng-model="config.notificacoes.convitePartida" type="checkbox">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+             </label>
+          </li>
+          <li class="item item-toggle">
+             Novos seguidores
+             <label class="toggle toggle-positive">
+               <input ng-model="config.notificacoes.solicitacaoAmizade" type="checkbox">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+             </label>
+          </li>
+          <li class="item item-toggle">
+             Promoções em arenas próximas a você
+             <label class="toggle toggle-positive">
+               <input ng-model="config.notificacoes.promocoesProximas" type="checkbox">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+             </label>
+          </li>
+          <li class="item item-toggle">
+             Partidas próximas a você
+             <label class="toggle toggle-positive">
+               <input ng-model="config.notificacoes.partidasProximas" type="checkbox">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+             </label>
+          </li>
+        </ul>
+    </ion-content>
+</ion-view>

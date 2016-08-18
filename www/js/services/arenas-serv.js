@@ -101,7 +101,7 @@ angular.module('main')
 
     })
 
-    .factory('GeoService', function($q, $ionicPlatform, ArenasService, JogosService, TimesService) {
+    .factory('GeoService', function($q, $ionicPlatform, ArenasService, JogosService, TimesService,  $window) {
         var service = {
             position: [],
 
