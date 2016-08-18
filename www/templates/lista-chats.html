@@ -1,12 +1,10 @@
 <ion-view view-title="Chat">
-    <!--<ion-nav-buttons side="right">
-      <button ng-click="vm.openListaJogadores( 'regiao') " class="button button-icon button-clear ion-android-person-add"></button>
-    </ion-nav-buttons>-->
     <ion-content>
 
         <div class="list">
             <a class="item item-avatar" ng-click="vm.openChat(chat.destinatario);" ng-repeat="chat in vm.chats">
-                <img ng-src="{{chat.destinatario.fotoPerfil}}">
+                <img ng-if="chat.tipoChat == 'jogador'" ng-src="{{chat.destinatario.fotoPerfil}}">
+                <img ng-if="chat.tipoChat == 'partida'" ng-src="img/icons/soccer-ball.png">
                 <div class="row">
                     <div class="col-50" style="font-weightt:bold">{{chat.destinatario.nome}}</div>
                     <div class="col-50" style="text-align: right; margin-top: -3px;">

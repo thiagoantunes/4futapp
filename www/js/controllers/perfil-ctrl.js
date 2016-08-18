@@ -121,7 +121,7 @@ angular.module('main')
 
   })
 
-  .controller('PerfilJogadorCtrl', function ($state, $timeout, ionicMaterialMotion, ionicMaterialInk, UserService, $ionicPopup, $ionicModal, $ionicHistory) {
+  .controller('PerfilJogadorCtrl', function ($state, $timeout, ionicMaterialMotion, ionicMaterialInk, UserService, ChatService, $ionicPopup, $ionicModal, $ionicHistory) {
     var vm = this;
     vm.jogador = UserService.jogadorSelecionado;
     vm.meusAmigos = UserService.amigos;
@@ -180,6 +180,7 @@ angular.module('main')
     }
 
     function openChat() {
+      ChatService.destinatario = vm.jogador;
       $state.go('main.chat-' + Object.keys($state.current.views)[0], { id: vm.jogador.$id, tipoChat: 'jogador' });
     }
 
@@ -319,7 +320,7 @@ angular.module('main')
     }
 
     function getChatJogador() {
-      vm.jogadores.push(UserService.jogadorSelecionado);
+      vm.jogadores.push(ChatService.destinatario);
 
       ChatService.getChatJogador(vm.jogadores[0].$id).then(function () {
         ChatService.mensagensChatSelecionado.$loaded().then(function (data) {
@@ -343,18 +344,12 @@ angular.module('main')
       keepKeyboardOpen();
       vm.input.message = '';
 
-      // vm.mensagens.$add(message).then(function () {
-      //   _.forEach(vm.jogadores, function (jogador) {
-      //     UserService.sendPushNotification(jogador.$id, firebase.auth().currentUser.displayName + ': ' + message.text);
-      //   });
-      // });
-
       switch ($stateParams.tipoChat) {
         case 'jogador':
           ChatService.enviaMensagemJogador(vm.jogadores[0], message);
           break;
         case 'partida':
-          ChatService.enviaMensagemPartida();
+          ChatService.enviaMensagemPartida(JogosService.jogoSelecionado, message);
           break;
       }
 
@@ -420,14 +415,14 @@ angular.module('main')
       messageCheckTimer = $interval(function () {
         switch ($stateParams.tipoChat) {
           case 'jogador':
-            ChatService.marcarComoLidasJogador(vm.jogadores[0].$id);
+            ChatService.marcarComoLidas(vm.jogadores[0].$id);
             break;
           case 'partida':
-            ChatService.enviaMensagemPartida();
+            ChatService.marcarComoLidas(JogosService.jogoSelecionado.$id);
             break;
         }
         // here you could check for new messages if your app doesn't use push notifications or user disabled them
-      }, 20000);
+      }, 2000);
     });
 
     $scope.$on('$ionicNavView.leave', function () {
@@ -470,7 +465,8 @@ angular.module('main')
     }
 
     function openChat(jogador) {
-      //UserService.jogadorSelecionado = jogador;
+      jogador.$id = jogador.id;
+      ChatService.destinatario = jogador;
       $state.go('main.chat-' + Object.keys($state.current.views)[0], { id: jogador.id, tipoChat: 'jogador' });
     }
 
