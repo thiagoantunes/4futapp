@@ -22,7 +22,43 @@
           PRÓXIMAS PARTIDAS
         </div>
         <ion-list class="jogo-card">
-          <a ng-repeat="jogo in vm.jogos" ng-click="vm.jogosService.jogoSelecionado = jogo;" href="#/main/meus-jogos/{{jogo.$id}}">
+          <a ng-repeat="jogo in vm.jogos | filter:vm.proximosJogos | orderBy: 'inicio'" ng-click="vm.jogosService.jogoSelecionado = jogo;" href="#/main/meus-jogos/{{jogo.$id}}">
+            <div class="card" style="margin: 3px 0px; padding:0 7px">
+              <div class="row">
+                <div class="col col-nome">{{jogo.nome}}</div>
+                <div class="col col-data positive" ng-if="vm.jogoEmAndamento(jogo.inicio);">Em andamento...</div>
+                <div class="col col-data positive" ng-if="vm.jogoAlgumasHoras(jogo.inicio);" am-time-ago="jogo.inicio"></div>
+                <div class="col col-data" ng-if="vm.jogoHoje(jogo.inicio) && !vm.jogoAlgumasHoras(jogo.inicio) && !vm.jogoEmAndamento(jogo.inicio);" >HOJE {{jogo.inicio | date :" 'às' H:mm"}}</div>
+                <div class="col col-data" ng-if="!vm.jogoHoje(jogo.inicio)  && !vm.jogoEmAndamento(jogo.inicio);" >{{jogo.inicio | date :"dd/MM 'às' H:mm"}}</div>
+              </div>
+              <div class="row">
+                <div class="col-75">
+                  <div class="jogadores">
+                    <div class="jogador" ng-repeat="jogador in jogo.jogadores | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
+                      <img ng-if="!jogador.aguardandoConfirmacao" ng-class="{confirmado: jogador.confirmado}" cache-src="{{jogador.fotoPerfil | defaultImage}}">
+                    </div>
+                    <div ng-if="jogo.jogadores.length > 4" class="plus">
+                      <div class="value"> + {{jogo.jogadores.length - 4}}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col resumo">
+                  <b>{{jogo.jogadores.length}}</b> / {{jogo.maxJogadores}}
+                </div>
+              </div>
+              <div class="row ">
+                <div class="col">
+                  <i class="icon ion-ios-location"></i> {{jogo.endereco}}
+                </div>
+              </div>
+            </div>
+          </a>
+        </ion-list>
+        <div ng-if="vm.numeroPartidasPassadas() > 0" class="item item-divider">
+          PARTIDAS ANTERIORES
+        </div>
+        <ion-list class="jogo-card">
+          <a ng-repeat="jogo in vm.jogos | filter:vm.jogosAnteriores | orderBy: 'inicio'" ng-click="vm.jogosService.jogoSelecionado = jogo;" href="#/main/meus-jogos/{{jogo.$id}}">
             <div class="card" style="margin: 3px 0px; padding:0 7px">
               <div class="row">
                 <div class="col col-nome">{{jogo.nome}}</div>
@@ -51,9 +87,6 @@
             </div>
           </a>
         </ion-list>
-        <div ng-if="vm.jogosAnteriores.length > 0" class="item item-divider">
-          PARTIDAS ANTERIORES
-        </div>
       </div>
     </div>
 

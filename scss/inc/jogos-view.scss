@@ -242,6 +242,11 @@
             }
         }
 
+        .undo-button:before{
+            font-size: 26px !important;
+            margin-left: -10px !important;
+        }
+
         .aguardando-confirmacao{
             background: #46687E;
             border-radius: 10px;
@@ -250,6 +255,22 @@
             text-align: center;
             font-weight: bold;
             font-size: 0.9em;
+        }
+    }
+
+    .info{
+        margin-top:-20px;
+        background-color:$base-background-color; color: $base-color;
+        .row{
+            border-bottom: 1px solid $stable;
+            .col{
+                span{
+                    font-size: 1.3em;
+                }
+                i{
+                    font-size: 1.8em;
+                }
+            }
         }
     }
 
@@ -274,7 +295,6 @@
     .modal-convidar-amigos{
         background: $base-background-color;
         .header{
-            margin-top:20px;
             height: 150px;
             background: $base-background-color;
             color:$base-color;
@@ -283,9 +303,6 @@
                 color:$base-color;
                 padding-left: 20px;
             }
-        }
-        ion-content{
-            top:220px;
         }
 
         .item{
@@ -300,14 +317,11 @@
       background-color: $dark;
 
       ion-content{
-        top:190px;
+       
         background: $dark;
       }
 
       .header{
-        height: 150px;
-        top:43px;
-        position: relative;
         background: $positive;
         color:$button-positive-text;
         button{

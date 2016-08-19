@@ -36,6 +36,7 @@ angular.module('main')
                     arena.longitude = location[1];
                     arena.icon = 'img/pin.png';
                     $timeout(function() {
+                        _.remove(service.arenas, { '$id': key });
                         service.arenas.push(arena);
                     });
                 });
@@ -92,6 +93,7 @@ angular.module('main')
                         arena.latitude = location[0];
                         arena.longitude = location[1];
                         $timeout(function() {
+                            _.remove(service.arenasBasicas, { '$id': key });
                             service.arenasBasicas.push(arena);
                         });
                     }
@@ -114,7 +116,7 @@ angular.module('main')
         function getPosition() {
             var deferred = $q.defer();
             var posOptions = { timeout: 30000 };
-            var watchOptions = { timeout: 3000 };
+            var watchOptions = { timeout: 10000 };
             //$ionicPlatform.ready(function () {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     service.position = [position.coords.latitude, position.coords.longitude];
@@ -141,7 +143,7 @@ angular.module('main')
 
                     deferred.resolve(service.position);
                 }, function (err) {
-                    $window.alert('Ative a localizaçao');
+                    console.log('Ative a localizaçao');
                 }, posOptions);
 
                 navigator.geolocation.watchPosition(function(position) {
@@ -187,7 +189,7 @@ angular.module('main')
                     }
 
                 }, function (err) {
-                    $window.alert('Ative a localizaçao');
+                    console.log('Ative a localizaçao (watch)');
                 }, watchOptions);
 
             //});

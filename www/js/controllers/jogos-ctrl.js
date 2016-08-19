@@ -23,7 +23,7 @@ angular.module('main')
           disableDefaultUI: true,
         },
         clusterOptions: {
-          nearbyDistance : 2,
+          nearbyDistance: 2,
         },
         mapEvents: {
           click: function () {
@@ -69,12 +69,18 @@ angular.module('main')
     vm.jogosService = JogosService;
     vm.minhasReservas = UserService.reservas;
     vm.jogos = UserService.jogos;
-    vm.jogosAnteriores = [];
     vm.verPartidas = true;
 
     vm.orderByConfirmacao = orderByConfirmacao;
     vm.isAndroid = isAndroid;
     vm.openReservamodal = openReservamodal;
+
+    vm.jogoHoje = jogoHoje;
+    vm.jogoAlgumasHoras = jogoAlgumasHoras;
+    vm.proximosJogos = proximosJogos;
+    vm.jogosAnteriores = jogosAnteriores;
+    vm.numeroPartidasPassadas = numeroPartidasPassadas;
+    vm.jogoEmAndamento = jogoEmAndamento;
 
     activate();
 
@@ -100,6 +106,41 @@ angular.module('main')
 
     function isAndroid() {
       return ionic.Platform.isAndroid();
+    }
+
+    function jogoHoje(inicio){
+      var date = moment(inicio);
+      var REFERENCE = moment();
+      var TODAY = REFERENCE.clone().startOf('day');
+      return date.isSame(TODAY, 'd');
+    }
+
+    function jogoAlgumasHoras(inicio){
+      var date = moment(inicio);
+      var duration = moment.duration(date.diff(moment()));
+      return duration.asHours() < 5 && duration.asHours() > 0;
+    }
+
+    function jogoEmAndamento(inicio) {
+      var date = moment(inicio);
+      var duration = moment.duration(date.diff(moment()));
+      return duration.asHours() < 0 && duration.asHours() >= -1;
+    }
+
+    function proximosJogos(jogo) {
+      var date = moment(jogo.inicio);
+      var duration = moment.duration(date.diff(moment()));
+      return duration.asHours() >= -1;
+    }
+
+    function jogosAnteriores(jogo) {
+      var date = moment(jogo.inicio);
+      var duration = moment.duration(date.diff(moment()));
+      return duration.asHours() < -1;
+    }
+
+    function numeroPartidasPassadas() {
+      return _.filter(vm.jogos, jogosAnteriores).length;
     }
 
   })
@@ -223,6 +264,7 @@ angular.module('main')
     vm.openCriaLocalModal = openCriaLocalModal;
     vm.selecionaArenaBasica = selecionaArenaBasica;
     vm.salvarJogo = salvarJogo;
+    vm.editarJogo = editarJogo;
     vm.goBack = goBack;
     vm.toggleJogador = toggleJogador;
     vm.checkJogadorPartida = checkJogadorPartida;
@@ -256,13 +298,15 @@ angular.module('main')
 
     function activate() {
       ArenasService.getArenasBasicas();
-      vm.novaPartida.data.minJogadores = 10;
-      vm.novaPartida.data.maxJogadores = 20;
-      vm.novaPartida.data.visibilidade = 4;
-      vm.novaPartida.data.compartilharFacebook = true;
-      vm.novaPartida.data.aprovacaoManual = false;
-      vm.novaPartida.data.responsavel = firebase.auth().currentUser.uid;
-      vm.novaPartida.data.status = 'agendado';
+      if(!vm.novaPartida.editing) {
+        vm.novaPartida.data.minJogadores = 10;
+        vm.novaPartida.data.maxJogadores = 20;
+        vm.novaPartida.data.visibilidade = 4;
+        vm.novaPartida.data.compartilharFacebook = true;
+        vm.novaPartida.data.aprovacaoManual = false;
+        vm.novaPartida.data.responsavel = firebase.auth().currentUser.uid;
+        vm.novaPartida.data.status = 'agendado';
+      }
 
       vm.numJogadoresRangeOptions = {
         floor: 5,
@@ -281,7 +325,7 @@ angular.module('main')
         jogadores: vm.jogadores,
         times: vm.times
       }
-      $ionicLoading.show({template: 'Carregando...' });
+      $ionicLoading.show({ template: 'Carregando...' });
       JogosService.criarJogo(novaPartidaData)
         .then(function (jogoId) {
           //goBack();
@@ -296,10 +340,33 @@ angular.module('main')
               $state.go('main.meus-jogos-detail', { id: jogoId });
             }
           });
-        }, function(err){
+        }, function (err) {
           console.log(err);
           $ionicLoading.hide();
           $window.alert('Ops! Ocorreu um erro ao criar a partida. Tente novamente mais tarde.');
+        });
+    }
+
+    function editarJogo() {
+      vm.novaPartida.data.endereco = vm.novaPartida.localSelecionado.endereco;
+      var partida = {
+        idPartida: vm.novaPartida.idPartida,
+        partida: vm.novaPartida.data,
+        coords: [vm.novaPartida.localSelecionado.latitude, vm.novaPartida.localSelecionado.longitude],
+        arenaId: vm.novaPartida.arenaReserva,
+      }
+      $ionicLoading.show({ template: 'Carregando...' });
+      JogosService.editarJogo(partida)
+        .then(function (jogoId) {
+          JogosService.getJogo(jogoId).then(function (val) {
+            $ionicLoading.hide();
+            JogosService.jogoSelecionado = val;
+            goBack();
+          });
+        }, function (err) {
+          console.log(err);
+          $ionicLoading.hide();
+          $window.alert('Ops! Ocorreu um erro ao editar a partida. Tente novamente mais tarde.');
         });
     }
 
@@ -510,39 +577,42 @@ angular.module('main')
       console.log(arenaBasica);
     }
 
-    function compartilharFacebook(){
+    function compartilharFacebook() {
+      $ionicLoading.show({ template: 'Carregando...' });
       $cordovaSocialSharing
-      .shareViaFacebook('Mensagem de teste', 'http://pt.seaicons.com/wp-content/uploads/2016/05/Sport-football-pitch-icon.png', 'http://reidaquadra.com/')
-      .then(function(result) {
-        // Success!
-      }, function(err) {
-        // An error occurred. Show a message to the user
-      });
+        .shareViaFacebook('Mensagem de teste', 'http://pt.seaicons.com/wp-content/uploads/2016/05/Sport-football-pitch-icon.png', 'http://reidaquadra.com/')
+        .then(function (result) {
+          $ionicLoading.hide();
+        }, function (err) {
+          $ionicLoading.hide();
+        });
     }
 
-    function compartilharWhatsapp(){
+    function compartilharWhatsapp() {
+      $ionicLoading.show({ template: 'Carregando...' });
       $cordovaSocialSharing
-      .shareViaWhatsApp('Mensagem de teste', 'http://pt.seaicons.com/wp-content/uploads/2016/05/Sport-football-pitch-icon.png', 'http://reidaquadra.com/')
-      .then(function(result) {
-        // Success!
-      }, function(err) {
-        // An error occurred. Show a message to the user
-      });
+        .shareViaWhatsApp('Mensagem de teste', 'http://pt.seaicons.com/wp-content/uploads/2016/05/Sport-football-pitch-icon.png', 'http://reidaquadra.com/')
+        .then(function (result) {
+          $ionicLoading.hide();
+        }, function (err) {
+          $ionicLoading.hide();
+        });
     }
 
-    function compartilharEmail(){
-      // $cordovaSocialSharing
-      // .shareViaEmail(message, subject, toArr, ccArr, bccArr, file)
-      // .then(function(result) {
-      //   // Success!
-      // }, function(err) {
-      //   // An error occurred. Show a message to the user
-      // });
+    function compartilharEmail() {
+      $ionicLoading.show({ template: 'Carregando...' });
+      $cordovaSocialSharing
+        .shareViaEmail('Mensagem de teste', 'Mensagem de teste')
+        .then(function (result) {
+          $ionicLoading.hide();
+        }, function (err) {
+          $ionicLoading.hide();
+        });
     }
 
   })
 
-  .controller('JogosDetailCtrl', function ($scope, $state, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService) {
+  .controller('JogosDetailCtrl', function ($scope, $state, $timeout, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService, $ionicLoading, $window, $ionicActionSheet, $cordovaSocialSharing) {
     var vm = this;
     vm.jogo = JogosService.jogoSelecionado;
     vm.amigos = UserService.amigos;
@@ -550,6 +620,7 @@ angular.module('main')
     vm.atualizaPresenca = atualizaPresenca;
     vm.getPresencaClass = getPresencaClass;
     vm.checkPresencaAmigo = checkPresencaAmigo;
+    vm.checkOrganizador = checkOrganizador;
     vm.convidarAmigo = convidarAmigo;
     vm.desconvidarAmigo = desconvidarAmigo;
     vm.getNumJogadores = getNumJogadores;
@@ -557,6 +628,17 @@ angular.module('main')
     vm.navigateTo = navigateTo;
     vm.openPerfilJogador = openPerfilJogador;
     vm.openChat = openChat;
+    vm.compartilhar = compartilhar;
+    vm.compartilharFacebook = compartilharFacebook;
+    vm.compartilharWhatsapp = compartilharWhatsapp;
+    vm.compartilharEmail = compartilharEmail;
+    vm.maisOpcoes = maisOpcoes;
+
+    $scope.$on('$ionicView.enter', function () {
+      $timeout(function () {
+        vm.jogo = JogosService.jogoSelecionado;
+      }, 0);
+    });
 
     activate();
 
@@ -606,6 +688,10 @@ angular.module('main')
       return _.some(vm.jogo.jogadores, { '$id': amigo.$id });
     }
 
+    function checkOrganizador() {
+      return vm.jogo.responsavel == firebase.auth().currentUser.uid;
+    }
+
     function convidarAmigo(amigo) {
       JogosService.convidarAmigo(amigo, vm.jogo.$id);
     }
@@ -645,7 +731,13 @@ angular.module('main')
     }
 
     function navigateTo() {
-      GeoService.navigateTo(vm.jogo.endereco);
+      var options = {
+        'buttonLabels': ['Navegar para endereço'],
+        'addCancelButtonWithLabel': 'Fechar'
+      };
+      window.plugins.actionsheet.show(options, function (_btnIndex) {
+          GeoService.navigateTo(vm.jogo.endereco);
+        });
     }
 
     function openPerfilJogador(jogador) {
@@ -657,6 +749,114 @@ angular.module('main')
 
     function openChat() {
       $state.go('main.chat-' + Object.keys($state.current.views)[0], { id: vm.jogo.$id, tipoChat: 'partida' });
+    }
+
+    function compartilhar() {
+      $ionicLoading.show({ template: 'Carregando...' });
+      $cordovaSocialSharing
+        .share('Mensagem de teste', 'teste', 'http://pt.seaicons.com/wp-content/uploads/2016/05/Sport-football-pitch-icon.png', 'http://reidaquadra.com/')
+        .then(function (result) {
+          $ionicLoading.hide();
+        }, function (err) {
+          $ionicLoading.hide();
+        });
+    }
+
+    function compartilharFacebook() {
+      $ionicLoading.show({ template: 'Carregando...' });
+      $cordovaSocialSharing
+        .shareViaFacebook('Mensagem de teste', 'http://pt.seaicons.com/wp-content/uploads/2016/05/Sport-football-pitch-icon.png', 'http://reidaquadra.com/')
+        .then(function (result) {
+          $ionicLoading.hide();
+        }, function (err) {
+          $ionicLoading.hide();
+        });
+    }
+
+    function compartilharWhatsapp() {
+      $ionicLoading.show({ template: 'Carregando...' });
+      $cordovaSocialSharing
+        .shareViaWhatsApp('Mensagem de teste', 'http://pt.seaicons.com/wp-content/uploads/2016/05/Sport-football-pitch-icon.png', 'http://reidaquadra.com/')
+        .then(function (result) {
+          $ionicLoading.hide();
+        }, function (err) {
+          $ionicLoading.hide();
+        });
+    }
+
+    function compartilharEmail() {
+      $ionicLoading.show({ template: 'Carregando...' });
+      $cordovaSocialSharing
+        .shareViaEmail('Mensagem de teste', 'Mensagem de teste')
+        .then(function (result) {
+          $ionicLoading.hide();
+        }, function (err) {
+          $ionicLoading.hide();
+        });
+    }
+
+    function maisOpcoes() {
+      var options = {
+        'buttonLabels': ['Editar Partida'],
+        'addDestructiveButtonWithLabel': 'Cancelar Partida',
+        'addCancelButtonWithLabel': 'Fechar'
+      };
+      if (window.cordova) {
+        window.plugins.actionsheet.show(options, function (_btnIndex) {
+          if (_btnIndex === 1) {
+            $window.alert('Cancelar Partida');
+          } else if (_btnIndex === 2) {
+            editarPartida();
+          }
+        });
+      }
+      else {
+        $ionicActionSheet.show({
+          buttons: [{
+            text: 'Editar Partida'
+          }, {
+              text: 'Cancelar Partida'
+            }],
+          buttonClicked: function (index) {
+            switch (index) {
+              case 0: // Copy Text
+                editarPartida();
+                break;
+              case 1: // Delete
+                $window.alert('Cancelar Partida');
+                break;
+            }
+
+            return true;
+          }
+        });
+      }
+    }
+
+    function editarPartida() {
+      JogosService.getLocalizacaoJogo(vm.jogo.$id).then(function(snapLocalizacao){
+        JogosService.novaPartida = {
+          data: {
+            nome: vm.jogo.nome,
+            inicio: vm.jogo.inicio,
+            minJogadores: vm.jogo.minJogadores,
+            maxJogadores: vm.jogo.maxJogadores,
+            visibilidade: vm.jogo.visibilidade,
+            compartilharFacebook: vm.jogo.compartilharFacebook,
+            aprovacaoManual: vm.jogo.aprovacaoManual,
+            responsavel: vm.jogo.responsavel
+          },
+          dataFormatada: moment(vm.jogo.inicio).format('DD/MM/YYYY') + ' às ' + moment(vm.jogo.inicio).format('HH:mm'),
+          localSelecionado: {
+            endereco: vm.jogo.endereco,
+            latitude: snapLocalizacao.val().l[0],
+            longitude: snapLocalizacao.val().l[1]
+          },
+          editing: true,
+          idPartida: vm.jogo.$id
+        };
+        $state.go('main.criar-partida'); 
+      });
     }
 
 

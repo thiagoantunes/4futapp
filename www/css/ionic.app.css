@@ -17731,6 +17731,9 @@ For example, you might change some of the default colors:
     #jogos-detail .header .confirmacao .nao-vou-checked {
       background-color: #F34235;
       border: none !important; }
+  #jogos-detail .header .undo-button:before {
+    font-size: 26px !important;
+    margin-left: -10px !important; }
   #jogos-detail .header .aguardando-confirmacao {
     background: #46687E;
     border-radius: 10px;
@@ -17739,6 +17742,17 @@ For example, you might change some of the default colors:
     text-align: center;
     font-weight: bold;
     font-size: 0.9em; }
+
+#jogos-detail .info {
+  margin-top: -20px;
+  background-color: #00242E;
+  color: #F1F7E9; }
+  #jogos-detail .info .row {
+    border-bottom: 1px solid #1A5463; }
+    #jogos-detail .info .row .col span {
+      font-size: 1.3em; }
+    #jogos-detail .info .row .col i {
+      font-size: 1.8em; }
 
 #jogos-detail ion-content {
   background-color: #00303D; }
@@ -17752,7 +17766,6 @@ For example, you might change some of the default colors:
 .platform-ios .modal-convidar-amigos {
   background: #00242E; }
   .platform-ios .modal-convidar-amigos .header {
-    margin-top: 20px;
     height: 150px;
     background: #00242E;
     color: #F1F7E9; }
@@ -17760,20 +17773,14 @@ For example, you might change some of the default colors:
       float: left;
       color: #F1F7E9;
       padding-left: 20px; }
-  .platform-ios .modal-convidar-amigos ion-content {
-    top: 220px; }
   .platform-ios .modal-convidar-amigos .item {
     background-color: #00303D; }
 
 .modal-convidar-amigos {
   background-color: #00303D; }
   .modal-convidar-amigos ion-content {
-    top: 190px;
     background: #00303D; }
   .modal-convidar-amigos .header {
-    height: 150px;
-    top: 43px;
-    position: relative;
     background: #AAF502;
     color: #00303D; }
     .modal-convidar-amigos .header button {

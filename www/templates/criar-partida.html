@@ -63,7 +63,8 @@
             <div class="bar bar-header" style="background:transparent; border: 0px !important">
                 <button ion-wizard-previous style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">VOLTAR</button>
                 <div style="font-weight:bold" class="title">Criar Partida</div>
-                <button ion-wizard-next style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">PRÓXIMO</button>
+                <button ng-if="vm.novaPartida.editing" ion-wizard-start="vm.editarJogo();" style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">SALVAR</button>
+                <button ng-if="!vm.novaPartida.editing" ion-wizard-next style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">PRÓXIMO</button>
             </div>
             <ion-content class="has-header step-opcoes">
                 <label for="nomePartida">Mínimo e máximo <br/> de jogadores</label>
@@ -104,7 +105,7 @@
                 </label>
             </ion-content>
         </ion-slide-page>
-        <ion-slide-page ion-wizard-step>
+        <ion-slide-page ng-if="!vm.novaPartida.editing" ion-wizard-step>
             <div class="bar bar-header" style="background:transparent; border: 0px !important">
                 <button ion-wizard-previous style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">VOLTAR</button>
                 <div style="font-weight:bold" class="title">CONVIDAR AMIGOS</div>

@@ -18,7 +18,9 @@ angular.module('main')
       getJogadoresJogo: getJogadoresJogo,
       getMeusJogos: getMeusJogos,
       getUserJogos: getUserJogos,
+      getLocalizacaoJogo: getLocalizacaoJogo,
       criarJogo: criarJogo,
+      editarJogo: editarJogo,
       convidarAmigo: convidarAmigo,
       desconvidarAmigo: desconvidarAmigo,
       solicitarPresenca: solicitarPresenca,
@@ -55,7 +57,7 @@ angular.module('main')
                 jogo.visivel = true;
                 jogo.icon = 'img/pin-jogos.png';
                 $timeout(function () {
-                  _.remove(service.jogosRegiao, { 'id': key });
+                  _.remove(service.jogosRegiao, { '$id': key });
                   service.jogosRegiao.push(jogo);
                 });
               }
@@ -64,7 +66,7 @@ angular.module('main')
                   jogo.visivel = visivel;
                   jogo.icon = visivel ? 'img/pin-jogos.png' : 'img/pin-jogos-readonly.png';
                   $timeout(function () {
-                    _.remove(service.jogosRegiao, { 'id': key });
+                    _.remove(service.jogosRegiao, { '$id': key });
                     service.jogosRegiao.push(jogo);
                   });
                 });
@@ -79,7 +81,7 @@ angular.module('main')
 
 
       service.geoQuery.on("key_exited", function (key, location, distance) {
-        _.remove(service.jogosRegiao, { 'id': key });
+        _.remove(service.jogosRegiao, { '$id': key });
       });
     }
 
@@ -90,6 +92,10 @@ angular.module('main')
 
     function getJogadoresJogo(jogoId) {
       return $firebaseArray(service.refJogadoresJogo.child(jogoId));
+    }
+
+    function getLocalizacaoJogo(jogoId) {
+      return service.refLocalizacao.child(jogoId).once('value');
     }
 
     function criarJogo(data) {
@@ -157,8 +163,30 @@ angular.module('main')
           geo.set(jogoId, data.coords);
           deferred.resolve(jogoId);
         }
-      }, function(err){
-        deferred.reject(err);
+      });
+
+      return deferred.promise;
+    }
+
+    function editarJogo(data) {
+      var deferred = $q.defer();
+      var jogoData = {};
+      jogoData['jogos/' + data.idPartida] = data.partida;
+
+      if (data.partida.reserva && data.arenaId) {
+        jogoData['reservas/' + data.arenaId + '/' + data.partida.reserva + '/partida'] = data.idPartida;
+      }
+
+      Ref.update(jogoData, function (error) {
+        if (error) {
+          deferred.reject('Erro ao cadastrar nova turma');
+        }
+        else {
+          //enviar notificaçao jogadores'
+          var geo = new GeoFire(Ref.child('jogosLocalizacao'));
+          geo.set(data.idPartida, data.coords);
+          deferred.resolve(data.idPartida);
+        }
       });
 
       return deferred.promise;
@@ -203,7 +231,7 @@ angular.module('main')
             data.$id = snap.key;
             data.jogadores = val;
             $timeout(function () {
-              _.remove(UserService.jogos, { 'id': snap.key });
+              _.remove(UserService.jogos, { '$id': snap.key });
               UserService.jogos.push(data);
             });
           });

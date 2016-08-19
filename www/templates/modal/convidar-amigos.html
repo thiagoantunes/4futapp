@@ -6,18 +6,19 @@
         </button>
         </div>
     </ion-header-bar>
-    <div class="header">
+    <ion-content>
+        <div class="header">
         <div class="row">
-            <div class="col text-center" style="border: solid 1px;
+            <div class="col text-center" ng-click="vm.compartilharFacebook();" style="border: solid 1px;
     border-radius: 10px;
     margin: 5px;">
-                <i class="icon ion-social-facebook" style="font-size:40px; margin-right:5px"></i>
+                <i class="icon ion-social-facebook"  style="font-size:40px; margin-right:5px"></i>
                 <br/>
                 <p style="font-size:0.8em">
                     Convide seus amigos do facebook.
                 </p>
             </div>
-            <div class="col text-center" style="border: solid 1px;
+            <div class="col text-center" ng-click="vm.compartilharWhatsapp();" style="border: solid 1px;
     border-radius: 10px;
     margin: 5px;">
                 <i class="icon ion-social-whatsapp" style="font-size:40px; margin-right:5px"></i>
@@ -26,7 +27,7 @@
                     Chame o seu grupo de pelada para esta partida.
                 </p>
             </div>
-            <div class="col text-center" style="border: solid 1px;
+            <div class="col text-center" ng-click="vm.compartilharEmail();" style="border: solid 1px;
     border-radius: 10px;
     margin: 5px;">
                 <i class="icon ion-email" style="font-size:40px; margin-right:5px"></i>
@@ -37,22 +38,21 @@
             </div>
         </div>
     </div>
-    <ion-content>
         <div class="list">
             <label class="item item-input" style="border: solid 1px #46687E">
                 <i class="icon ion-search placeholder-icon"></i>
-                <input type="text" placeholder="Buscar">
+                <input type="text" ng-model="searchText"  placeholder="Buscar">
             </label>
-            <a class="item item-avatar item-button-right" ng-repeat="amigo in vm.amigos" href="#">
+            <a class="item item-avatar item-button-right" ng-repeat="amigo in vm.amigos | filter:searchText" href="#">
                 <img style="margin-top:-7px;" src="{{amigo.fotoPerfil | defaultImage}}">
                 <h2>{{amigo.nome}}</h2>
                 <button ng-if="!vm.checkPresencaAmigo(amigo);" ng-click="vm.convidarAmigo(amigo);" class="button button-small button-stable"
-                    style="padding: 0px 5px; min-width: 28px; min-height: 30px; font-size: 12px; line-height: 26px">
+                    style="line-height: 30px !important; height: 30px;margin-top: 10px; font-size: 0.7em !important;">
                     Convidar
                 </button>
                 <button ng-if="vm.checkPresencaAmigo(amigo);" ng-click="vm.desconvidarAmigo(amigo);" class="button button-small button-positive"
-                    style="padding: 0px 5px; min-width: 28px; min-height: 30px; font-size: 12px; line-height: 26px">
-                    <i class="icon ion-checkmark"></i> Convidado
+                    style="line-height: 30px !important; height: 30px;margin-top: 10px; font-size: 0.7em !important;">
+                    Convidado
                 </button>
             </a>
         </div>
