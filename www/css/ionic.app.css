@@ -18121,6 +18121,17 @@ For example, you might change some of the default colors:
 
 .lista-vazia {
   padding: 50px 0px; }
+  .lista-vazia img {
+    display: block;
+    margin: auto; }
+  .lista-vazia p {
+    color: #AABDC2;
+    padding: 10px 20px; }
+  .lista-vazia a {
+    text-decoration: none;
+    font-size: 1.5em; }
+  .lista-vazia h4 {
+    color: #AABDC2; }
   .lista-vazia i {
     font-size: 80px; }
 

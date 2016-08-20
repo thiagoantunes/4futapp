@@ -1,6 +1,6 @@
 <ion-view view-title="">
     <ion-nav-buttons side="right">
-      <button ng-click="vm.openListaJogadores( 'regiao') " class="button button-icon button-clear ion-android-person-add"></button>
+        <button ng-click="vm.openListaJogadores( 'regiao') " class="button button-icon button-clear ion-android-person-add"></button>
     </ion-nav-buttons>
     <ion-content>
         <div class="padding" style="background-color: #00303D">
@@ -10,11 +10,19 @@
             </div>
         </div>
         <div ng-if="vm.verSeguindo">
+            <div ng-if="vm.seguindo.length == 0" class="lista-vazia text-center">
+                <div>
+                    <img src="img/ilustracoes/jogador.png" alt="">
+                    <h4>Cadê a galera?</h4>
+                    <p>Você ainda não segue ninguém.<a style="font-size:1em;" ng-click="vm.openListaJogadores( 'regiao') "> Encontre</a> seus amigos que já estão por aqui e <a  style="font-size:1em;"> convide</a> os que ainda não estão.</p>
+                    <br/>
+                </div>
+            </div>
             <div class="list ">
-                <label class="item item-input">
-                <i class="icon ion-search placeholder-icon"></i>
-                <input type="text" ng-model="searchSeguindo" placeholder="Buscar">
-            </label>
+                <label class="item item-input" ng-if="vm.seguindo.length > 0">
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="text" ng-model="searchSeguindo" placeholder="Buscar">
+                </label>
                 <div ng-click="vm.openPerfilJogador(usuario);" class="item  item-avatar item-text-wrap item-button-right" ng-repeat="usuario in vm.seguindo | filter:searchSeguindo">
                     <img style="margin-top:-7px;" src="{{usuario.fotoPerfil | defaultImage}}">
                     <h2>{{usuario.nome}}</h2>
@@ -30,8 +38,16 @@
             </div>
         </div>
         <div ng-if="!vm.verSeguindo">
+            <div ng-if="vm.seguidores.length == 0" class="lista-vazia text-center">
+                <div>
+                    <img src="img/ilustracoes/jogador.png" alt="">
+                    <h4>Cadê a galera?</h4>
+                    <p>Você ainda não tem seguidores.<a style="font-size:1em;" ng-click="vm.openListaJogadores( 'regiao') "> Siga</a> seus amigos para eles te seguirem de volta.</p>
+                    <br/>
+                </div>
+            </div>
             <div class="list ">
-                <label class="item item-input">
+                <label class="item item-input" ng-if="vm.seguidores.length > 0" >
                 <i class="icon ion-search placeholder-icon"></i>
                 <input type="text" ng-model="searchSeguidores" placeholder="Buscar">
             </label>

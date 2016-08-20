@@ -7,12 +7,20 @@
   </button>-->
   <ion-content>
     <div ng-if="!actrl.mapView">
+      <div ng-if="actrl.arenas.length == 0" style="margin-top:30px;" class="lista-vazia text-center">
+        <div>
+          <img src="img/ilustracoes/campo.png" alt="">
+          <h4>Nenhuma arena na sua região =/</h4>
+          <p>Em breve chegaremos na sua cidade e você poderá reservar horários nas melhores quadras. Enquanto isso você pode organizar partidas, convidar seus amigos, desafiar outros times e muito mais.</p>
+          <br/>
+        </div>
+      </div>
       <div class="card-2" ng-repeat="arena in actrl.arenas | orderBy:'distance'">
         <a ng-click="actrl.arenaService.arenaSelecionada = arena;" href="#/main/arenas/{{arena.$id}}">
           <div class="list card">
             <div class="row card-outer">
               <div class="col col-50 card-image">
-                <img cache-src="{{arena.fotoPerfil}}" >
+                <img cache-src="{{arena.fotoPerfil}}">
               </div>
               <div class="col card-content">
                 <h2 class="card-title">{{arena.nome}}</h2>

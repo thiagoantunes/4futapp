@@ -1,5 +1,13 @@
 <ion-view view-title="NOTIFICAÇOES">
   <ion-content>
+    <div ng-if="vm.notificacoes.length == 0" style="margin-top:30px;" class="lista-vazia text-center">
+      <div>
+        <img src="img/ilustracoes/apito.png" alt="">
+        <h4>Segue o jogo!</h4>
+        <p>Nada de notificações por enquanto. Aqui irão aparecer convites para partidas, mensagens de outros jogadores, lembretes de jogos e muito mais. </p>
+        <br/>
+      </div>
+    </div>
     <div class="list ">
       <div ng-click="vm.acaoClickItem(notificacao);" class="item  item-avatar item-text-wrap item-button-right" ng-repeat="notificacao in vm.notificacoes | orderBy: '-dateTime'">
         <img ng-click="vm.acaoClickImagem(notificacao); $event.stopPropagation();" style="margin-top:-7px;" src="{{notificacao.img | defaultImage}}">

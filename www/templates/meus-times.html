@@ -4,10 +4,12 @@
   </ion-nav-buttons>
   <ion-content>
     <div ng-if="vm.times.length == 0" class="lista-vazia text-center">
-      <i class="icon ion-ios-football-outline"></i>
-      <h5>Você ainda não esta em um time.</h5>
-      <div style="padding:20px">
-        <button ui-sref="main.criarTime" class="button button-full button-positive">Criar Time</button>
+      <div>
+        <img src="img/ilustracoes/escudo.png" alt="">
+        <h4>Está na hora de arrumar um empresário!</h4>
+        <p>Você ainda não tem um time. Crie um agora mesmo e desafie outros times da sua região.</p>
+        <br/>
+        <a ui-sref="main.criarTime" >CRIAR TIME</a>
       </div>
     </div>
     <div class="list">

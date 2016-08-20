@@ -11,15 +11,13 @@
     </div>
     <div ng-if="vm.verPartidas">
       <div ng-if="vm.jogos.length == 0" class="lista-vazia text-center">
-        <div style="padding:20px; background-color:#1A5463; border-radius:50% ">
-          <img style="display: block; margin: auto;" src="img/ilustracoes/cartao-vermelho.png" alt="">
-          <p>Você tem certeza que deseja anular esta partida? Está ação não poderá ser desfeita</p>
+        <div>
+          <img src="img/ilustracoes/bola.png" alt="">
+          <h4>Opa! nada de jogo por enquanto.</h4>
+          <p>Suas partidas serão listadas aqui. Você pode criar uma agora mesmo, esperar ser convidado ou pedir para jogar em alguma da região. É você quem manda!</p>
+          <br/>
+          <a ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="main.criar-partida">CRIAR PARTIDA</a>
         </div>
-        <!--<i class="icon ion-ios-football-outline"></i>
-        <h5>Você ainda não tem uma partida.</h5>
-        <div style="padding:20px">
-          <button ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="main.criar-partida"  class="button button-full button-positive">Criar Partida</button>
-        </div>-->
       </div>
       <div ng-if="vm.jogos.length > 0">
         <div ng-if="vm.jogos.length > 0" class="item item-divider">
