@@ -14,6 +14,7 @@ angular.module('main')
       geoQuery: {},
 
       getJogo: getJogo,
+      getAndamentoJogo: getAndamentoJogo,
       getJogosRegiao: getJogosRegiao,
       getJogadoresJogo: getJogadoresJogo,
       getMeusJogos: getMeusJogos,
@@ -41,6 +42,10 @@ angular.module('main')
         });
       });
       return deferred.promise;
+    }
+
+    function getAndamentoJogo(jogoId) {
+      return $firebaseObject(service.ref.child(jogoId + '/andamento'));
     }
 
     function getJogosRegiao() {
@@ -101,6 +106,14 @@ angular.module('main')
 
     function criarJogo(data) {
       var deferred = $q.defer();
+
+      data.partida.andamento = {
+        timeForTimer: 300,
+        timer: 300,
+        started: false,
+        paused: false,
+        done: false
+      };
 
       var jogoId = service.ref.push().key;
       var jogoData = {};

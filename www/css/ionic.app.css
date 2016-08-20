@@ -17815,6 +17815,20 @@ For example, you might change some of the default colors:
     font-size: 14px;
     margin-top: -5px; }
 
+.progress-wrapper {
+  position: relative;
+  margin: 20px auto;
+  font-size: 21px; }
+
+.progress {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 9em;
+  font-size: 1em;
+  text-align: center;
+  font-weight: 100; }
+
 #grupo-modal .info-grupo {
   background: #00303D;
   padding: 30px 20px; }

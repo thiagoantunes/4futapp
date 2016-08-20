@@ -633,6 +633,16 @@ angular.module('main')
     vm.compartilharWhatsapp = compartilharWhatsapp;
     vm.compartilharEmail = compartilharEmail;
     vm.maisOpcoes = maisOpcoes;
+    vm.jogoEmAndamento = jogoEmAndamento;
+    vm.cancelarPartida = cancelarPartida;
+    vm.editarPartida = editarPartida;
+    vm.emitirChamado = emitirChamado;
+
+    vm.onTimeout = onTimeout;
+    vm.startTimer = startTimer;
+    vm.stopTimer = stopTimer;
+    vm.pauseTimer = pauseTimer;
+    vm.humanizeDurationTimer = humanizeDurationTimer;
 
     $scope.$on('$ionicView.enter', function () {
       $timeout(function () {
@@ -651,6 +661,15 @@ angular.module('main')
       }).then(function (modal) {
         $scope.modal = modal;
       });
+
+      JogosService.getAndamentoJogo(vm.jogo.$id).$bindTo($scope, 'andamentoJogo');
+    }
+
+    function jogoEmAndamento() {
+      // var date = moment(vm.jogo.inicio);
+      // var duration = moment.duration(date.diff(moment()));
+      // return duration.asHours() < 0 && duration.asHours() >= -1;
+      return true;
     }
 
     function atualizaPresenca(bool) {
@@ -890,6 +909,97 @@ angular.module('main')
       });
     }
 
+    function emitirChamado() {
+      var confirmPopup = $ionicPopup.show({
+        title: 'Emitir Chamado',
+        cssClass: 'dark-popup',
+        template: '<div><img style="display: block; margin: auto; padding-top:20px; margin-bottom: 30px;" src="img/ilustracoes/apito.png" alt=""><p style="text-align:center">Faltam poucas pessoas para completar a pelada? Emita um chamado para os jogadores que estão na redondeza.</p></div>',
+        buttons: [
+          { text: 'Cancelar', type: 'button-light', },
+          {
+            text: '<b>Emitir</b>',
+            type: 'button-positive',
+            onTap: function (e) {
+              $ionicLoading.show({ template: 'Carregando...' });
+              JogosService.cancelarJogo(vm.jogo).then(function () {
+                $ionicLoading.hide();
+                var alertPopup = $ionicPopup.alert({
+                  title: 'Chamado emitido!',
+                  template: ''
+                });
+                alertPopup.then(function (res) {
+                  $ionicHistory.goBack();
+                });
+              }, function (err) {
+                console.log(err);
+                $ionicLoading.hide();
+              });
+            }
+          }
+        ]
+      });
+    }
+
+    //Partida iniciada
+    var mytimeout = null; 
+    function onTimeout() {
+      if ($scope.andamentoJogo.timer === 0) {
+        $scope.$broadcast('timer-stopped', 0);
+        $timeout.cancel(mytimeout);
+        return;
+      }
+      $scope.andamentoJogo.timer--;
+      mytimeout = $timeout(onTimeout, 1000);
+    };
+
+    function startTimer() {
+      mytimeout = $timeout(onTimeout, 1000);
+      $scope.andamentoJogo.started = true;
+    };
+
+    function stopTimer(closingModal) {
+      if (closingModal != true) {
+        $scope.$broadcast('timer-stopped', $scope.andamentoJogo.timer);
+      }
+      $scope.andamentoJogo.timer = $scope.andamentoJogo.timeForTimer;
+      $scope.andamentoJogo.started = false;
+      $scope.andamentoJogo.paused = false;
+      $timeout.cancel(mytimeout);
+    };
+
+    function pauseTimer() {
+      $scope.$broadcast('timer-stopped', $scope.andamentoJogo.timer);
+      $scope.andamentoJogo.started = false;
+      $scope.andamentoJogo.paused = true;
+      $timeout.cancel(mytimeout);
+    };
+
+    function humanizeDurationTimer(input, units) {
+      // units is a string with possible values of y, M, w, d, h, m, s, ms
+      if (input == 0) {
+        return 0;
+      } else {
+        var duration = moment().startOf('day').add(input, units);
+        var format = "";
+        if (duration.hour() > 0) {
+          format += "H[h] ";
+        }
+        if (duration.minute() > 0) {
+          format += "m[m] ";
+        }
+        if (duration.second() > 0) {
+          format += "s[s] ";
+        }
+        return duration.format(format);
+      }
+    };
+
+    $scope.$on('timer-stopped', function (event, remaining) {
+      if (remaining === 0) {
+        $scope.andamentoJogo.done = true;
+      }
+    });
+
 
     var oldSoftBack = $rootScope.$ionicGoBack;
 
@@ -919,3 +1029,12 @@ angular.module('main')
     });
 
   });
+
+
+
+
+
+
+
+
+

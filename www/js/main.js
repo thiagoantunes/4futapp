@@ -24,7 +24,8 @@ angular.module('main', [
   'ngResource',
   'ui.utils.masks',
   'angularMoment',
-  'monospaced.elastic'
+  'monospaced.elastic',
+  'angular-svg-round-progress'
 ])
 
   .run(function ($ionicPlatform, $ionicAnalytics, $state, Ref, $rootScope, UserService, $ionicLoading) {

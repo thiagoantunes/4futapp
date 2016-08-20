@@ -36,26 +36,29 @@
                         <input id="localPartida" name="localPartida" ng-model="vm.novaPartida.localSelecionado.endereco" ng-focus="vm.openLocalPicker();"
                             ng-readonly="true" type="text">
                     </div>
-                    <p ng-if="vm.arenas.length > 0" style="padding-top: 40px; font-size: 1.2em;">
+                </div>
+                <div style="height: 260px; width:100%; position: relative; bottom:-150px">
+                    <p style="padding: 0px 30px;" ng-if="vm.arenas.length > 0" style="font-size: 1.2em;">
                         Ainda nao tem onde jogar? Reserve um horário em uma das arenas abaixo.
                     </p>
-                </div>
-                <ion-scroll style="height: 50vh;" zooming="false" direction="y">
-                    <div class="list card" style="background: transparent !important; margin:0px;">
-                        <a ng-repeat="arena in vm.arenas | orderBy:'distance'" ng-click="vm.abrirArena(arena);" ui-sref="main.arenas-detail-partida({id: arena.$id})">
-                            <div class="list-arena" style="background-image: url('{{arena.fotoPerfil | defaultImage}}');">
-                                <div class="item">
-                                    <div class="title">
-                                        {{arena.nome}}
-                                    </div>
-                                    <div class="info">
-                                        <i class="icon ion-location"></i> {{arena.endereco}}
+                    <ion-scroll style="height: 240px;" zooming="false" direction="y">
+                        <div class="list card" style="background: transparent !important; margin:0px;">
+                            <a ng-repeat="arena in vm.arenas | orderBy:'distance'" ng-click="vm.abrirArena(arena);" ui-sref="main.arenas-detail-partida({id: arena.$id})">
+                                <div class="list-arena" style="background-image: url('{{arena.fotoPerfil | defaultImage}}');">
+                                    <div class="item">
+                                        <div class="title">
+                                            {{arena.nome}}
+                                        </div>
+                                        <div class="info">
+                                            <i class="icon ion-location"></i> {{arena.endereco}}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                </ion-scroll>
+                            </a>
+                        </div>
+                    </ion-scroll>
+                </div>
+
 
             </ion-content>
         </ion-slide-page>
@@ -63,7 +66,8 @@
             <div class="bar bar-header" style="background:transparent; border: 0px !important">
                 <button ion-wizard-previous style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">VOLTAR</button>
                 <div style="font-weight:bold" class="title">Criar Partida</div>
-                <button ng-if="vm.novaPartida.editing" ion-wizard-start="vm.editarJogo();" style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">SALVAR</button>
+                <button ng-if="vm.novaPartida.editing" ion-wizard-start="vm.editarJogo();" style="color: white; font-weight: normal; font-size: 1em;"
+                    class="button button-clear">SALVAR</button>
                 <button ng-if="!vm.novaPartida.editing" ion-wizard-next style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">PRÓXIMO</button>
             </div>
             <ion-content class="has-header step-opcoes">
@@ -108,7 +112,7 @@
         <ion-slide-page ng-if="!vm.novaPartida.editing" ion-wizard-step>
             <div class="bar bar-header" style="background:transparent; border: 0px !important">
                 <button ion-wizard-previous style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">VOLTAR</button>
-                <div style="font-weight:bold" class="title">CONVIDAR AMIGOS</div>
+                <div style="font-weight:bold" class="title">CONVOCAR JOGADORES</div>
                 <button ion-wizard-start="vm.salvarJogo();" style="color: white; font-weight: normal; font-size: 1em;" class="button button-clear">SALVAR</button>
             </div>
             <ion-content class="has-header step-jogadores">
@@ -137,23 +141,17 @@
                         </div>
                     </div>
                 </div>
+                <div style="padding:20px 0px" ng-if=" vm.amigos.length == 0 && vm.meusTimes.length == 0" class="lista-vazia text-center">
+                    <div>
+                        <img src="img/ilustracoes/jogador.png" alt="">
+                        <h4 style="color:white">Cadê a galera?</h4>
+                        <p style="color:white">Você ainda não segue outros jogadores. Encontre jogadores na região e convide-os para sua partida.
+                            Você também poderá convidar outros jogadores depois.</p>
+                        <br/>
+                        <a class="dark" ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="main.criar-partida">BUSCAR JOGADORES</a>
+                    </div>
+                </div>
                 <div class="list">
-                    <!--<div class="item" ng-if="vm.times.length > 0 || vm.jogadores.length > 0" style="padding-right: 0;">
-                        <div style="padding: 0px 15px 15px 0px;" class="label">Convocados</div>
-                        <ion-scroll zooming="false" direction="x">
-                            <div style="display: block; position:relative;">
-                                <div class="img" style="position:relative; display:inline-block; padding:5px;" ng-repeat="time in vm.times">
-                                    <img style="width: 60px; height: 60px; border-radius: 50%;" cache-src="{{time.escudo | defaultImage}}">
-                                </div>
-                                <div class="img" style="position:relative; display:inline-block; padding:5px;" ng-repeat="jogador in vm.jogadores">
-                                    <img style="width: 60px; height: 60px; border-radius: 50%;" cache-src="{{jogador.fotoPerfil | defaultImage}}">
-                                </div>
-                            </div>
-                        </ion-scroll>
-                        <div style="padding-right:15px">
-                            <hr/>
-                        </div>
-                    </div>-->
                     <div ng-if="vm.meusTimes.length> 0" class="label">Times</div>
                     <div class="item item-avatar item-icon-right" ng-click="vm.toggleTime(time)" ng-repeat="time in vm.meusTimes" href="#">
                         <img style="margin-top:-7px;" cache-src="{{time.escudo | defaultImage}}">
