@@ -164,50 +164,46 @@
     </div>
     <div ng-if="vm.jogoEmAndamento()">
 
-      <div class="progress-wrapper">
-        <div class="progress">
-          {{vm.humanizeDurationTimer(andamentoJogo.timer,'s')}}
-        </div>
-        <div round-progress max="andamentoJogo.timeForTimer" current="andamentoJogo.timer" clockwise="false" color="#ef473a" rounded="true" class="text-center"></div>
-      </div>
+      <div class="row">
 
-      <div ng-if="!andamentoJogo.started && !andamentoJogo.paused && !andamentoJogo.done">
-        <div class="row">
-          <div class="col">
-            <button class="button button-outline button-balanced button-rounded button-block" ng-click='vm.startTimer()'>
-              Start
-            </button>
-          </div>
+        <div ng-if="andamentoJogo.started && !andamentoJogo.done" class="col-20 text-center">
+          <button ng-click='vm.pauseTimer()' class="button button-fab button-large icon ion-ios-pause" style="    margin-top: 85px;
+    box-shadow: none;
+    color: #AABDC2;
+    background: #00303D;"></button>
         </div>
-      </div>
 
-      <div ng-if="andamentoJogo.started && !andamentoJogo.done">
-        <div class="row">
-          <div class="col">
-            <button class="button button-outline button-energized button-rounded button-block" ng-click='vm.pauseTimer()'>
-              Pause
-            </button>
-          </div>
-          <div class="col">
-            <button class="button button-outline button-assertive button-rounded button-block" ng-click='vm.stopTimer()'>
-              Reset
-            </button>
+        <div ng-if="!andamentoJogo.started  && !andamentoJogo.done" class="col-20 text-center">
+          <button ng-click='vm.startTimer()' class="button button-fab button-large icon ion-ios-play " style="    margin-top: 85px;
+    box-shadow: none;
+    color: #AABDC2;
+    background: #00303D;"></button>
+        </div>
+
+
+        <div class="col-60">
+          <div class="progress-wrapper">
+            <div class="progress">
+              {{vm.humanizeDurationTimer(andamentoJogo.timer,'s')}}
+            </div>
+            <div round-progress max="andamentoJogo.timeForTimer" current="andamentoJogo.timer" stroke="5" clockwise="false" color="#AAF502"
+              bgcolor="#1A5463" rounded="true" class="text-center"></div>
           </div>
         </div>
+        <div class="col-20 text-center">
+          <button ng-click="vm.addTime();" class="button button-fab waves-effect waves-button waves-light" style="    margin-top: 85px;
+    box-shadow: none;
+    color: #AABDC2;
+    background: #00303D;
+    font-size: 1.4em;
+    font-weight: bold;">+ 1</button>
+        </div>
       </div>
 
-      <div ng-if="!andamentoJogo.started && andamentoJogo.paused && !andamentoJogo.done">
-        <div class="row">
-          <div class="col">
-            <button class="button button-outline button-balanced button-rounded button-block" ng-click='vm.startTimer()'>
-              Continue
-            </button>
-          </div>
-          <div class="col">
-            <button class="button button-outline button-assertive button-rounded button-block" ng-click='vm.stopTimer()'>
-              Reset
-            </button>
-          </div>
+      <div class="row">
+        <div class="col text-center">
+          <button class="button button-clear button-large button-assertive icon ion-refresh" ng-click='vm.stopTimer()'>
+          </button>
         </div>
       </div>
 
@@ -223,7 +219,7 @@
           <h2>Congratulations</h2>
         </div>
       </div>
-      
+
     </div>
   </ion-content>
 </ion-view>

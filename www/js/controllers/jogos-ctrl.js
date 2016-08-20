@@ -612,7 +612,7 @@ angular.module('main')
 
   })
 
-  .controller('JogosDetailCtrl', function ($scope, $state, $timeout, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService, $ionicLoading, $window, $ionicActionSheet, $cordovaSocialSharing, $ionicPopup) {
+  .controller('JogosDetailCtrl', function ($scope, $state, $timeout, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService, $ionicLoading, $window, $ionicActionSheet, $cordovaSocialSharing, $ionicPopup, $cordovaVibration) {
     var vm = this;
     vm.jogo = JogosService.jogoSelecionado;
     vm.amigos = UserService.amigos;
@@ -643,6 +643,7 @@ angular.module('main')
     vm.stopTimer = stopTimer;
     vm.pauseTimer = pauseTimer;
     vm.humanizeDurationTimer = humanizeDurationTimer;
+    vm.addTime = addTime;
 
     $scope.$on('$ionicView.enter', function () {
       $timeout(function () {
@@ -666,10 +667,9 @@ angular.module('main')
     }
 
     function jogoEmAndamento() {
-      // var date = moment(vm.jogo.inicio);
-      // var duration = moment.duration(date.diff(moment()));
-      // return duration.asHours() < 0 && duration.asHours() >= -1;
-      return true;
+      var date = moment(vm.jogo.inicio);
+      var duration = moment.duration(date.diff(moment()));
+      return duration.asHours() < 0 && duration.asHours() >= -1;
     }
 
     function atualizaPresenca(bool) {
@@ -974,6 +974,10 @@ angular.module('main')
       $timeout.cancel(mytimeout);
     };
 
+    function addTime() {
+      $scope.andamentoJogo.timer = $scope.andamentoJogo.timer + 60;
+    }
+
     function humanizeDurationTimer(input, units) {
       // units is a string with possible values of y, M, w, d, h, m, s, ms
       if (input == 0) {
@@ -997,6 +1001,9 @@ angular.module('main')
     $scope.$on('timer-stopped', function (event, remaining) {
       if (remaining === 0) {
         $scope.andamentoJogo.done = true;
+        if (window.cordova) {
+          $cordovaVibration.vibrate(200);
+        } 
       }
     });
 

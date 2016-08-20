@@ -17824,10 +17824,11 @@ For example, you might change some of the default colors:
   position: absolute;
   width: 100%;
   height: 100%;
-  line-height: 9em;
-  font-size: 1em;
+  line-height: 4.6em;
   text-align: center;
-  font-weight: 100; }
+  font-size: 2em;
+  font-weight: 200;
+  color: #AAF502; }
 
 #grupo-modal .info-grupo {
   background: #00303D;
