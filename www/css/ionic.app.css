@@ -46,6 +46,13 @@ input[readonly] {
 .modal {
   background-color: #00242E !important; }
 
+.dark-popup .popup {
+  background: #1A5463 !important;
+  color: #F1F7E9 !important; }
+
+.dark-popup .popup-title {
+  color: #F1F7E9 !important; }
+
 .popup-head h3 {
   font-size: 16px !important; }
 

@@ -21,6 +21,7 @@ angular.module('main')
       getLocalizacaoJogo: getLocalizacaoJogo,
       criarJogo: criarJogo,
       editarJogo: editarJogo,
+      cancelarJogo: cancelarJogo,
       convidarAmigo: convidarAmigo,
       desconvidarAmigo: desconvidarAmigo,
       solicitarPresenca: solicitarPresenca,
@@ -168,6 +169,36 @@ angular.module('main')
       return deferred.promise;
     }
 
+    function cancelarJogo(jogo) {
+      var deferred = $q.defer();
+      var jogoData = {};
+      var jogoId = jogo.$id;
+      jogoData['jogos/' + jogoId] = null;
+      jogoData['jogosJogadores/' + jogoId] = null;
+      jogoData['jogosLocalizacao/' + jogoId] = null;
+      _.forEach(jogo.jogadores, function (jogador) {
+        jogoData['usersJogos/' + jogador.$id + '/' + jogoId] = null;
+      });
+      Ref.update(jogoData, function (error) {
+        if (error) {
+          deferred.reject('Erro ao cancelar a partida');
+        }
+        else {
+          _.forEach(jogo.jogadores, function (jogador) {
+            UserService.enviaNotificacao({
+              msg: firebase.auth().currentUser.displayName + ' cancelou uma partida ' + jogo.nome,
+              img: firebase.auth().currentUser.photoURL,
+              tipo: Enum.TipoNotificacao.cancelamentoPartida,
+              lida: false,
+              dateTime: new Date().getTime()
+            }, jogador.$id);
+          });
+          deferred.resolve(jogoId);
+        }
+      });
+      return deferred.promise;
+    }
+
     function editarJogo(data) {
       var deferred = $q.defer();
       var jogoData = {};
@@ -227,14 +258,22 @@ angular.module('main')
       service.refUserJogos.child(firebase.auth().currentUser.uid).on('child_added', function (snap) {
         service.ref.child(snap.key).on('value', function (snapJogo) {
           getJogadoresJogo(snap.key).$loaded().then(function (val) {
-            var data = snapJogo.val();
-            data.$id = snap.key;
-            data.jogadores = val;
-            $timeout(function () {
-              _.remove(UserService.jogos, { '$id': snap.key });
-              UserService.jogos.push(data);
-            });
+            if (snapJogo.val()) {
+              var data = snapJogo.val();
+              data.$id = snap.key;
+              data.jogadores = val;
+              $timeout(function () {
+                _.remove(UserService.jogos, { '$id': snap.key });
+                UserService.jogos.push(data);
+              });
+            }
           });
+        });
+      });
+
+      service.refUserJogos.child(firebase.auth().currentUser.uid).on('child_removed', function (oldChild) {
+        $timeout(function () {
+          _.remove(UserService.jogos, { '$id': oldChild.key });
         });
       });
     }

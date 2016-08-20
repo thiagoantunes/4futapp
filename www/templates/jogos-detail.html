@@ -1,6 +1,6 @@
 <ion-view id="jogos-detail" view-title="{{vm.jogo.nome}}">
   <ion-nav-buttons side="right">
-    <button ng-if="vm.minhaPresenca" ng-click="vm.openChat();" style="padding: 0px 10px;"  class="button button-icon button-clear ion-chatbubbles"></button>
+    <button ng-if="vm.minhaPresenca" ng-click="vm.openChat();" style="padding: 0px 10px;" class="button button-icon button-clear ion-chatbubbles"></button>
     <button ng-if="vm.checkOrganizador();" ng-click="vm.maisOpcoes();" style="padding: 0px 15px;" class="button button-icon button-clear ion-android-more-vertical"></button>
   </ion-nav-buttons>
   <ion-content>
@@ -65,7 +65,7 @@
       <div class="row">
         <div ng-click="modal.show();" class="col text-center">
           <i class="icon ion-android-person-add"></i>
-          <br/> Convidar 
+          <br/> Convidar
         </div>
         <div ng-click="vm.openEstruturaModal();" class="col text-center">
           <i class="icon ion-ios-stopwatch-outline"></i>

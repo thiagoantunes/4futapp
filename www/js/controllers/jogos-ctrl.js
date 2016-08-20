@@ -108,14 +108,14 @@ angular.module('main')
       return ionic.Platform.isAndroid();
     }
 
-    function jogoHoje(inicio){
+    function jogoHoje(inicio) {
       var date = moment(inicio);
       var REFERENCE = moment();
       var TODAY = REFERENCE.clone().startOf('day');
       return date.isSame(TODAY, 'd');
     }
 
-    function jogoAlgumasHoras(inicio){
+    function jogoAlgumasHoras(inicio) {
       var date = moment(inicio);
       var duration = moment.duration(date.diff(moment()));
       return duration.asHours() < 5 && duration.asHours() > 0;
@@ -298,7 +298,7 @@ angular.module('main')
 
     function activate() {
       ArenasService.getArenasBasicas();
-      if(!vm.novaPartida.editing) {
+      if (!vm.novaPartida.editing) {
         vm.novaPartida.data.minJogadores = 10;
         vm.novaPartida.data.maxJogadores = 20;
         vm.novaPartida.data.visibilidade = 4;
@@ -612,7 +612,7 @@ angular.module('main')
 
   })
 
-  .controller('JogosDetailCtrl', function ($scope, $state, $timeout, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService, $ionicLoading, $window, $ionicActionSheet, $cordovaSocialSharing) {
+  .controller('JogosDetailCtrl', function ($scope, $state, $timeout, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService, $ionicLoading, $window, $ionicActionSheet, $cordovaSocialSharing, $ionicPopup) {
     var vm = this;
     vm.jogo = JogosService.jogoSelecionado;
     vm.amigos = UserService.amigos;
@@ -736,8 +736,8 @@ angular.module('main')
         'addCancelButtonWithLabel': 'Fechar'
       };
       window.plugins.actionsheet.show(options, function (_btnIndex) {
-          GeoService.navigateTo(vm.jogo.endereco);
-        });
+        GeoService.navigateTo(vm.jogo.endereco);
+      });
     }
 
     function openPerfilJogador(jogador) {
@@ -804,7 +804,7 @@ angular.module('main')
       if (window.cordova) {
         window.plugins.actionsheet.show(options, function (_btnIndex) {
           if (_btnIndex === 1) {
-            $window.alert('Cancelar Partida');
+            cancelarPartida();
           } else if (_btnIndex === 2) {
             editarPartida();
           }
@@ -823,7 +823,7 @@ angular.module('main')
                 editarPartida();
                 break;
               case 1: // Delete
-                $window.alert('Cancelar Partida');
+                cancelarPartida();
                 break;
             }
 
@@ -834,7 +834,7 @@ angular.module('main')
     }
 
     function editarPartida() {
-      JogosService.getLocalizacaoJogo(vm.jogo.$id).then(function(snapLocalizacao){
+      JogosService.getLocalizacaoJogo(vm.jogo.$id).then(function (snapLocalizacao) {
         JogosService.novaPartida = {
           data: {
             nome: vm.jogo.nome,
@@ -855,7 +855,38 @@ angular.module('main')
           editing: true,
           idPartida: vm.jogo.$id
         };
-        $state.go('main.criar-partida'); 
+        $state.go('main.criar-partida');
+      });
+    }
+
+    function cancelarPartida() {
+      var confirmPopup = $ionicPopup.show({
+        title: 'Anular Partida',
+        cssClass: 'dark-popup',
+        template: '<div><img style="display: block; margin: auto; margin-bottom: 30px;" src="img/ilustracoes/cartao-vermelho.png" alt=""><p style="text-align:center">Você tem certeza que deseja anular esta partida? Está ação não poderá ser desfeita</p></div>',
+        buttons: [
+          { text: 'NÃO', type: 'button-light', },
+          {
+            text: '<b>SIM</b>',
+            type: 'button-assertive',
+            onTap: function (e) {
+              $ionicLoading.show({ template: 'Carregando...' });
+              JogosService.cancelarJogo(vm.jogo).then(function () {
+                $ionicLoading.hide();
+                var alertPopup = $ionicPopup.alert({
+                  title: 'PARTIDA CANCELADA',
+                  template: ''
+                });
+                alertPopup.then(function (res) {
+                  $ionicHistory.goBack();
+                });
+              }, function (err) {
+                console.log(err);
+                $ionicLoading.hide();
+              });
+            }
+          }
+        ]
       });
     }
 

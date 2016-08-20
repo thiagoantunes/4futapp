@@ -130,6 +130,19 @@ input[readonly]{
     background-color: $base-background-color !important;
 }
 
+
+
+.dark-popup{
+    .popup {
+        background: $stable !important;
+        color: $base-color !important;
+    }
+
+    .popup-title{
+        color: $base-color !important;
+    }
+}
+
 .popup-head{
     h3{
         font-size: 16px !important;

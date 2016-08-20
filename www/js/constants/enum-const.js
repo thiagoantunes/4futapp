@@ -6,7 +6,8 @@ angular.module('main')
         solicitacaoAmizade: 1,
         convitePartida: 2,
         solicitacaoPresenca: 3,
-        aprovacaoSolicitacaoPresenca: 4
+        aprovacaoSolicitacaoPresenca: 4,
+        cancelamentoPartida: 5,
     },
     Modalidade: {
         society: 1,
