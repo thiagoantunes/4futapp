@@ -52,7 +52,7 @@
   <form name="sendMessageForm" ng-submit="vm.enviarMensagem()" novalidate>
     <ion-footer-bar class="bar-dark item-input-inset message-footer" keyboard-attach>
       <label class="item-input-wrapper">
-                      <textarea ng-model="vm.input.message" value="" placeholder="Envie uma mensagem para..." required minlength="1" maxlength="1500" msd-elastic></textarea>
+                      <textarea ng-model="vm.input.message" value="" placeholder="Envie uma mensagem" required minlength="1" maxlength="1500" msd-elastic></textarea>
                   </label>
       <div class="footer-btn-wrap">
         <button style="margin-left:-25px; box-shadow: none;" class="button button-icon icon ion-android-send footer-btn" type="submit" ng-disabled="!vm.input.message || vm.input.message === ''">

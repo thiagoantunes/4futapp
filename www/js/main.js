@@ -32,8 +32,8 @@ angular.module('main', [
     firebase.auth().onAuthStateChanged(checkLogin);
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
-      if (next.name == 'main.home') {
-        $rootScope.hideTabs = false;
+      if (next.name == 'main.home' || next.name == 'main.meus-jogos'|| 'main.notificacoes' || 'main.perfil' || 'main.meus-times') {
+        $rootScope.hideTabs = true;
       }
     });
 
@@ -662,37 +662,43 @@ angular.module('main', [
   .controller('MenuCtrl', function ($state, $window, $rootScope, GeoService, ArenasService, UserService, ReservasService, JogosService, TimesService, $ionicHistory, $cordovaNetwork) {
     var vm = this;
     var hideTabsStates = [
-      'main.arenas',
-      'main.arenas-detail',
-      'main.minhas-reservas',
-      'main.encontrar-jogos',
-      'main.jogos-detail',
-      'main.criar-partida',
-      'main.meus-jogos-detail',
-      'main.jogos',
-      'main.perfilAmigo',
-      'main.criar-partida-reserva',
-      'main.meus-jogos-detail-reserva',
-      'main.arenas-detail-partida',
-      'main.criarDesafio',
-      'main.times',
-      'main.criarTime',
-      'main.meus-jogos-detail-notificacoes',
-      'main.perfilJogador-tab-meus-times',
-      'main.perfilJogador-tab-notificacoes',
-      'main.listaJogadores-tab-notificacoes',
-      'main.listaJogadores-tab-meus-times',
-      'main.listaJogadores-tab-perfil',
-      'main.perfilJogador-tab-perfil',
-      'main.listaJogadores-tab-meus-jogos',
-      'main.perfilJogador-tab-meus-jogos',
-      'main.perfilJogador-tab-home',
-      'main.listaJogadores-tab-home',
-      'main.chat-tab-perfil',
-      'main.chat-tab-notificacoes',
-      'main.chat-tab-meus-times',
-      'main.chat-tab-meus-jogos',
-      'main.chat-tab-home'
+      'main.home',
+      'main.meus-jogos',
+      'main.notificacoes',
+      'main.perfil',
+      'main.meus-times', 
+
+      // 'main.arenas',
+      // 'main.arenas-detail',
+      // 'main.minhas-reservas',
+      // 'main.encontrar-jogos',
+      // 'main.jogos-detail',
+      // 'main.criar-partida',
+      // 'main.meus-jogos-detail',
+      // 'main.jogos',
+      // 'main.perfilAmigo',
+      // 'main.criar-partida-reserva',
+      // 'main.meus-jogos-detail-reserva',
+      // 'main.arenas-detail-partida',
+      // 'main.criarDesafio',
+      // 'main.times',
+      // 'main.criarTime',
+      // 'main.meus-jogos-detail-notificacoes',
+      // 'main.perfilJogador-tab-meus-times',
+      // 'main.perfilJogador-tab-notificacoes',
+      // 'main.listaJogadores-tab-notificacoes',
+      // 'main.listaJogadores-tab-meus-times',
+      // 'main.listaJogadores-tab-perfil',
+      // 'main.perfilJogador-tab-perfil',
+      // 'main.listaJogadores-tab-meus-jogos',
+      // 'main.perfilJogador-tab-meus-jogos',
+      // 'main.perfilJogador-tab-home',
+      // 'main.listaJogadores-tab-home',
+      // 'main.chat-tab-perfil',
+      // 'main.chat-tab-notificacoes',
+      // 'main.chat-tab-meus-times',
+      // 'main.chat-tab-meus-jogos',
+      // 'main.chat-tab-home'
     ];
     $rootScope.$on('$ionicView.beforeEnter', function () {
       $rootScope.hideTabs = ~hideTabsStates.indexOf($state.current.name);

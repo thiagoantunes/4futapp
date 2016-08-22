@@ -312,6 +312,11 @@ angular.module('main')
       ChatService.mensagensChatSelecionado.$loaded().then(function (data) {
         vm.doneLoading = true;
         vm.mensagens = data;
+        vm.mensagens.$watch(function(event) {
+          $timeout(function () {
+            viewScroll.scrollBottom(true);
+          }, 0);
+        });
 
         $timeout(function () {
           viewScroll.scrollBottom();
@@ -326,6 +331,11 @@ angular.module('main')
         ChatService.mensagensChatSelecionado.$loaded().then(function (data) {
           vm.doneLoading = true;
           vm.mensagens = data;
+          vm.mensagens.$watch(function(event) {
+            $timeout(function () {
+              viewScroll.scrollBottom(true);
+            }, 0);
+          });
 
           $timeout(function () {
             viewScroll.scrollBottom();
