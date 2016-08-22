@@ -91,7 +91,4 @@
         <variable name="APP_ID" value="1834143436814148" />
         <variable name="APP_NAME" value="Rei da Quadra" />
     </plugin>
-    <plugin name="cordova-plugin-googleplus" spec="https://github.com/EddyVerbruggen/cordova-plugin-googleplus">
-        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.276187195050-rosqf29l764le1l371eack8ltqcei6bm" />
-    </plugin>
 </widget>
