@@ -41,7 +41,8 @@
   },
   "devDependencies": {
     "angular-mocks": "~1.5.0",
-    "ionic-platform-web-client": "^0.7.1"
+    "ionic-platform-web-client": "^0.7.1",
+    "phonegap-facebook-plugin": "/Users/thiago/Documents/Source/temp/phonegap-facebook-plugin#^0.12.0"
   },
   "resolutions": {
     "angular": "1.5.7",
