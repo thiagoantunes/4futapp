@@ -663,13 +663,18 @@ angular.module('main')
         $scope.modal = modal;
       });
 
-      JogosService.getAndamentoJogo(vm.jogo.$id).$bindTo($scope, 'andamentoJogo');
+      JogosService.getAndamentoJogo(vm.jogo.$id).$bindTo($scope, 'andamentoJogo').then(function(){
+        if( $scope.andamentoJogo.started ){
+          mytimeout = $timeout(onTimeout, 1000);
+        }
+      });
     }
 
     function jogoEmAndamento() {
-      var date = moment(vm.jogo.inicio);
-      var duration = moment.duration(date.diff(moment()));
-      return duration.asHours() < 0 && duration.asHours() >= -1;
+      // var date = moment(vm.jogo.inicio);
+      // var duration = moment.duration(date.diff(moment()));
+      // return duration.asHours() < 0 && duration.asHours() >= -1;
+      return true;
     }
 
     function atualizaPresenca(bool) {
@@ -948,13 +953,14 @@ angular.module('main')
         $timeout.cancel(mytimeout);
         return;
       }
-      $scope.andamentoJogo.timer--;
+      $scope.andamentoJogo.timer = Math.round( moment.duration(moment($scope.andamentoJogo.startedTime).diff(moment())).asSeconds() );
       mytimeout = $timeout(onTimeout, 1000);
     };
 
     function startTimer() {
       mytimeout = $timeout(onTimeout, 1000);
       $scope.andamentoJogo.started = true;
+      $scope.andamentoJogo.startedTime = moment().add($scope.andamentoJogo.timeForTimer, 'seconds')._d.getTime();
     };
 
     function stopTimer(closingModal) {
