@@ -28,6 +28,7 @@ angular.module('main')
       removerAmigo: removerAmigo,
       enviaNotificacao: enviaNotificacao,
       sendPushNotification: sendPushNotification,
+      schedulePushNotification: schedulePushNotification,
       setLocalizacaoJogador: setLocalizacaoJogador,
       setConexao: setConexao,
     };
@@ -107,6 +108,36 @@ angular.module('main')
               'notification': {
                 'title': 'Rei da Quadra',
                 'message': msg,
+              }
+            }
+          };
+          $http(req).then(function (val) {
+            console.log(val);
+          }, function (err) {
+            console.log(err);
+          });
+        }
+      });
+    }
+
+    function schedulePushNotification(data) {
+      service.ref.child(data.id + '/token').once('value', function (snap) {
+        if (snap.val()) {
+          var jwt = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjMjYyYjY0Mi01NzEzLTQ5MjctOGMxZC0zMzJlM2EwMzg0ZDQifQ.c1vHBOiHZe8w1Nvf1nUsgtLdrwniRkr8xpYUhjD2f2o';
+          var req = {
+            method: 'POST',
+            url: 'https://api.ionic.io/push/notifications',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + jwt
+            },
+            data: {
+              'tokens': [snap.val()],
+              'scheduled': data.date,
+              'profile': 'dev',
+              'notification': {
+                'title': 'Rei da Quadra',
+                'message': data.msg,
               }
             }
           };

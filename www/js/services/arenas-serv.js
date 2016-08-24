@@ -115,7 +115,7 @@ angular.module('main')
 
         function getPosition() {
             var deferred = $q.defer();
-            var posOptions = { timeout: 30000 };
+            var posOptions = { timeout: 30000 , maximumAge: 5 * 60 * 1000};
             var watchOptions = { timeout: 10000 };
             //$ionicPlatform.ready(function () {
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -154,9 +154,23 @@ angular.module('main')
                             center: service.position,
                             radius: 100
                         });
+                        ArenasService.getArenas();
                     }
                     else{
                         ArenasService.geoQuery.updateCriteria({
+                            center: service.position,
+                            radius: 100
+                        });
+                    }
+
+                    if(_.isEmpty(ArenasService.geoArenasBasicasQuery)){
+                        ArenasService.geoArenasBasicasQuery = ArenasService.geoArenaBasica.query({
+                            center: service.position,
+                            radius: 100
+                        });
+                    }
+                    else{
+                        ArenasService.geoArenasBasicasQuery.updateCriteria({
                             center: service.position,
                             radius: 100
                         });
@@ -167,6 +181,7 @@ angular.module('main')
                             center: service.position,
                             radius: 100
                         });
+                        TimesService.getTimesRegiao();
                     }
                     else{
                         TimesService.geoQuery.updateCriteria({
@@ -180,6 +195,7 @@ angular.module('main')
                             center: service.position,
                             radius: 100
                         });
+                        JogosService.getJogosRegiao();
                     }
                     else{
                         JogosService.geoQuery.updateCriteria({

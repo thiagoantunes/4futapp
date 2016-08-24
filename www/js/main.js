@@ -307,8 +307,8 @@ angular.module('main', [
         }
       })
 
-      .state('main.meus-jogos-detail-reserva', {
-        url: '/meus-jogos-reserva/:id',
+      .state('main.jogo-criado-reserva', {
+        url: '/jogo-criado-reserva/:id',
         views: {
           'tab-home': {
             templateUrl: 'templates/jogos-detail.html',
@@ -746,7 +746,6 @@ angular.module('main', [
     };
 
   })
-
 
   .controller('HomeCtrl', function ($scope, $stateParams, $state) {
 

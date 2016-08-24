@@ -1,10 +1,11 @@
 <ion-view id="jogos-detail" view-title="{{vm.jogo.nome}}">
   <ion-nav-buttons side="right">
-    <button ng-if="vm.minhaPresenca" ng-click="vm.openChat();" style="padding: 0px 10px;" class="button button-icon button-clear ion-chatbubbles"></button>
-    <button ng-if="vm.checkOrganizador();" ng-click="vm.maisOpcoes();" style="padding: 0px 15px;" class="button button-icon button-clear ion-android-more-vertical"></button>
+    <button ng-if="vm.jogoEmAndamento();" ng-click="vm.finalizarPartida();" style="padding: 0px 10px;" class="button button-clear">FINALIZAR</button>
+    <button ng-if="vm.minhaPresenca && vm.jogoAgendado();" ng-click="vm.openChat();" style="padding: 0px 10px;" class="button button-icon button-clear ion-chatbubbles"></button>
+    <button ng-if="vm.checkOrganizador() && vm.jogoAgendado();" ng-click="vm.maisOpcoes();" style="padding: 0px 15px;" class="button button-icon button-clear ion-android-more-vertical"></button>
   </ion-nav-buttons>
   <ion-content>
-    <div ng-if="!vm.jogoEmAndamento()">
+    <div ng-if="vm.jogoAgendado()">
       <div class="header">
         <div class="row">
           <div class="col-50">
@@ -168,35 +169,35 @@
 
         <div ng-if="andamentoJogo.started && !andamentoJogo.done" class="col-20 text-center">
           <button ng-click='vm.pauseTimer()' class="button button-fab button-large icon ion-ios-pause" style="    margin-top: 85px;
-    box-shadow: none;
-    color: #AABDC2;
-    background: #00303D;"></button>
+            box-shadow: none;
+            color: #AABDC2;
+            background: #00303D;"></button>
         </div>
 
         <div ng-if="!andamentoJogo.started  && !andamentoJogo.done" class="col-20 text-center">
           <button ng-click='vm.startTimer()' class="button button-fab button-large icon ion-ios-play " style="    margin-top: 85px;
-    box-shadow: none;
-    color: #AABDC2;
-    background: #00303D;"></button>
+            box-shadow: none;
+            color: #AABDC2;
+            background: #00303D;"></button>
         </div>
 
 
         <div class="col-60">
           <div class="progress-wrapper">
             <div class="progress">
-              {{vm.humanizeDurationTimer(andamentoJogo.timer,'s')}}
+              {{vm.humanizeDurationTimer(timer,'s')}}
             </div>
-            <div round-progress max="andamentoJogo.timeForTimer" current="andamentoJogo.timer" stroke="5" clockwise="false" color="#AAF502"
+            <div round-progress max="andamentoJogo.timeForTimer" current="timer" stroke="5" clockwise="false" color="#AAF502"
               bgcolor="#1A5463" rounded="true" class="text-center"></div>
           </div>
         </div>
         <div class="col-20 text-center">
           <button ng-click="vm.addTime();" class="button button-fab waves-effect waves-button waves-light" style="    margin-top: 85px;
-    box-shadow: none;
-    color: #AABDC2;
-    background: #00303D;
-    font-size: 1.4em;
-    font-weight: bold;">+ 1</button>
+            box-shadow: none;
+            color: #AABDC2;
+            background: #00303D;
+            font-size: 1.4em;
+            font-weight: bold;">+ 1</button>
         </div>
       </div>
 
@@ -207,7 +208,7 @@
         </div>
       </div>
 
-      <div ng-if="done" class="text-center">
+      <div ng-if="andamentoJogo.done" class="text-center">
         <div class="row">
           <button class="button button-outline button-balanced button-rounded button-block" ng-click="vm.stopTimer(true);">
             Done
@@ -220,6 +221,15 @@
         </div>
       </div>
 
+      <ul>
+        <li ng-repeat="tempo in andamentoJogo.tempos">
+          {{tempo.inicio | date: 'HH:mm' }} - {{tempo.fim | date: 'HH:mm'}}
+        </li>
+      </ul>
+
+    </div>
+    <div ng-if="vm.jogoEncerrado();">
+      <h1>FINALIZADO</h1>
     </div>
   </ion-content>
 </ion-view>

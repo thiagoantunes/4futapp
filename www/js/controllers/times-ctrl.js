@@ -2,7 +2,7 @@
 'use strict';
 angular.module('main')
 
-    .controller('TimesCtrl', function (TimesService, UserService, $timeout, $ionicModal) {
+    .controller('TimesCtrl', function (TimesService, GeoService, UserService, $timeout, $ionicModal) {
         var vm = this;
         vm.timesService = TimesService;
         vm.meusTimes = UserService.times;
@@ -12,6 +12,11 @@ angular.module('main')
         activate();
 
         function activate() {
+            if(vm.times.length == 0){
+              GeoService.getPosition().then(function(){
+                TimesService.getTimesRegiao();
+              });
+            }
         }
 
         function filtrarModalidades(time) {

@@ -9,6 +9,11 @@ angular.module('main')
     activate();
 
     function activate() {
+      if(vm.jogosRegiao.length == 0){
+        GeoService.getPosition().then(function(){
+          JogosService.getJogosRegiao();
+        });
+      }
       setMap();
     }
 
@@ -124,19 +129,19 @@ angular.module('main')
     function jogoEmAndamento(inicio) {
       var date = moment(inicio);
       var duration = moment.duration(date.diff(moment()));
-      return duration.asHours() < 0 && duration.asHours() >= -1;
+      return duration.asHours() < 0 && duration.asHours() >= -1.5;
     }
 
     function proximosJogos(jogo) {
       var date = moment(jogo.inicio);
       var duration = moment.duration(date.diff(moment()));
-      return duration.asHours() >= -1;
+      return duration.asHours() >= -1.5;
     }
 
     function jogosAnteriores(jogo) {
       var date = moment(jogo.inicio);
       var duration = moment.duration(date.diff(moment()));
-      return duration.asHours() < -1;
+      return duration.asHours() < -1.5;
     }
 
     function numeroPartidasPassadas() {
@@ -187,8 +192,7 @@ angular.module('main')
       JogosService.novaPartida = {
         data: {
           reserva: vm.reservaSelecionada.$id,
-          dia: moment(vm.reservaSelecionada.start).format('DD/MM/YYYY'),
-          hora: moment(vm.reservaSelecionada.start).format('HH:mm'),
+          inicio: vm.reservaSelecionada.start,
         },
         arenaReserva: vm.reservaSelecionada.arenaId,
         localSelecionado: {
@@ -334,7 +338,7 @@ angular.module('main')
             JogosService.jogoSelecionado = val;
             JogosService.jogoSelecionado.novoJogo = true;
             if (vm.novaPartida.arenaReserva) {
-              $state.go('main.meus-jogos-detail-reserva', { id: jogoId });
+              $state.go('main.jogo-criado-reserva', { id: jogoId });
             }
             else {
               $state.go('main.meus-jogos-detail', { id: jogoId });
@@ -634,9 +638,12 @@ angular.module('main')
     vm.compartilharEmail = compartilharEmail;
     vm.maisOpcoes = maisOpcoes;
     vm.jogoEmAndamento = jogoEmAndamento;
+    vm.jogoAgendado = jogoAgendado;
+    vm.jogoEncerrado = jogoEncerrado;
     vm.cancelarPartida = cancelarPartida;
     vm.editarPartida = editarPartida;
     vm.emitirChamado = emitirChamado;
+    vm.finalizarPartida = finalizarPartida;
 
     vm.onTimeout = onTimeout;
     vm.startTimer = startTimer;
@@ -664,17 +671,45 @@ angular.module('main')
       });
 
       JogosService.getAndamentoJogo(vm.jogo.$id).$bindTo($scope, 'andamentoJogo').then(function(){
-        if( $scope.andamentoJogo.started ){
+        if($scope.andamentoJogo.started){
           mytimeout = $timeout(onTimeout, 1000);
+        }
+        else if($scope.andamentoJogo.paused) {
+          $scope.timer = $scope.andamentoJogo.pausedTimer;
+        }
+        else{
+          $scope.timer = $scope.andamentoJogo.timeForTimer;;
+        }
+      });
+
+      $scope.$watch('andamentoJogo', function() {
+        if($scope.andamentoJogo.started){
+          mytimeout = $timeout(onTimeout, 1000);
+        }
+        else{
+          $timeout.cancel(mytimeout);
         }
       });
     }
 
     function jogoEmAndamento() {
-      // var date = moment(vm.jogo.inicio);
-      // var duration = moment.duration(date.diff(moment()));
-      // return duration.asHours() < 0 && duration.asHours() >= -1;
-      return true;
+      var date = moment(vm.jogo.inicio);
+      var duration = moment.duration(date.diff(moment()));
+      return duration.asHours() < 0 && duration.asHours() >= -1.5 && $scope.andamentoJogo && vm.jogo.status !== 'encerrado';
+    }
+
+    function jogoAgendado() {
+      return !jogoEmAndamento() && !jogoEncerrado();
+    }
+
+    function jogoEncerrado() {
+      var date = moment(vm.jogo.inicio);
+      var duration = moment.duration(date.diff(moment()));
+      return duration.asHours() < -1.5 || vm.jogo.status == 'encerrado';
+    }
+
+    function finalizarPartida() {
+      vm.jogo.status = 'encerrado';
     }
 
     function atualizaPresenca(bool) {
@@ -948,40 +983,44 @@ angular.module('main')
     //Partida iniciada
     var mytimeout = null; 
     function onTimeout() {
-      if ($scope.andamentoJogo.timer === 0) {
+      if ($scope.timer === 0) {
         $scope.$broadcast('timer-stopped', 0);
         $timeout.cancel(mytimeout);
         return;
       }
-      $scope.andamentoJogo.timer = Math.round( moment.duration(moment($scope.andamentoJogo.startedTime).diff(moment())).asSeconds() );
-      mytimeout = $timeout(onTimeout, 1000);
+        $scope.timer = Math.round( moment.duration(moment($scope.andamentoJogo.refTime).diff(moment())).asSeconds() );
+        mytimeout = $timeout(onTimeout, 1000);
     };
 
     function startTimer() {
-      mytimeout = $timeout(onTimeout, 1000);
       $scope.andamentoJogo.started = true;
-      $scope.andamentoJogo.startedTime = moment().add($scope.andamentoJogo.timeForTimer, 'seconds')._d.getTime();
+      if(!$scope.andamentoJogo.paused) {
+        $scope.andamentoJogo.startedTime = moment()._d.getTime();
+        $scope.andamentoJogo.refTime = moment().add($scope.andamentoJogo.timeForTimer, 'seconds')._d.getTime();
+      }
+      else{
+        $scope.andamentoJogo.paused = false;
+        $scope.andamentoJogo.refTime = moment().add($scope.timer, 'seconds')._d.getTime();
+      }
     };
 
     function stopTimer(closingModal) {
-      if (closingModal != true) {
-        $scope.$broadcast('timer-stopped', $scope.andamentoJogo.timer);
-      }
-      $scope.andamentoJogo.timer = $scope.andamentoJogo.timeForTimer;
+      $scope.timer = $scope.andamentoJogo.timeForTimer;
       $scope.andamentoJogo.started = false;
       $scope.andamentoJogo.paused = false;
       $timeout.cancel(mytimeout);
     };
 
     function pauseTimer() {
-      $scope.$broadcast('timer-stopped', $scope.andamentoJogo.timer);
+      $scope.$broadcast('timer-stopped', $scope.timer);
+      $scope.andamentoJogo.pausedTimer = $scope.timer;
       $scope.andamentoJogo.started = false;
       $scope.andamentoJogo.paused = true;
-      $timeout.cancel(mytimeout);
     };
 
     function addTime() {
-      $scope.andamentoJogo.timer = $scope.andamentoJogo.timer + 60;
+      $scope.andamentoJogo.timeForTimer = $scope.andamentoJogo.timeForTimer + 60;
+      $scope.andamentoJogo.refTime = moment($scope.andamentoJogo.refTime).add(60, 'seconds')._d.getTime();
     }
 
     function humanizeDurationTimer(input, units) {
@@ -1006,11 +1045,36 @@ angular.module('main')
 
     $scope.$on('timer-stopped', function (event, remaining) {
       if (remaining === 0) {
+        $scope.timer = $scope.andamentoJogo.timeForTimer;
         $scope.andamentoJogo.done = true;
+        $scope.andamentoJogo.started = false;
+        $scope.andamentoJogo.paused = false;
+        if(!$scope.andamentoJogo.tempos){
+          $scope.andamentoJogo.tempos = [];
+        }
+        $scope.andamentoJogo.tempos.push({
+          inicio: $scope.andamentoJogo.startedTime,
+          fim: new Date().getTime()
+        });
         if (window.cordova) {
           $cordovaVibration.vibrate(200);
         } 
+        var timerStoppedPopup = $ionicPopup.show({
+          title: 'Acabou!!!',
+          cssClass: 'dark-popup',
+          template: '<div><img style="display: block; margin: auto; margin-bottom: 30px;" src="img/ilustracoes/cronometro.png" alt=""><p style="text-align:center"></p></div>',
+          buttons: [
+            { 
+              text: 'COMEÇAR OUTRA', 
+              type: 'button-positive', 
+              onTap: function (e) {
+                
+              }
+            }
+          ]
+        });
       }
+
     });
 
 

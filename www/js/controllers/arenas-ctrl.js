@@ -10,6 +10,11 @@ angular.module('main')
     activate();
 
     function activate() {
+      if(vm.arenas.length == 0){
+        GeoService.getPosition().then(function(){
+          ArenasService.getArenas();
+        });
+      } 
       setMap();
     }
 
@@ -282,7 +287,8 @@ angular.module('main')
               if (!$scope.currentUser.telefone) {
                 e.preventDefault();
               } else {
-                enviarCodigoVerificacao();
+                salvarNovaReserva();
+                //enviarCodigoVerificacao();
               }
             }
           },

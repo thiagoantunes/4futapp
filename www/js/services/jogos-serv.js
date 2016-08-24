@@ -109,7 +109,6 @@ angular.module('main')
 
       data.partida.andamento = {
         timeForTimer: 300,
-        timer: 300,
         started: false,
         paused: false,
         done: false
@@ -151,6 +150,13 @@ angular.module('main')
           deferred.reject('Erro ao cadastrar nova turma');
         }
         else {
+          var scheduleNotificationData = {
+            id: firebase.auth().currentUser.uid,
+            msg: 'Comece a aquecer! ' + data.partida.nome + ' vai começar!',
+            date: moment(data.partida.inicio).subtract(30, 'minutes').toISOString()
+          }
+          UserService.schedulePushNotification(scheduleNotificationData);
+
           _.forEach(data.jogadores, function (jogador) {
             UserService.enviaNotificacao({
               msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
@@ -159,10 +165,22 @@ angular.module('main')
               lida: false,
               dateTime: new Date().getTime()
             }, jogador.$id);
+            var scheduleNotificationData = {
+              id: jogador.$id,
+              msg: 'Comece a aquecer! ' + data.partida.nome + ' vai começar!',
+              date: moment(data.partida.inicio).subtract(30, 'minutes').toISOString()
+            }
+            UserService.schedulePushNotification(scheduleNotificationData);
           });
           _.forEach(data.times, function (time) {
             _.forEach(time.jogadores, function (jogador) {
               if (jogador.id !== firebase.auth().currentUser.uid) {
+                var scheduleNotificationData = {
+                  id: jogador.$id,
+                  msg: 'Comece a aquecer! ' + data.partida.nome + ' vai começar!',
+                  date: moment(data.partida.inicio).subtract(30, 'minutes').toISOString()
+                }
+                UserService.schedulePushNotification(scheduleNotificationData);
                 UserService.enviaNotificacao({
                   msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
                   img: firebase.auth().currentUser.photoURL,
