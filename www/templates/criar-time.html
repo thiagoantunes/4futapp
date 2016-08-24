@@ -76,7 +76,7 @@
             <ion-content class="has-header step-jogadores">
                 <div class="list" style="padding:10px">
                     <div class="item" ng-if="vm.novoTime.jogadores.length > 0" style="padding-right: 0;">
-                        <div style="padding: 0px 15px 15px 0px;" class="label">Jogadores</div>
+                        <div style="padding: 0px 15px 15px 0px; background: transparent;" class="label">Jogadores</div>
                         <ion-scroll zooming="false" direction="x">
                             <div style="display: block; position:relative;">
                                 <div class="img" style="position:relative; display:inline-block; padding:5px;" ng-repeat="jogador in vm.novoTime.jogadores">
@@ -88,7 +88,7 @@
                             <hr/>
                         </div>
                     </div>
-                    <div class="label">Escale o seu time</div>
+                    <div style="background: transparent;"  class="label">Escale o seu time</div>
                     <div class="item item-avatar item-icon-right" ng-click="vm.toggleMembroTime(amigo)" ng-repeat="amigo in vm.amigos" href="#">
                         <img style="margin-top:-7px;" cache-src="{{amigo.fotoPerfil | defaultImage}}">
                         <h2>{{amigo.nome}}</h2>
