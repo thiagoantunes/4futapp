@@ -80,9 +80,9 @@ $input-color-placeholder:          $light !default;
 }
 
 // The path for our ionicons font files, relative to the built CSS in www/css
-$ionicons-font-path: "../lib/ionic/fonts" !default;
+$ionicons-font-path: "../fonts" !default;
 
-$RobotoDraftFontPath: "../fonts"; // REMINDER: edit as appropriate!
+$RobotoDraftFontPath: "../fonts" !default; // REMINDER: edit as appropriate!
 $RobotoDraftFontName: "RobotoDraft";
 $RobotoDraftFontVersion: "1.0.0";
 
