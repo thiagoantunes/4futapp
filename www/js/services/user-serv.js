@@ -1,6 +1,36 @@
-'use strict';
-angular.module('main')
-  .factory('UserService', function (Ref, $firebaseObject, $state, Enum, $firebaseArray, $q, $timeout, $http, $ionicModal, $resource, $ionicPlatform) {
+(function () {
+  'use strict';
+  angular
+    .module('main')
+    .factory('UserService', UserService);
+
+  UserService.$inject = [
+    'Ref',
+    '$firebaseObject',
+    '$state',
+    'Enum',
+    '$firebaseArray',
+    '$q',
+    '$timeout',
+    '$http',
+    '$ionicModal',
+    '$resource',
+    '$ionicPlatform'
+  ];
+
+  function UserService(
+    Ref,
+    $firebaseObject,
+    $state,
+    Enum,
+    $firebaseArray,
+    $q,
+    $timeout,
+    $http,
+    $ionicModal,
+    $resource,
+    $ionicPlatform) {
+
     var service = {
       jogos: [],
       amigos: [],
@@ -295,4 +325,6 @@ angular.module('main')
       });
     }
 
-  });
+  }
+
+} ());

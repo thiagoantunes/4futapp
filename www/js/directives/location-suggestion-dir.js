@@ -1,6 +1,6 @@
-/*global google*/
-'use strict';
-angular.module('main')
+(function () {
+  'use strict';
+  angular.module('main')
   .service('LocationService', function ($q) {
     var autocompleteService = new google.maps.places.AutocompleteService();
     var detailsService = new google.maps.places.PlacesService(document.createElement('input'));
@@ -73,7 +73,7 @@ angular.module('main')
         $scope.search = {};
         $scope.search.suggestions = [];
         $scope.search.query = '';
-        $ionicModal.fromTemplateUrl('templates/modal/criar-local.html', {
+        $ionicModal.fromTemplateUrl('modal/criar-local.html', {
           scope: $scope,
           focusFirstInput: true
         }).then(function (modal) {
@@ -107,3 +107,4 @@ angular.module('main')
       }
     };
   });
+} ());

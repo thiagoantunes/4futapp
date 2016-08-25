@@ -1,5 +1,6 @@
-'use strict';
-angular.module('main')
+(function () {
+  'use strict';
+  angular.module('main')
   .directive('preImg', function () {
     return {
       restrict: 'E',
@@ -18,7 +19,7 @@ angular.module('main')
           });
         };
       },
-      templateUrl: 'templates/misc/pre-img.html'
+      templateUrl: 'misc/pre-img.html'
     };
   })
 
@@ -75,7 +76,7 @@ angular.module('main')
           }
         }
       },
-      templateUrl: 'templates/misc/multi-bg.html',
+      templateUrl: 'misc/multi-bg.html',
       restrict: 'A',
       replace: true,
       transclude: true
@@ -97,3 +98,5 @@ angular.module('main')
       }
     };
   });
+
+} ());

@@ -1,5 +1,6 @@
-'use strict';
-angular.module('main')
+(function () {
+  'use strict';
+  angular.module('main')
   .controller('StartupCtrl', function ($scope, $state, user) {
     user.$bindTo($scope, 'user');
 
@@ -12,3 +13,4 @@ angular.module('main')
       return angular.isDefined($scope.user.telefone);
     };
   });
+} ());

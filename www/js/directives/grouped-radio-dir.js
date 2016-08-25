@@ -1,5 +1,6 @@
-'use strict';
-angular.module('main')
+(function () {
+  'use strict';
+  angular.module('main')
   .directive('groupedRadio', function () {
     return {
       restrict: 'A',
@@ -25,3 +26,5 @@ angular.module('main')
       }
     };
   });
+
+} ());

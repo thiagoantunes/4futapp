@@ -1,6 +1,11 @@
-'use strict';
-angular.module('main')
-  .factory('ChatService', function (Ref, $firebaseObject, $firebaseArray, $q, $timeout, UserService) {
+(function () {
+  'use strict';
+  angular.module('main')
+    .factory('ChatService', ChatService);
+
+  ChatService.$inject = ['Ref', '$firebaseObject', '$firebaseArray', '$q', '$timeout', 'UserService'];
+
+  function ChatService(Ref, $firebaseObject, $firebaseArray, $q, $timeout, UserService) {
     var service = {
       mensagensChatSelecionado: {},
       chatSelecionado: {},
@@ -47,7 +52,7 @@ angular.module('main')
     function enviaMensagemJogador(user, mensagem) {
       var deferred = $q.defer();
       var chatData = {};
-      var msgId = service.ref.child(service.chatSelecionado).push().key;;
+      var msgId = service.ref.child(service.chatSelecionado).push().key;
       chatData['chats/' + service.chatSelecionado + '/' + msgId] = mensagem;
       chatData['usersChats/' + firebase.auth().currentUser.uid + '/' + user.$id + '/ultimaMsg'] = mensagem.text;
       chatData['usersChats/' + firebase.auth().currentUser.uid + '/' + user.$id + '/date'] = mensagem.date;
@@ -85,7 +90,7 @@ angular.module('main')
     function enviaMensagemPartida(partida, mensagem) {
       var deferred = $q.defer();
       var chatData = {};
-      var msgId = service.ref.child(partida.$id).push().key;;
+      var msgId = service.ref.child(partida.$id).push().key;
       chatData['chats/' + partida.$id + '/' + msgId] = mensagem;
 
       _.forEach(partida.jogadores, function (jogador) {
@@ -123,4 +128,6 @@ angular.module('main')
       service.refUserChats.child(firebase.auth().currentUser.uid + '/' + dest + '/naoLidas').set(null);
     }
 
-  });
+  }
+  
+} ());

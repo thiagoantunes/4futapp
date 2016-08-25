@@ -1,7 +1,11 @@
-/*global firebase GeoFire*/
-'use strict';
-angular.module('main')
-  .factory('JogosService', function (Ref, $timeout, $firebaseObject, Enum, $firebaseArray, $q, UserService) {
+(function () {
+  'use strict';
+  angular.module('main')
+    .factory('JogosService', JogosService);
+
+  JogosService.$inject = ['Ref', '$timeout', '$firebaseObject', 'Enum', '$firebaseArray', '$q', 'UserService'];
+
+  function JogosService(Ref, $timeout, $firebaseObject, Enum, $firebaseArray, $q, UserService) {
     var service = {
       jogoSelecionado: null,
       novaPartida: {},
@@ -154,7 +158,7 @@ angular.module('main')
             id: firebase.auth().currentUser.uid,
             msg: 'Comece a aquecer! ' + data.partida.nome + ' vai começar!',
             date: moment(data.partida.inicio).subtract(30, 'minutes').toISOString()
-          }
+          };
           UserService.schedulePushNotification(scheduleNotificationData);
 
           _.forEach(data.jogadores, function (jogador) {
@@ -169,7 +173,7 @@ angular.module('main')
               id: jogador.$id,
               msg: 'Comece a aquecer! ' + data.partida.nome + ' vai começar!',
               date: moment(data.partida.inicio).subtract(30, 'minutes').toISOString()
-            }
+            };
             UserService.schedulePushNotification(scheduleNotificationData);
           });
           _.forEach(data.times, function (time) {
@@ -179,7 +183,7 @@ angular.module('main')
                   id: jogador.$id,
                   msg: 'Comece a aquecer! ' + data.partida.nome + ' vai começar!',
                   date: moment(data.partida.inicio).subtract(30, 'minutes').toISOString()
-                }
+                };
                 UserService.schedulePushNotification(scheduleNotificationData);
                 UserService.enviaNotificacao({
                   msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
@@ -379,4 +383,6 @@ angular.module('main')
       return deferred.promise;
     }
 
-  });
+  }
+  
+} ());

@@ -1,7 +1,11 @@
-/*global firebase moment*/
-'use strict';
-angular.module('main')
-  .controller('NotificacoesCtrl', function ($scope, $state, JogosService, UserService, Enum) {
+(function () {
+  'use strict';
+  angular.module('main')
+  .controller('NotificacoesCtrl', NotificacoesCtrl);
+
+  NotificacoesCtrl.$inject = ['$scope', '$state', 'JogosService', 'UserService', 'Enum'];
+
+  function NotificacoesCtrl($scope, $state, JogosService, UserService, Enum) {
     var vm = this;
     vm.notificacoes = UserService.notificacoes;
     vm.meusAmigos = UserService.amigos;
@@ -19,7 +23,7 @@ angular.module('main')
         val.lida = true;
         vm.notificacoes.$save(val);
       });
-    })
+    });
 
     activate();
 
@@ -89,4 +93,5 @@ angular.module('main')
       });
     }
 
-  });
+  }
+} ());

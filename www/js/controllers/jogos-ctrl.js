@@ -1,7 +1,20 @@
-/*global firebase moment*/
-'use strict';
-angular.module('main')
-  .controller('JogosCtrl', function ($scope, GeoService, JogosService, $ionicModal) {
+/*jshint loopfunc: true */
+(function () {
+  'use strict';
+  angular.module('main')
+    .controller('JogosCtrl', JogosCtrl)
+    .controller('MeusJogosCtrl', MeusJogosCtrl)
+    .controller('ReservaCtrl', ReservaCtrl)
+    .controller('NovaPartidaCtrl', NovaPartidaCtrl)
+    .controller('JogosDetailCtrl', JogosDetailCtrl);
+
+  JogosCtrl.$inject = ['$scope', 'GeoService', 'JogosService', '$ionicModal'];
+  MeusJogosCtrl.$inject = ['JogosService', 'UserService', 'ReservasService', 'ArenasService', '$ionicModal'];
+  ReservaCtrl.$inject = ['$scope', '$state', 'JogosService', 'UserService', 'ReservasService', 'ArenasService', 'GeoService', 'Enum', '$ionicModal', '$ionicPopup'];
+  NovaPartidaCtrl.$inject = ['$scope', '$state', '$ionicHistory', 'Enum', 'UserService', 'ReservasService', 'JogosService', 'ArenasService', '$ionicModal', 'ionicTimePicker', 'ionicDatePicker', 'LocationService', '$ionicLoading', '$cordovaSocialSharing', '$window'];
+  JogosDetailCtrl.$inject = ['$scope', '$state', '$timeout', '$rootScope', '$ionicPlatform', '$ionicHistory', 'JogosService', 'UserService', '$ionicModal', 'GeoService', '$ionicLoading', '$window', '$ionicActionSheet', '$cordovaSocialSharing', '$ionicPopup', '$cordovaVibration'];
+
+  function JogosCtrl($scope, GeoService, JogosService, $ionicModal) {
     var vm = this;
     vm.jogosRegiao = JogosService.jogosRegiao;
     vm.jogosService = JogosService;
@@ -9,8 +22,8 @@ angular.module('main')
     activate();
 
     function activate() {
-      if(vm.jogosRegiao.length == 0){
-        GeoService.getPosition().then(function(){
+      if (vm.jogosRegiao.length === 0) {
+        GeoService.getPosition().then(function () {
           JogosService.getJogosRegiao();
         });
       }
@@ -56,20 +69,20 @@ angular.module('main')
     }
 
     function orderByConfirmacao(jogador) {
-      if (jogador.confirmado == true) {
+      if (jogador.confirmado === true) {
         return 1;
       }
-      else if (jogador.confirmado == undefined) {
+      else if (jogador.confirmado === undefined) {
         return 2;
       }
-      else if (jogador.confirmado == false) {
+      else if (jogador.confirmado === false) {
         return 3;
       }
     }
 
-  })
+  }
 
-  .controller('MeusJogosCtrl', function (JogosService, UserService, ReservasService, ArenasService, $ionicModal) {
+  function MeusJogosCtrl(JogosService, UserService, ReservasService, ArenasService, $ionicModal) {
     var vm = this;
     vm.jogosService = JogosService;
     vm.minhasReservas = UserService.reservas;
@@ -98,13 +111,13 @@ angular.module('main')
     }
 
     function orderByConfirmacao(jogador) {
-      if (jogador.confirmado == true) {
+      if (jogador.confirmado === true) {
         return 1;
       }
-      else if (jogador.confirmado == undefined) {
+      else if (jogador.confirmado === undefined) {
         return 2;
       }
-      else if (jogador.confirmado == false) {
+      else if (jogador.confirmado === false) {
         return 3;
       }
     }
@@ -148,111 +161,9 @@ angular.module('main')
       return _.filter(vm.jogos, jogosAnteriores).length;
     }
 
-  })
+  }
 
-  .controller('ReservaCtrl', function ($scope, $state, JogosService, UserService, ReservasService, ArenasService, GeoService, Enum, $ionicModal, $ionicPopup) {
-    var vm = this;
-    vm.reservaSelecionada = ReservasService.reservaSelecionada.data;
-
-    vm.cancelarReserva = cancelarReserva;
-    vm.getStatusReserva = getStatusReserva;
-    vm.isAndroid = isAndroid;
-    vm.closeModal = closeModal;
-    vm.criaPartida = criaPartida;
-    vm.idParaPartida = idParaPartida;
-
-    activate();
-
-    function activate() {
-      setMap();
-    }
-
-    function cancelarReserva() {
-      var popup = $ionicPopup.confirm({
-        template: 'Confirma o cancelamento da reserva?',
-        buttons: [{
-          text: 'Não',
-          type: 'button-default',
-          onTap: function (e) {
-            e.preventDefault();
-            popup.close();
-          }
-        }, {
-            text: 'Sim',
-            type: 'button-assertive',
-            onTap: function (e) {
-              ReservasService.cancelarReserva(vm.reservaSelecionada.arenaId, vm.reservaSelecionada.$id);
-              vm.modal.hide();
-            }
-          }]
-      });
-    }
-
-    function criaPartida() {
-      JogosService.novaPartida = {
-        data: {
-          reserva: vm.reservaSelecionada.$id,
-          inicio: vm.reservaSelecionada.start,
-        },
-        arenaReserva: vm.reservaSelecionada.arenaId,
-        localSelecionado: {
-          nome: vm.reservaSelecionada.arena.nome,
-          endereco: vm.reservaSelecionada.arena.endereco,
-          latitude: vm.reservaSelecionada.arena.latitude,
-          longitude: vm.reservaSelecionada.arena.longitude
-        }
-      };
-
-      $state.go('main.criar-partida-reserva');
-      closeModal();
-    }
-
-    function idParaPartida() {
-      closeModal();
-      var partida = _.find(UserService.jogos, { '$id': vm.reservaSelecionada.partida });
-      JogosService.jogoSelecionado = partida;
-      $state.go('main.meus-jogos-detail', { '$id': partida.$id });
-    }
-
-    function isAndroid() {
-      return ionic.Platform.isAndroid();
-    }
-
-    function closeModal() {
-      ReservasService.reservaSelecionada.modal.hide();
-    }
-
-    function setMap() {
-      vm.showDetails = false;
-      vm.map = {
-        center: {
-          latitude: vm.reservaSelecionada.arena.latitude,
-          longitude: vm.reservaSelecionada.arena.longitude
-        },
-        zoom: 14,
-        options: {
-          disableDefaultUI: true,
-
-        }
-      };
-    }
-
-    function getStatusReserva(status) {
-      if (status == 'cancelado') {
-        return 'Reserva cancelada';
-      }
-      else if (status == 'agendado') {
-        return 'Agendamento confirmado';
-      }
-      else if (status == 'aguardando-confirmacao') {
-        return 'Aguardando confirmação';
-      }
-
-    }
-
-  })
-
-  .controller('NovaPartidaCtrl', function ($scope, $state, $ionicHistory, Enum, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService, $ionicLoading, $cordovaSocialSharing, $window) {
+  function NovaPartidaCtrl($scope, $state, $ionicHistory, Enum, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService, $ionicLoading, $cordovaSocialSharing, $window) {
     var vm = this;
     vm.jogadores = [];
     vm.times = [];
@@ -328,7 +239,7 @@ angular.module('main')
         arenaId: vm.novaPartida.arenaReserva,
         jogadores: vm.jogadores,
         times: vm.times
-      }
+      };
       $ionicLoading.show({ template: 'Carregando...' });
       JogosService.criarJogo(novaPartidaData)
         .then(function (jogoId) {
@@ -358,7 +269,7 @@ angular.module('main')
         partida: vm.novaPartida.data,
         coords: [vm.novaPartida.localSelecionado.latitude, vm.novaPartida.localSelecionado.longitude],
         arenaId: vm.novaPartida.arenaReserva,
-      }
+      };
       $ionicLoading.show({ template: 'Carregando...' });
       JogosService.editarJogo(partida)
         .then(function (jogoId) {
@@ -450,7 +361,7 @@ angular.module('main')
         else {
           var tpObj = {
             callback: function (val) {
-              if (!(typeof (val) === 'undefined')) {
+              if ((typeof (val) !== 'undefined')) {
                 var selectedTime = new Date(val * 1000);
                 var hora = moment(new Date(val * 1000)).add(moment(new Date(val * 1000))._d.getTimezoneOffset(), 'm').format('HH:mm');
 
@@ -513,7 +424,7 @@ angular.module('main')
 
     function openLocalPicker() {
       if (!vm.novaPartida.arenaReservaCallback) {
-        $ionicModal.fromTemplateUrl('templates/modal/selecionar-local.html', {
+        $ionicModal.fromTemplateUrl('modal/selecionar-local.html', {
           scope: $scope,
           animation: 'slide-in-up'
         }).then(function (modal) {
@@ -558,7 +469,7 @@ angular.module('main')
                 latitude: $scope.location.geometry.location.lat(),
                 longitude: $scope.location.geometry.location.lng(),
                 endereco: $scope.location.formatted_address
-              }
+              };
               $scope.modalCriaLocal.hide();
               $scope.modalLocal.hide();
             }, function (error) {
@@ -566,7 +477,7 @@ angular.module('main')
             });
         };
       });
-      $ionicModal.fromTemplateUrl('templates/modal/criar-local.html', {
+      $ionicModal.fromTemplateUrl('modal/criar-local.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
@@ -614,9 +525,111 @@ angular.module('main')
         });
     }
 
-  })
+  }
 
-  .controller('JogosDetailCtrl', function ($scope, $state, $timeout, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService, $ionicLoading, $window, $ionicActionSheet, $cordovaSocialSharing, $ionicPopup, $cordovaVibration) {
+  function ReservaCtrl($scope, $state, JogosService, UserService, ReservasService, ArenasService, GeoService, Enum, $ionicModal, $ionicPopup) {
+    var vm = this;
+    vm.reservaSelecionada = ReservasService.reservaSelecionada.data;
+
+    vm.cancelarReserva = cancelarReserva;
+    vm.getStatusReserva = getStatusReserva;
+    vm.isAndroid = isAndroid;
+    vm.closeModal = closeModal;
+    vm.criaPartida = criaPartida;
+    vm.idParaPartida = idParaPartida;
+
+    activate();
+
+    function activate() {
+      setMap();
+    }
+
+    function cancelarReserva() {
+      var popup = $ionicPopup.confirm({
+        template: 'Confirma o cancelamento da reserva?',
+        buttons: [{
+          text: 'Não',
+          type: 'button-default',
+          onTap: function (e) {
+            e.preventDefault();
+            popup.close();
+          }
+        }, {
+            text: 'Sim',
+            type: 'button-assertive',
+            onTap: function (e) {
+              ReservasService.cancelarReserva(vm.reservaSelecionada.arenaId, vm.reservaSelecionada.$id);
+              vm.modal.hide();
+            }
+          }]
+      });
+    }
+
+    function criaPartida() {
+      JogosService.novaPartida = {
+        data: {
+          reserva: vm.reservaSelecionada.$id,
+          inicio: vm.reservaSelecionada.start,
+        },
+        arenaReserva: vm.reservaSelecionada.arenaId,
+        localSelecionado: {
+          nome: vm.reservaSelecionada.arena.nome,
+          endereco: vm.reservaSelecionada.arena.endereco,
+          latitude: vm.reservaSelecionada.arena.latitude,
+          longitude: vm.reservaSelecionada.arena.longitude
+        }
+      };
+
+      $state.go('main.criar-partida-reserva');
+      closeModal();
+    }
+
+    function idParaPartida() {
+      closeModal();
+      var partida = _.find(UserService.jogos, { '$id': vm.reservaSelecionada.partida });
+      JogosService.jogoSelecionado = partida;
+      $state.go('main.meus-jogos-detail', { '$id': partida.$id });
+    }
+
+    function isAndroid() {
+      return ionic.Platform.isAndroid();
+    }
+
+    function closeModal() {
+      ReservasService.reservaSelecionada.modal.hide();
+    }
+
+    function setMap() {
+      vm.showDetails = false;
+      vm.map = {
+        center: {
+          latitude: vm.reservaSelecionada.arena.latitude,
+          longitude: vm.reservaSelecionada.arena.longitude
+        },
+        zoom: 14,
+        options: {
+          disableDefaultUI: true,
+
+        }
+      };
+    }
+
+    function getStatusReserva(status) {
+      if (status === 'cancelado') {
+        return 'Reserva cancelada';
+      }
+      else if (status === 'agendado') {
+        return 'Agendamento confirmado';
+      }
+      else if (status === 'aguardando-confirmacao') {
+        return 'Aguardando confirmação';
+      }
+
+    }
+
+  }
+
+  function JogosDetailCtrl($scope, $state, $timeout, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService, $ionicLoading, $window, $ionicActionSheet, $cordovaSocialSharing, $ionicPopup, $cordovaVibration) {
     var vm = this;
     vm.jogo = JogosService.jogoSelecionado;
     vm.amigos = UserService.amigos;
@@ -663,30 +676,30 @@ angular.module('main')
     function activate() {
       vm.minhaPresenca = _.find(vm.jogo.jogadores, { '$id': firebase.auth().currentUser.uid });
 
-      $ionicModal.fromTemplateUrl('templates/modal/convidar-amigos.html', {
+      $ionicModal.fromTemplateUrl('modal/convidar-amigos.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
         $scope.modal = modal;
       });
 
-      JogosService.getAndamentoJogo(vm.jogo.$id).$bindTo($scope, 'andamentoJogo').then(function(){
-        if($scope.andamentoJogo.started){
+      JogosService.getAndamentoJogo(vm.jogo.$id).$bindTo($scope, 'andamentoJogo').then(function () {
+        if ($scope.andamentoJogo.started) {
           mytimeout = $timeout(onTimeout, 1000);
         }
-        else if($scope.andamentoJogo.paused) {
+        else if ($scope.andamentoJogo.paused) {
           $scope.timer = $scope.andamentoJogo.pausedTimer;
         }
-        else{
-          $scope.timer = $scope.andamentoJogo.timeForTimer;;
+        else {
+          $scope.timer = $scope.andamentoJogo.timeForTimer;
         }
       });
 
-      $scope.$watch('andamentoJogo', function() {
-        if($scope.andamentoJogo.started){
+      $scope.$watch('andamentoJogo', function () {
+        if ($scope.andamentoJogo.started) {
           mytimeout = $timeout(onTimeout, 1000);
         }
-        else{
+        else {
           $timeout.cancel(mytimeout);
         }
       });
@@ -705,7 +718,7 @@ angular.module('main')
     function jogoEncerrado() {
       var date = moment(vm.jogo.inicio);
       var duration = moment.duration(date.diff(moment()));
-      return duration.asHours() < -1.5 || vm.jogo.status == 'encerrado';
+      return duration.asHours() < -1.5 || vm.jogo.status === 'encerrado';
     }
 
     function finalizarPartida() {
@@ -715,7 +728,7 @@ angular.module('main')
     function atualizaPresenca(bool) {
       if (vm.minhaPresenca) {
         if (vm.minhaPresenca.confirmado !== undefined) {
-          vm.minhaPresenca.confirmado = bool == vm.minhaPresenca.confirmado ? null : bool;
+          vm.minhaPresenca.confirmado = bool === vm.minhaPresenca.confirmado ? null : bool;
         }
         else {
           vm.minhaPresenca.confirmado = bool;
@@ -732,7 +745,7 @@ angular.module('main')
 
     function getPresencaClass(confirmacao) {
       var val = 'icon ion-ios-help-outline';
-      if (confirmacao != undefined) {
+      if (confirmacao !== undefined) {
         if (confirmacao) {
           val = 'icon ion-ios-checkmark positive';
         }
@@ -748,7 +761,7 @@ angular.module('main')
     }
 
     function checkOrganizador() {
-      return vm.jogo.responsavel == firebase.auth().currentUser.uid;
+      return vm.jogo.responsavel === firebase.auth().currentUser.uid;
     }
 
     function convidarAmigo(amigo) {
@@ -760,31 +773,31 @@ angular.module('main')
     }
 
     function orderByConfirmacao(jogador) {
-      if (jogador.confirmado == true) {
+      if (jogador.confirmado === true) {
         return 1;
       }
-      else if (jogador.confirmado == undefined) {
+      else if (jogador.confirmado === undefined) {
         return 2;
       }
-      else if (jogador.confirmado == false) {
+      else if (jogador.confirmado === false) {
         return 3;
       }
     }
 
     function getNumJogadores(confirmado) {
-      if (confirmado == true) {
+      if (confirmado === true) {
         return _.filter(vm.jogo.jogadores, function (val) {
-          return val.confirmado == true && !val.aguardandoConfirmacao;
+          return val.confirmado === true && !val.aguardandoConfirmacao;
         }).length;
       }
-      else if (confirmado == false) {
+      else if (confirmado === false) {
         return _.filter(vm.jogo.jogadores, function (val) {
-          return val.confirmado == false && !val.aguardandoConfirmacao;
+          return val.confirmado === false && !val.aguardandoConfirmacao;
         }).length;
       }
       else {
         return _.filter(vm.jogo.jogadores, function (val) {
-          return val.confirmado == undefined && !val.aguardandoConfirmacao;
+          return val.confirmado === undefined && !val.aguardandoConfirmacao;
         }).length;
       }
     }
@@ -981,42 +994,42 @@ angular.module('main')
     }
 
     //Partida iniciada
-    var mytimeout = null; 
+    var mytimeout = null;
     function onTimeout() {
       if ($scope.timer === 0) {
         $scope.$broadcast('timer-stopped', 0);
         $timeout.cancel(mytimeout);
         return;
       }
-        $scope.timer = Math.round( moment.duration(moment($scope.andamentoJogo.refTime).diff(moment())).asSeconds() );
-        mytimeout = $timeout(onTimeout, 1000);
-    };
+      $scope.timer = Math.round(moment.duration(moment($scope.andamentoJogo.refTime).diff(moment())).asSeconds());
+      mytimeout = $timeout(onTimeout, 1000);
+    }
 
     function startTimer() {
       $scope.andamentoJogo.started = true;
-      if(!$scope.andamentoJogo.paused) {
+      if (!$scope.andamentoJogo.paused) {
         $scope.andamentoJogo.startedTime = moment()._d.getTime();
         $scope.andamentoJogo.refTime = moment().add($scope.andamentoJogo.timeForTimer, 'seconds')._d.getTime();
       }
-      else{
+      else {
         $scope.andamentoJogo.paused = false;
         $scope.andamentoJogo.refTime = moment().add($scope.timer, 'seconds')._d.getTime();
       }
-    };
+    }
 
     function stopTimer(closingModal) {
       $scope.timer = $scope.andamentoJogo.timeForTimer;
       $scope.andamentoJogo.started = false;
       $scope.andamentoJogo.paused = false;
       $timeout.cancel(mytimeout);
-    };
+    }
 
     function pauseTimer() {
       $scope.$broadcast('timer-stopped', $scope.timer);
       $scope.andamentoJogo.pausedTimer = $scope.timer;
       $scope.andamentoJogo.started = false;
       $scope.andamentoJogo.paused = true;
-    };
+    }
 
     function addTime() {
       $scope.andamentoJogo.timeForTimer = $scope.andamentoJogo.timeForTimer + 60;
@@ -1025,7 +1038,7 @@ angular.module('main')
 
     function humanizeDurationTimer(input, units) {
       // units is a string with possible values of y, M, w, d, h, m, s, ms
-      if (input == 0) {
+      if (input === 0) {
         return 0;
       } else {
         var duration = moment().startOf('day').add(input, units);
@@ -1041,7 +1054,7 @@ angular.module('main')
         }
         return duration.format(format);
       }
-    };
+    }
 
     $scope.$on('timer-stopped', function (event, remaining) {
       if (remaining === 0) {
@@ -1049,7 +1062,7 @@ angular.module('main')
         $scope.andamentoJogo.done = true;
         $scope.andamentoJogo.started = false;
         $scope.andamentoJogo.paused = false;
-        if(!$scope.andamentoJogo.tempos){
+        if (!$scope.andamentoJogo.tempos) {
           $scope.andamentoJogo.tempos = [];
         }
         $scope.andamentoJogo.tempos.push({
@@ -1058,17 +1071,17 @@ angular.module('main')
         });
         if (window.cordova) {
           $cordovaVibration.vibrate(200);
-        } 
+        }
         var timerStoppedPopup = $ionicPopup.show({
           title: 'Acabou!!!',
           cssClass: 'dark-popup',
           template: '<div><img style="display: block; margin: auto; margin-bottom: 30px;" src="img/ilustracoes/cronometro.png" alt=""><p style="text-align:center"></p></div>',
           buttons: [
-            { 
-              text: 'COMEÇAR OUTRA', 
-              type: 'button-positive', 
+            {
+              text: 'COMEÇAR OUTRA',
+              type: 'button-positive',
               onTap: function (e) {
-                
+
               }
             }
           ]
@@ -1105,4 +1118,6 @@ angular.module('main')
       deregisterSoftBack();
     });
 
-  });
+  }
+
+} ());

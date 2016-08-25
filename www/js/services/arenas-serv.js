@@ -1,7 +1,15 @@
-/*global GeoFire*/
-'use strict';
-angular.module('main')
-    .factory('ArenasService', function(Ref, $timeout, $firebaseArray, $firebaseObject, $q) {
+(function () {
+    'use strict';
+    angular.module('main')
+        .factory('ArenasService', ArenasService)
+        .factory('GeoService', GeoService)
+        .factory('SmsVerify', SmsVerify);
+
+    ArenasService.$inject = ['Ref', '$timeout', '$firebaseArray', '$firebaseObject', '$q'];
+    GeoService.$inject = ['$q', '$ionicPlatform', 'ArenasService', 'JogosService', 'TimesService', '$window'];
+    SmsVerify.$inject = ['$resource'];
+
+    function ArenasService(Ref, $timeout, $firebaseArray, $firebaseObject, $q) {
         var service = {
             ref: Ref.child('arenas'),
             refArenaBasica: Ref.child('arenasBasicas'),
@@ -27,15 +35,15 @@ angular.module('main')
         return service;
 
         function getArenas() {
-            service.geoQuery.on('key_entered', function(key, location, distance) {
-                service.ref.child(key).once('value').then(function(snapshot) {
+            service.geoQuery.on('key_entered', function (key, location, distance) {
+                service.ref.child(key).once('value').then(function (snapshot) {
                     var arena = snapshot.val();
                     arena.distance = distance;
                     arena.$id = key;
                     arena.latitude = location[0];
                     arena.longitude = location[1];
                     arena.icon = 'img/pin.png';
-                    $timeout(function() {
+                    $timeout(function () {
                         _.remove(service.arenas, { '$id': key });
                         service.arenas.push(arena);
                     });
@@ -73,10 +81,10 @@ angular.module('main')
             service.refArenaBasica.child(key).set({
                 endereco: endereco,
                 nome: nomeLocal
-            }).then(function() {
-                service.geoArenaBasica.set(key, coords).then(function() {
+            }).then(function () {
+                service.geoArenaBasica.set(key, coords).then(function () {
                     deferred.resolve(key);
-                }, function(error) {
+                }, function (error) {
                     deferred.reject('Erro ao cadastrar novo local');
                 });
             });
@@ -85,14 +93,14 @@ angular.module('main')
         }
 
         function getArenasBasicas() {
-            service.geoArenasBasicasQuery.on('key_entered', function(key, location, distance) {
-                service.refArenaBasica.child(key).once('value').then(function(snapshot) {
+            service.geoArenasBasicasQuery.on('key_entered', function (key, location, distance) {
+                service.refArenaBasica.child(key).once('value').then(function (snapshot) {
                     if (snapshot.val()) {
                         var arena = snapshot.val();
                         arena.$id = key;
                         arena.latitude = location[0];
                         arena.longitude = location[1];
-                        $timeout(function() {
+                        $timeout(function () {
                             _.remove(service.arenasBasicas, { '$id': key });
                             service.arenasBasicas.push(arena);
                         });
@@ -101,9 +109,9 @@ angular.module('main')
             });
         }
 
-    })
+    }
 
-    .factory('GeoService', function($q, $ionicPlatform, ArenasService, JogosService, TimesService,  $window) {
+    function GeoService($q, $ionicPlatform, ArenasService, JogosService, TimesService, $window) {
         var service = {
             position: [],
 
@@ -115,98 +123,98 @@ angular.module('main')
 
         function getPosition() {
             var deferred = $q.defer();
-            var posOptions = { timeout: 30000 , maximumAge: 5 * 60 * 1000};
+            var posOptions = { timeout: 30000, maximumAge: 5 * 60 * 1000 };
             var watchOptions = { timeout: 10000 };
             //$ionicPlatform.ready(function () {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    service.position = [position.coords.latitude, position.coords.longitude];
+            navigator.geolocation.getCurrentPosition(function (position) {
+                service.position = [position.coords.latitude, position.coords.longitude];
 
+                ArenasService.geoQuery = ArenasService.geoFire.query({
+                    center: service.position,
+                    radius: 100
+                });
+
+                ArenasService.geoArenasBasicasQuery = ArenasService.geoArenaBasica.query({
+                    center: service.position,
+                    radius: 100
+                });
+
+                JogosService.geoQuery = JogosService.geoFire.query({
+                    center: service.position,
+                    radius: 100
+                });
+
+                TimesService.geoQuery = TimesService.geoFire.query({
+                    center: service.position,
+                    radius: 100
+                });
+
+                deferred.resolve(service.position);
+            }, function (err) {
+                console.log('Ative a localizaçao');
+            }, posOptions);
+
+            navigator.geolocation.watchPosition(function (position) {
+                service.position = [position.coords.latitude, position.coords.longitude];
+
+                if (_.isEmpty(ArenasService.geoQuery)) {
                     ArenasService.geoQuery = ArenasService.geoFire.query({
                         center: service.position,
                         radius: 100
                     });
+                    ArenasService.getArenas();
+                }
+                else {
+                    ArenasService.geoQuery.updateCriteria({
+                        center: service.position,
+                        radius: 100
+                    });
+                }
 
+                if (_.isEmpty(ArenasService.geoArenasBasicasQuery)) {
                     ArenasService.geoArenasBasicasQuery = ArenasService.geoArenaBasica.query({
                         center: service.position,
                         radius: 100
                     });
-
-                    JogosService.geoQuery = JogosService.geoFire.query({
+                }
+                else {
+                    ArenasService.geoArenasBasicasQuery.updateCriteria({
                         center: service.position,
                         radius: 100
                     });
+                }
 
+                if (_.isEmpty(TimesService.geoQuery)) {
                     TimesService.geoQuery = TimesService.geoFire.query({
                         center: service.position,
                         radius: 100
                     });
+                    TimesService.getTimesRegiao();
+                }
+                else {
+                    TimesService.geoQuery.updateCriteria({
+                        center: service.position,
+                        radius: 100
+                    });
+                }
 
-                    deferred.resolve(service.position);
-                }, function (err) {
-                    console.log('Ative a localizaçao');
-                }, posOptions);
+                if (_.isEmpty(JogosService.geoQuery)) {
+                    JogosService.geoQuery = JogosService.geoFire.query({
+                        center: service.position,
+                        radius: 100
+                    });
+                    JogosService.getJogosRegiao();
+                }
+                else {
+                    JogosService.geoQuery.updateCriteria({
+                        center: service.position,
+                        radius: 100
+                    });
+                }
 
-                navigator.geolocation.watchPosition(function(position) {
-                    service.position = [position.coords.latitude, position.coords.longitude];
-
-                    if(_.isEmpty(ArenasService.geoQuery)){
-                        ArenasService.geoQuery = ArenasService.geoFire.query({
-                            center: service.position,
-                            radius: 100
-                        });
-                        ArenasService.getArenas();
-                    }
-                    else{
-                        ArenasService.geoQuery.updateCriteria({
-                            center: service.position,
-                            radius: 100
-                        });
-                    }
-
-                    if(_.isEmpty(ArenasService.geoArenasBasicasQuery)){
-                        ArenasService.geoArenasBasicasQuery = ArenasService.geoArenaBasica.query({
-                            center: service.position,
-                            radius: 100
-                        });
-                    }
-                    else{
-                        ArenasService.geoArenasBasicasQuery.updateCriteria({
-                            center: service.position,
-                            radius: 100
-                        });
-                    }
-
-                    if(_.isEmpty(TimesService.geoQuery) ){
-                        TimesService.geoQuery = TimesService.geoFire.query({
-                            center: service.position,
-                            radius: 100
-                        });
-                        TimesService.getTimesRegiao();
-                    }
-                    else{
-                        TimesService.geoQuery.updateCriteria({
-                            center: service.position,
-                            radius: 100
-                        });
-                    }
-
-                    if(_.isEmpty(JogosService.geoQuery)){
-                        JogosService.geoQuery = JogosService.geoFire.query({
-                            center: service.position,
-                            radius: 100
-                        });
-                        JogosService.getJogosRegiao();
-                    }
-                    else{
-                        JogosService.geoQuery.updateCriteria({
-                            center: service.position,
-                            radius: 100
-                        });
-                    }
-
-                }, function (err) {
-                    console.log('Ative a localizaçao (watch)');
-                }, watchOptions);
+            }, function (err) {
+                console.log('Ative a localizaçao (watch)');
+            }, watchOptions);
 
             //});
 
@@ -214,7 +222,7 @@ angular.module('main')
         }
 
         function navigateTo(endereco) {
-            launchnavigator.isAppAvailable(launchnavigator.APP.WAZE, function(isAvailable) {
+            launchnavigator.isAppAvailable(launchnavigator.APP.WAZE, function (isAvailable) {
                 var app;
                 if (isAvailable) {
                     app = launchnavigator.APP.WAZE;
@@ -228,21 +236,22 @@ angular.module('main')
             });
         }
 
-    })
+    }
 
-    .factory('SmsVerify', function($resource) {
+    function SmsVerify($resource) {
 
         var serviceBase = 'http://rdqapi.azurewebsites.net/api/';
 
         return $resource(serviceBase + 'twofactorverification/', {}, {
             query: { method: 'POST' },
             numberVerify: {
-                url: serviceBase + 'twofactorverification/NumberVerify', 
+                url: serviceBase + 'twofactorverification/NumberVerify',
                 method: 'POST',
             },
             numberVerifyCheck: {
-                url: serviceBase + 'twofactorverification/NumberVerifyCheck', 
+                url: serviceBase + 'twofactorverification/NumberVerifyCheck',
                 method: 'POST',
             }
         });
-    });
+    }
+} ());

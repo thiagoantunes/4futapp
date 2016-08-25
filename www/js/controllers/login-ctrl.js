@@ -1,7 +1,11 @@
-/*global firebase firebaseui _*/
-'use strict';
-angular.module('main')
-  .controller('LoginCtrl', function ($state, $facebook, Ref, $ionicPlatform, $cordovaOauth, $ionicLoading, $window) {
+(function () {
+  'use strict';
+  angular.module('main')
+  .controller('LoginCtrl', LoginCtrl);
+
+  LoginCtrl.$inhect = ['$state', '$facebook', 'Ref', '$ionicPlatform', '$cordovaOauth', '$ionicLoading', '$window'];
+
+  function LoginCtrl($state, $facebook, Ref, $ionicPlatform, $cordovaOauth, $ionicLoading, $window) {
     var vm = this;
     vm.facebookLogin = facebookLogin;
     vm.googleLogin = googleLogin;
@@ -82,4 +86,6 @@ angular.module('main')
       }
     }
 
-  });
+  }
+
+} ());

@@ -1,8 +1,17 @@
-/*global firebase moment*/
-'use strict';
-angular.module('main')
+(function () {
+  'use strict';
+  angular.module('main')
+    .controller('TimesCtrl', TimesCtrl)
+    .controller('MeusTimesCtrl', MeusTimesCtrl)
+    .controller('PerfilTimeCtrl', PerfilTimeCtrl)
+    .controller('CriarTimeCtrl', CriarTimeCtrl);
 
-    .controller('TimesCtrl', function (TimesService, GeoService, UserService, $timeout, $ionicModal) {
+    TimesCtrl.$inject = ['TimesService', 'GeoService', 'UserService', '$timeout', '$ionicModal'];
+    MeusTimesCtrl .$inject = ['UserService', 'TimesService'];
+    PerfilTimeCtrl.$inject = ['TimesService', 'UserService', '$state', '$timeout', 'ionicMaterialMotion', 'ionicMaterialInk', '$ionicPopup'];
+    CriarTimeCtrl.$inject = ['$scope', 'TimesService', 'UserService', 'RegionService', '$ionicHistory', '$ionicSlideBoxDelegate', '$ionicModal', '$ionicLoading', '$window'];
+
+    function TimesCtrl(TimesService, GeoService, UserService, $timeout, $ionicModal) {
         var vm = this;
         vm.timesService = TimesService;
         vm.meusTimes = UserService.times;
@@ -12,7 +21,7 @@ angular.module('main')
         activate();
 
         function activate() {
-            if(vm.times.length == 0){
+            if(vm.times.length === 0){
               GeoService.getPosition().then(function(){
                 TimesService.getTimesRegiao();
               });
@@ -26,15 +35,15 @@ angular.module('main')
             return _.some(time.modalidades, function (mod) {
                 return _.some(UserService.times, function (meuTime) {
                     return _.some(meuTime.modalidades, function (minhaModalidade) {
-                        return minhaModalidade == mod;
+                        return minhaModalidade === mod;
                     });
                 });
             });
         }
 
-    })
+    }
 
-    .controller('MeusTimesCtrl', function (UserService, TimesService) {
+    function MeusTimesCtrl(UserService, TimesService) {
         var vm = this;
         vm.timesService = TimesService;
         vm.times = UserService.times;
@@ -43,9 +52,9 @@ angular.module('main')
 
         function activate() {
         }
-    })
+    }
 
-    .controller('PerfilTimeCtrl', function (TimesService, UserService, $state, $timeout, ionicMaterialMotion, ionicMaterialInk, $ionicPopup) {
+    function PerfilTimeCtrl(TimesService, UserService, $state, $timeout, ionicMaterialMotion, ionicMaterialInk, $ionicPopup) {
         var vm = this;
         vm.time = TimesService.timeSelecionado.data;
         vm.closeModal = closeModal;
@@ -61,7 +70,7 @@ angular.module('main')
         }
 
         function desafiarTime() {
-            if (UserService.times.length == 0) {
+            if (UserService.times.length === 0) {
                 var popup = $ionicPopup.confirm({
                     template: 'Você ainda não faz parte de um time.',
                     buttons: [{
@@ -97,9 +106,9 @@ angular.module('main')
         // Set Ink
         ionicMaterialInk.displayEffect();
 
-    })
+    }
 
-    .controller('CriarTimeCtrl', function ($scope, TimesService, UserService, RegionService, $ionicHistory, $ionicSlideBoxDelegate, $ionicModal, $ionicLoading, $window) {
+    function CriarTimeCtrl($scope, TimesService, UserService, RegionService, $ionicHistory, $ionicSlideBoxDelegate, $ionicModal, $ionicLoading, $window) {
         var vm = this;
         vm.amigos = UserService.amigos;
         vm.checkMembroTime = checkMembroTime;
@@ -139,7 +148,7 @@ angular.module('main')
                 modalidade = undefined;
             }
             else {
-                modalidade = true
+                modalidade = true;
             }
             return modalidade;
         }
@@ -176,7 +185,7 @@ angular.module('main')
         }
 
         function openRegiaoModal() {
-            $ionicModal.fromTemplateUrl('templates/modal/selecionar-regiao.html', {
+            $ionicModal.fromTemplateUrl('modal/selecionar-regiao.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
             }).then(function (modal) {
@@ -247,4 +256,5 @@ angular.module('main')
                 }
             });
         }
-    });
+    }
+} ());

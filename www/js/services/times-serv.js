@@ -1,6 +1,11 @@
-'use strict';
-angular.module('main')
-    .factory('TimesService', function(Ref, UserService, $firebaseObject, $firebaseArray, $q, $timeout, $http, $ionicModal, $cordovaFile) {
+(function () {
+    'use strict';
+    angular.module('main')
+        .factory('TimesService', TimesService);
+
+    TimesService.$inject = ['Ref', 'UserService', '$firebaseObject', '$firebaseArray', '$q', '$timeout', '$http', '$ionicModal', '$cordovaFile'];
+
+    function TimesService(Ref, UserService, $firebaseObject, $firebaseArray, $q, $timeout, $http, $ionicModal, $cordovaFile) {
         var service = {
             timesRegiao: [],
             timeSelecionado: {},
@@ -20,17 +25,17 @@ angular.module('main')
         return service;
 
         function getMeusTimes() {
-            service.refJogador.child(firebase.auth().currentUser.uid + '/times').on('child_added', function(snap) {
-                service.ref.child(snap.key).on('value', function(snapUser) {
+            service.refJogador.child(firebase.auth().currentUser.uid + '/times').on('child_added', function (snap) {
+                service.ref.child(snap.key).on('value', function (snapUser) {
                     var data = snapUser.val();
                     data.$id = snap.key;
-                    data.modalidades = Object.keys(data.modalidades).map(function(key) {
+                    data.modalidades = Object.keys(data.modalidades).map(function (key) {
                         return key;
                     });
-                    data.jogadores = Object.keys(data.jogadores).map(function(key) {
+                    data.jogadores = Object.keys(data.jogadores).map(function (key) {
                         return data.jogadores[key];
                     });
-                    $timeout(function() {
+                    $timeout(function () {
                         _.remove(UserService.times, { '$id': snap.key });
                         UserService.times.push(data);
                     });
@@ -39,25 +44,25 @@ angular.module('main')
         }
 
         function getTimesRegiao() {
-            service.geoQuery.on('key_entered', function(key, location, distance) {
-                service.ref.child(key).on('value', function(snapshot) {
+            service.geoQuery.on('key_entered', function (key, location, distance) {
+                service.ref.child(key).on('value', function (snapshot) {
                     var time = snapshot.val();
                     time.distance = distance;
                     time.$id = key;
-                    time.modalidades = Object.keys(time.modalidades).map(function(key) {
+                    time.modalidades = Object.keys(time.modalidades).map(function (key) {
                         return key;
                     });
-                    time.jogadores = Object.keys(time.jogadores).map(function(key) {
+                    time.jogadores = Object.keys(time.jogadores).map(function (key) {
                         return time.jogadores[key];
                     });
-                    $timeout(function() {
+                    $timeout(function () {
                         _.remove(service.timesRegiao, { '$id': key });
                         service.timesRegiao.push(time);
                     });
                 });
             });
 
-            service.geoQuery.on("key_exited", function(key, location, distance) {
+            service.geoQuery.on("key_exited", function (key, location, distance) {
                 _.remove(service.timesRegiao, { '$id': key });
             });
         }
@@ -70,24 +75,24 @@ angular.module('main')
             var arquivo = time.escudo.substring(time.escudo.lastIndexOf('/') + 1, time.escudo.length);
             var fileName = new Date().valueOf() + arquivo;
             $cordovaFile.readAsArrayBuffer(diretorio, arquivo)
-                .then(function(success) {
+                .then(function (success) {
                     var blob = new Blob([success], { type: 'image/jpeg' });
                     var storageRef = firebase.storage().ref();
                     var metadata = { contentType: 'image/jpeg' };
-                    var uploadTask = storageRef.child('images/times/' + timeId +'/escudo/' + fileName).put(blob, metadata);
+                    var uploadTask = storageRef.child('images/times/' + timeId + '/escudo/' + fileName).put(blob, metadata);
 
                     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-                        function(snapshot) {
+                        function (snapshot) {
                             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                             console.log('Upload is ' + progress + '% done');
-                        }, function(error) {
+                        }, function (error) {
                             deferred.reject(error);
-                        }, function() {
+                        }, function () {
                             time.escudo = uploadTask.snapshot.downloadURL;
                             var timeData = {};
                             timeData['times/' + timeId] = time;
                             timeData['times/' + timeId].jogadores = {};
-                            _.forEach(jogadores, function(val) {
+                            _.forEach(jogadores, function (val) {
                                 timeData['times/' + timeId].jogadores[val.$id] = {
                                     fotoPerfil: val.fotoPerfil,
                                     id: val.$id
@@ -97,12 +102,12 @@ angular.module('main')
                                 fotoPerfil: firebase.auth().currentUser.photoURL,
                                 id: firebase.auth().currentUser.uid
                             };
-                            _.forEach(jogadores, function(val) {
+                            _.forEach(jogadores, function (val) {
                                 timeData['users/' + val.$id + '/times/' + timeId] = true;
                             });
                             timeData['users/' + firebase.auth().currentUser.uid + '/times/' + timeId] = true;
 
-                            Ref.update(timeData, function(error) {
+                            Ref.update(timeData, function (error) {
                                 if (error) {
                                     deferred.reject('Erro ao cadastrar novo time');
                                 }
@@ -114,7 +119,7 @@ angular.module('main')
                             });
                         });
 
-                }, function(error) {
+                }, function (error) {
                     deferred.reject(error);
                 });
 
@@ -134,7 +139,7 @@ angular.module('main')
                 desafioData['reservas/' + data.arenaId + '/' + data.desafio.reserva + '/desafio'] = desafioId;
             }
 
-            Ref.update(desafioData, function(error) {
+            Ref.update(desafioData, function (error) {
                 if (error) {
                     deferred.reject('Erro ao cadastrar novo desafio');
                 }
@@ -150,7 +155,7 @@ angular.module('main')
                     geo.set(desafioId, data.coords);
                     deferred.resolve(desafioId);
                 }
-            }, function (err){
+            }, function (err) {
                 deferred.reject(err);
             });
 
@@ -159,12 +164,14 @@ angular.module('main')
 
         function openPerfilTime(time) {
             service.timeSelecionado.data = time;
-            $ionicModal.fromTemplateUrl('templates/modal/perfil-time.html', {
+            $ionicModal.fromTemplateUrl('modal/perfil-time.html', {
                 animation: 'slide-in-up'
-            }).then(function(modal) {
+            }).then(function (modal) {
                 service.timeSelecionado.modal = modal;
                 modal.show();
             });
         }
 
-    });
+    }
+
+} ());

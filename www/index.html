@@ -7,20 +7,14 @@
   <meta http-equiv="Content-Security-Policy" content="default-src *; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos; *; style-src  &apos;self&apos; &apos;unsafe-inline&apos; *">
   <title></title>
 
-  <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+  <!-- build:css dist_css/styles.css -->
   <link href="css/ionic.app.css" rel="stylesheet">
 
   <link rel="stylesheet" href="lib/ionic-advanced-carousel/dist/advanced-carousel.min.css">
   <link rel="stylesheet" href="lib/angularjs-slider/dist/rzslider.css">
   <link rel="stylesheet" href="lib/waves/dist/waves.min.css">
-  <link href="lib/ion-gallery/dist/ion-gallery.css" rel="stylesheet">
-
-  <!-- ionic/angularjs js -->
-  <script src="lib/ionic/js/ionic.bundle.js"></script>
-
-  <!-- cordova script (this will be a 404 during development) -->
-  <!-- Cordova is bootstrapped by ionic-platform-web-client, uncomment this if you remove ionic-platform-web-client... -->
-  <!-- <script src="cordova.js"></script> -->
+  <link rel="stylesheet" href="lib/ion-gallery/dist/ion-gallery.css">
+  <!-- endbuild -->
 
   <!-- firebase-->
   <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/0.4.0/firebase-ui-auth.css">
@@ -42,30 +36,9 @@
         }, 500);
       });
   </script>
-  <script>
-    angular.element(document).ready(function () {
-      if (window.cordova) {
-        console.log("Running in Cordova, will bootstrap AngularJS once 'deviceready' event fires.");
-        document.addEventListener('deviceready', function () {
-          console.log("Deviceready event has fired, bootstrapping AngularJS.");
-          angular.bootstrap(document.body, ['fourfut']);
-        }, false);
-      } else {
-        console.log("Running in browser, bootstrapping AngularJS now.");
-        angular.bootstrap(document.body, ['fourfut']);
-      }
-    });
-  </script>
-</head>
 
-<body>
-  <ion-nav-bar align-title="center" class="bar-positive">
-    <ion-nav-back-button class="no-text">
-    </ion-nav-back-button>
-  </ion-nav-bar>
-  <ion-nav-view></ion-nav-view>
-
-  <!-- vendors js -->
+  <!-- build:js dist_js/app.js -->
+  <script src="lib/ionic/js/ionic.bundle.js"></script>
   <script src="lib/angular-animate/angular-animate.js"></script>
   <script src="lib/angular-sanitize/angular-sanitize.js"></script>
   <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
@@ -108,30 +81,60 @@
   <script src="lib/angular-elastic/elastic.js"></script>
   <script src="lib/Autolinker.js/dist/Autolinker.min.js"></script>
 
-  <!-- your app's js -->
-  <script src="js/app.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/services/user-serv.js"></script>
-  <script src="js/services/reservas-serv.js"></script>
-  <script src="js/services/main-serv.js"></script>
-  <script src="js/services/jogos-serv.js"></script>
-  <script src="js/services/arenas-serv.js"></script>
-  <script src="js/services/times-serv.js"></script>
-  <script src="js/services/chat-serv.js"></script>
-  <script src="js/directives/location-suggestion-dir.js"></script>
-  <script src="js/directives/grouped-radio-dir.js"></script>
-  <script src="js/directives/cards-dir.js"></script>
-  <script src="js/directives/autolinker.js"></script>
-  <script src="js/controllers/startup-ctrl.js"></script>
-  <script src="js/controllers/perfil-ctrl.js"></script>
-  <script src="js/controllers/login-ctrl.js"></script>
-  <script src="js/controllers/jogos-ctrl.js"></script>
-  <script src="js/controllers/times-ctrl.js"></script>
-  <script src="js/controllers/desafios-ctrl.js"></script>
-  <script src="js/controllers/arenas-ctrl.js"></script>
-  <script src="js/controllers/notificacoes-ctrl.js"></script>
-  <script src="js/constants/config-const.js"></script>
-  <script src="js/constants/enum-const.js"></script>
+  <script src="dist/dist_js/app/templates.js"></script>
+  <script src="dist/dist_js/app/app.js"></script>
+  <script src="dist/dist_js/app/main.js"></script>
+  <script src="dist/dist_js/app/services/user-serv.js"></script>
+  <script src="dist/dist_js/app/services/reservas-serv.js"></script>
+  <script src="dist/dist_js/app/services/main-serv.js"></script>
+  <script src="dist/dist_js/app/services/jogos-serv.js"></script>
+  <script src="dist/dist_js/app/services/arenas-serv.js"></script>
+  <script src="dist/dist_js/app/services/times-serv.js"></script>
+  <script src="dist/dist_js/app/services/chat-serv.js"></script>
+  <script src="dist/dist_js/app/directives/location-suggestion-dir.js"></script>
+  <script src="dist/dist_js/app/directives/grouped-radio-dir.js"></script>
+  <script src="dist/dist_js/app/directives/cards-dir.js"></script>
+  <script src="dist/dist_js/app/directives/autolinker.js"></script>
+  <script src="dist/dist_js/app/controllers/startup-ctrl.js"></script>
+  <script src="dist/dist_js/app/controllers/perfil-ctrl.js"></script>
+  <script src="dist/dist_js/app/controllers/login-ctrl.js"></script>
+  <script src="dist/dist_js/app/controllers/jogos-ctrl.js"></script>
+  <script src="dist/dist_js/app/controllers/times-ctrl.js"></script>
+  <script src="dist/dist_js/app/controllers/desafios-ctrl.js"></script>
+  <script src="dist/dist_js/app/controllers/arenas-ctrl.js"></script>
+  <script src="dist/dist_js/app/controllers/notificacoes-ctrl.js"></script>
+  <script src="dist/dist_js/app/constants/config-const.js"></script>
+  <script src="dist/dist_js/app/constants/enum-const.js"></script>
+  <!-- endbuild -->
+
+
+  <!-- cordova script (this will be a 404 during development) -->
+  <!-- Cordova is bootstrapped by ionic-platform-web-client, uncomment this if you remove ionic-platform-web-client... -->
+  <!-- <script src="cordova.js"></script> -->
+
+
+  <script>
+    angular.element(document).ready(function () {
+      if (window.cordova) {
+        console.log("Running in Cordova, will bootstrap AngularJS once 'deviceready' event fires.");
+        document.addEventListener('deviceready', function () {
+          console.log("Deviceready event has fired, bootstrapping AngularJS.");
+          angular.bootstrap(document.body, ['fourfut']);
+        }, false);
+      } else {
+        console.log("Running in browser, bootstrapping AngularJS now.");
+        angular.bootstrap(document.body, ['fourfut']);
+      }
+    });
+  </script>
+</head>
+
+<body ng-strict-di>
+  <ion-nav-bar align-title="center" class="bar-positive">
+    <ion-nav-back-button class="no-text">
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-nav-view></ion-nav-view>
 
 </body>
 

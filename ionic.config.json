@@ -1,4 +1,12 @@
 {
   "name": "4futapp",
-  "app_id": "2666a895"
+  "app_id": "2666a895",
+
+  "gulpStartupTasks": [
+    "sass",
+    "templatecache",
+    "ng_annotate",
+    "useref",
+    "watch"
+  ]
 }

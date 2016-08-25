@@ -1,7 +1,23 @@
-/*global firebase*/
-'use strict';
-angular.module('main')
-  .controller('PerfilCtrl', function (selectedUser, $state, $timeout, $stateParams, ionicMaterialMotion, ionicMaterialInk, UserService, $ionicPopup) {
+(function () {
+  'use strict';
+  angular.module('main')
+  .controller('PerfilCtrl', PerfilCtrl)
+  .controller('SeguindoSeguidoresCtrl', SeguindoSeguidoresCtrl)
+  .controller('PerfilJogadorCtrl', PerfilJogadorCtrl)
+  .controller('ListaJogadoresCtrl', ListaJogadoresCtrl)
+  .controller('ChatCtrl', ChatCtrl)
+  .controller('ChatsListCtrl', ChatsListCtrl)
+  .controller('ConfigCtrl', ConfigCtrl);
+
+  PerfilCtrl.$inhect = ['selectedUser', '$state', '$timeout', '$stateParams', 'ionicMaterialMotion', 'ionicMaterialInk', 'UserService', '$ionicPopup'];
+  SeguindoSeguidoresCtrl.$inhect = ['$state', 'UserService', '$stateParams', '$ionicHistory'];
+  PerfilJogadorCtrl.$inhect = ['$state', '$timeout', 'ionicMaterialMotion', 'ionicMaterialInk', 'UserService', 'ChatService', '$ionicPopup', '$ionicModal', '$ionicHistory'];
+  ListaJogadoresCtrl.$inhect = ['$state', 'UserService', '$stateParams', '$ionicHistory'];
+  ChatCtrl.$inhect = ['$scope', 'ChatService', 'JogosService', 'UserService', '$rootScope', '$state', '$stateParams', '$ionicActionSheet', '$ionicHistory', '$ionicScrollDelegate', '$timeout', '$interval'];
+  ChatsListCtrl.$inhect = ['$scope', '$state', 'ChatService', 'UserService'];
+  ConfigCtrl.$inhect = ['$scope', 'UserService'];
+
+  function PerfilCtrl(selectedUser, $state, $timeout, $stateParams, ionicMaterialMotion, ionicMaterialInk, UserService, $ionicPopup) {
     var vm = this;
     vm.user = selectedUser;
     vm.meusAmigos = UserService.amigos;
@@ -39,10 +55,10 @@ angular.module('main')
       }, function (error) {
         console.log(error);
       });
-    };
-  })
+    }
+  }
 
-  .controller('SeguindoSeguidoresCtrl', function ($state, UserService, $stateParams, $ionicHistory) {
+  function SeguindoSeguidoresCtrl($state, UserService, $stateParams, $ionicHistory) {
     var vm = this;
     vm.seguindo = [];
     vm.seguidores = [];
@@ -119,9 +135,9 @@ angular.module('main')
       });
     }
 
-  })
+  }
 
-  .controller('PerfilJogadorCtrl', function ($state, $timeout, ionicMaterialMotion, ionicMaterialInk, UserService, ChatService, $ionicPopup, $ionicModal, $ionicHistory) {
+  function PerfilJogadorCtrl($state, $timeout, ionicMaterialMotion, ionicMaterialInk, UserService, ChatService, $ionicPopup, $ionicModal, $ionicHistory) {
     var vm = this;
     vm.jogador = UserService.jogadorSelecionado;
     vm.meusAmigos = UserService.amigos;
@@ -193,9 +209,9 @@ angular.module('main')
 
     // Set Ink
     ionicMaterialInk.displayEffect();
-  })
+  }
 
-  .controller('ListaJogadoresCtrl', function ($state, UserService, $stateParams, $ionicHistory) {
+  function ListaJogadoresCtrl($state, UserService, $stateParams, $ionicHistory) {
     var vm = this;
     //TODO !!!!!!!!!!!!!
     vm.jogadores = [];
@@ -275,9 +291,9 @@ angular.module('main')
       });
     }
 
-  })
+  }
 
-  .controller('ChatCtrl', function ($scope, ChatService, JogosService, UserService, $rootScope, $state, $stateParams, $ionicActionSheet, $ionicHistory, $ionicScrollDelegate, $timeout, $interval) {
+  function ChatCtrl($scope, ChatService, JogosService, UserService, $rootScope, $state, $stateParams, $ionicActionSheet, $ionicHistory, $ionicScrollDelegate, $timeout, $interval) {
     var vm = this;
     var messageCheckTimer;
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
@@ -460,9 +476,9 @@ angular.module('main')
       scroller.style.bottom = newFooterHeight + 'px';
     });
 
-  })
+  }
 
-  .controller('ChatsListCtrl', function ($scope, $state, ChatService, UserService) {
+  function ChatsListCtrl($scope, $state, ChatService, UserService) {
     var vm = this;
     vm.chats = [];
 
@@ -480,9 +496,9 @@ angular.module('main')
       $state.go('main.chat-' + Object.keys($state.current.views)[0], { id: jogador.id, tipoChat: 'jogador' });
     }
 
-  })
+  }
 
-  .controller('ConfigCtrl', function ($scope, UserService) {
+  function ConfigCtrl($scope, UserService) {
 
     activate();
 
@@ -490,4 +506,6 @@ angular.module('main')
       UserService.getConfiguracao().$bindTo($scope, 'config');
     }
 
-  });
+  }
+
+} ());

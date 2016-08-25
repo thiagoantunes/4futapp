@@ -1,7 +1,14 @@
-/*global */
-'use strict';
-angular.module('main')
-  .controller('ArenasCtrl', function (GeoService, $scope, $timeout, ArenasService) {
+/*jshint loopfunc: true */
+(function () {
+  'use strict';
+  angular.module('main')
+    .controller('ArenasCtrl', ArenasCtrl)
+    .controller('ArenaDetailsCtrl', ArenaDetailsCtrl);
+
+  ArenasCtrl.$inject = ['GeoService', '$scope', '$timeout', 'ArenasService'];
+  ArenaDetailsCtrl.$inject = ['ArenasService', 'UserService', 'GeoService', 'JogosService', 'SmsVerify', '$scope', '$timeout', 'ReservasService', '$stateParams', '$ionicModal', 'ionicMaterialMotion', 'ionicMaterialInk', '$ionicPopup', '$ionicHistory', '$ionicLoading', '$window'];
+
+  function ArenasCtrl(GeoService, $scope, $timeout, ArenasService) {
     var vm = this;
     vm.arenaService = ArenasService;
     vm.arenas = ArenasService.arenas;
@@ -10,11 +17,11 @@ angular.module('main')
     activate();
 
     function activate() {
-      if(vm.arenas.length == 0){
-        GeoService.getPosition().then(function(){
+      if (vm.arenas.length === 0) {
+        GeoService.getPosition().then(function () {
           ArenasService.getArenas();
         });
-      } 
+      }
       setMap();
     }
 
@@ -53,9 +60,9 @@ angular.module('main')
       vm.showDetails = true;
     }
 
-  })
+  }
 
-  .controller('ArenaDetailsCtrl', function (ArenasService, UserService, GeoService, JogosService, SmsVerify, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup, $ionicHistory, $ionicLoading, $window) {
+  function ArenaDetailsCtrl(ArenasService, UserService, GeoService, JogosService, SmsVerify, $scope, $timeout, ReservasService, $stateParams, $ionicModal, ionicMaterialMotion, ionicMaterialInk, $ionicPopup, $ionicHistory, $ionicLoading, $window) {
     var vm = this;
     vm.arena = ArenasService.arenaSelecionada;
     vm.album = ArenasService.getAlbum($stateParams.id);
@@ -87,13 +94,13 @@ angular.module('main')
         align: 'left',
         selectFirst: true,
         centerOnSelect: false,
-        template: 'templates/misc/carousel-template.html'
+        template: 'misc/carousel-template.html'
       };
       vm.carouselData1 = createArray();
     }
 
     function openEstruturaModal() {
-      $ionicModal.fromTemplateUrl('templates/modal/estrutura-arena.html', {
+      $ionicModal.fromTemplateUrl('modal/estrutura-arena.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
@@ -104,7 +111,7 @@ angular.module('main')
     }
 
     function openQuadrasModal() {
-      $ionicModal.fromTemplateUrl('templates/modal/quadras-arena.html', {
+      $ionicModal.fromTemplateUrl('modal/quadras-arena.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
@@ -115,7 +122,7 @@ angular.module('main')
     }
 
     function openAlbumModal() {
-      $ionicModal.fromTemplateUrl('templates/modal/album-arena.html', {
+      $ionicModal.fromTemplateUrl('modal/album-arena.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
@@ -124,7 +131,7 @@ angular.module('main')
           return {
             src: val.img,
             thumb: val.thumb
-          }
+          };
         });
         modal.show();
       });
@@ -173,7 +180,7 @@ angular.module('main')
         });
       });
       vm.nenhumHorario = _.every(vm.horariosPorQuadra, function (val) {
-        return val.horarios.length == 0;
+        return val.horarios.length === 0;
       });
     }
 
@@ -242,7 +249,7 @@ angular.module('main')
         confirmarReserva();
       };
 
-      $ionicModal.fromTemplateUrl('templates/modal/confirma-reserva.html', {
+      $ionicModal.fromTemplateUrl('modal/confirma-reserva.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
@@ -298,7 +305,7 @@ angular.module('main')
 
     function enviarCodigoVerificacao() {
       vm.verificacaoReserva = {};
-      $ionicModal.fromTemplateUrl('templates/modal/codigo-verificacao.html', {
+      $ionicModal.fromTemplateUrl('modal/codigo-verificacao.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
@@ -307,42 +314,42 @@ angular.module('main')
           if (vm.verificacaoReserva.code.length < 4) {
             vm.verificacaoReserva.code = vm.verificacaoReserva.code + value;
           }
-        }
+        };
         $scope.deletePin = function () {
           if (vm.verificacaoReserva.code.length > 0) {
             vm.verificacaoReserva.code = vm.verificacaoReserva.code.substring(0, vm.verificacaoReserva.code.length - 1);
           }
-        }
+        };
         $scope.modalVerificacao.show();
       });
-      $ionicLoading.show({template: 'Carregando...' });
-      SmsVerify.numberVerify({ Number: '55'+$scope.currentUser.telefone, brand: 'Rei da Quadra' }, function (data) {
+      $ionicLoading.show({ template: 'Carregando...' });
+      SmsVerify.numberVerify({ Number: '55' + $scope.currentUser.telefone, brand: 'Rei da Quadra' }, function (data) {
         $ionicLoading.hide();
         console.log(data);
         vm.verificacaoReserva = {
           requestId: data.request_id,
           code: ''
         };
-      }, function (err){
+      }, function (err) {
         console.log(err);
         $ionicLoading.hide();
-        $window.alert('Erro ao enviar mensagem de verificação. Tente novamente mais tarde.')
+        $window.alert('Erro ao enviar mensagem de verificação. Tente novamente mais tarde.');
       });
     }
 
     function verificarCodigo() {
-      $ionicLoading.show({template: 'Carregando...' });
+      $ionicLoading.show({ template: 'Carregando...' });
       SmsVerify.numberVerifyCheck(vm.verificacaoReserva, function (verification) {
         $ionicLoading.hide();
         console.log(verification);
-        if (verification.status == 0) {
+        if (verification.status === 0) {
           salvarNovaReserva();
           $scope.modalVerificacao.hide();
         }
-      }, function(err){
+      }, function (err) {
         console.log(err);
         $ionicLoading.hide();
-        $window.alert('Erro ao verificar código. Tente novamente mais tarde.')
+        $window.alert('Erro ao verificar código. Tente novamente mais tarde.');
       });
     }
 
@@ -358,7 +365,7 @@ angular.module('main')
         title: firebase.auth().currentUser.displayName,
         status: 'agendado'
       };
-      $ionicLoading.show({template: 'Carregando...' });
+      $ionicLoading.show({ template: 'Carregando...' });
       ReservasService.criarReservaAvulsa(novaReserva, vm.arena.$id).then(function (reserva) {
         $ionicLoading.hide();
         if (vm.arena.criacaoPartidaAndamento) {
@@ -400,4 +407,6 @@ angular.module('main')
     // Set Ink
     ionicMaterialInk.displayEffect();
 
-  });
+  }
+
+} ());

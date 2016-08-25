@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+  <meta http-equiv="Content-Security-Policy" content="default-src *; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos; *; style-src  &apos;self&apos; &apos;unsafe-inline&apos; *">
+  <title></title>
+
+ <link rel="stylesheet" href="dist_css/styles.css">
+
+  <!-- firebase-->
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/0.4.0/firebase-ui-auth.css">
+  <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/ui/0.4.0/firebase-ui-auth.js"></script>
+  <script src="https://maps.google.com/maps/api/js?key=AIzaSyCMgDkKuk3uMRhfIhcWTCgaCmOAqhDOoIY&amp;libraries=placeses,visualization,places">    
+    jQuery("#my-autocomplete-element-id").focus(function (event) {
+        $timeout(function () {
+          jQuery(".pac-container").css("z-index", 10000);
+          jQuery('.pac-container').css('pointer-events', "auto");
+          jQuery('.pac-container').attr('data-tap-disabled', true);
+          if (isMobilePlatform()) {
+            jQuery('.pac-container').mouseover(function () {
+              var focusedElement = jQuery(':focus');
+              focusedElement.blur();
+            });
+          }
+        }, 500);
+      });
+  </script>
+
+  <script src="dist_js/app.js"></script>
+
+
+  <!-- cordova script (this will be a 404 during development) -->
+  <!-- Cordova is bootstrapped by ionic-platform-web-client, uncomment this if you remove ionic-platform-web-client... -->
+  <!-- <script src="cordova.js"></script> -->
+
+  
+  <script>
+    angular.element(document).ready(function () {
+      if (window.cordova) {
+        console.log("Running in Cordova, will bootstrap AngularJS once 'deviceready' event fires.");
+        document.addEventListener('deviceready', function () {
+          console.log("Deviceready event has fired, bootstrapping AngularJS.");
+          angular.bootstrap(document.body, ['fourfut']);
+        }, false);
+      } else {
+        console.log("Running in browser, bootstrapping AngularJS now.");
+        angular.bootstrap(document.body, ['fourfut']);
+      }
+    });
+  </script>
+</head>
+
+<body ng-strict-di>
+  <ion-nav-bar align-title="center" class="bar-positive">
+    <ion-nav-back-button class="no-text">
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-nav-view></ion-nav-view>
+
+</body>
+
+</html>

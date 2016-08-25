@@ -1,7 +1,11 @@
-/*global _ moment firebase GeoFire*/
-'use strict';
-angular.module('main')
-  .factory('ReservasService', function (Ref, $timeout, $firebaseArray, $q, $rootScope, UserService, $ionicModal, ArenasService) {
+(function () {
+  'use strict';
+  angular.module('main')
+  .factory('ReservasService', ReservasService);
+
+  ReservasService.$inject = ['Ref', '$timeout', '$firebaseArray', '$q', '$rootScope', 'UserService', '$ionicModal', 'ArenasService'];
+
+  function ReservasService(Ref, $timeout, $firebaseArray, $q, $rootScope, UserService, $ionicModal, ArenasService) {
     var service = {
       reservaSelecionada: {},
       ref: Ref.child('reservas'),
@@ -116,7 +120,7 @@ angular.module('main')
     function openReservaModal(reserva, arena) {
       service.reservaSelecionada.data = reserva;
       service.reservaSelecionada.data.arena = arena;
-      $ionicModal.fromTemplateUrl('templates/modal/reserva-details.html', {
+      $ionicModal.fromTemplateUrl('modal/reserva-details.html', {
         animation: 'slide-in-up'
       }).then(function (modal) {
         service.reservaSelecionada.modal = modal;
@@ -124,4 +128,6 @@ angular.module('main')
       });
     }
 
-  });
+  }
+
+} ());

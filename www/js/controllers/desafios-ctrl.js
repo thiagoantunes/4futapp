@@ -1,7 +1,13 @@
-/*global firebase*/
-'use strict';
-angular.module('main')
-  .controller('DesafiosCtrl', function (TimesService, UserService, $timeout, $ionicModal) {
+(function () {
+  'use strict';
+  angular.module('main')
+    .controller('DesafiosCtrl', DesafiosCtrl)
+    .controller('CriarDesafioCtrl', CriarDesafioCtrl);
+
+  DesafiosCtrl.$inject = ['TimesService', 'UserService', '$timeout', '$ionicModal'];
+  CriarDesafioCtrl.$inject = ['TimesService', '$scope', '$window', '$state', '$ionicHistory', 'UserService', 'ReservasService', 'JogosService', 'ArenasService', '$ionicModal', 'ionicTimePicker', 'ionicDatePicker', 'LocationService', '$ionicLoading'];
+
+  function DesafiosCtrl(TimesService, UserService, $timeout, $ionicModal) {
     var vm = this;
     vm.timesService = TimesService;
     vm.times = TimesService.timesRegiao;
@@ -11,9 +17,9 @@ angular.module('main')
     function activate() {
     }
 
-  })
+  }
 
-  .controller('CriarDesafioCtrl', function (TimesService, $scope, $window, $state, $ionicHistory, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService, $ionicLoading) {
+  function CriarDesafioCtrl(TimesService, $scope, $window, $state, $ionicHistory, UserService, ReservasService, JogosService, ArenasService, $ionicModal, ionicTimePicker, ionicDatePicker, LocationService, $ionicLoading) {
     var vm = this;
     vm.arenas = ArenasService.arenas;
     vm.meusTimes = UserService.times;
@@ -65,8 +71,8 @@ angular.module('main')
         desafio: vm.novoDesafio.data,
         coords: [vm.novoDesafio.localSelecionado.latitude, vm.novoDesafio.localSelecionado.longitude],
         arenaId: vm.novoDesafio.arenaReserva
-      }
-      $ionicLoading.show({template: 'Carregando...' });
+      };
+      $ionicLoading.show({ template: 'Carregando...' });
       TimesService.criarDesafio(novoDesafioData)
         .then(function (desafioId) {
           TimesService.getDesafio(desafioId).then(function (val) {
@@ -74,7 +80,7 @@ angular.module('main')
             TimesService.desafioSelecionado = val;
             $state.go('main.meus-desafios-detail', { id: desafioId });
           });
-        } , function(err){
+        }, function (err) {
           $ionicLoading.hide();
           console.log(err);
           $window.alert('Ocorreu um erro ao criar o desafio. Tente novamente mais tarde.');
@@ -98,7 +104,7 @@ angular.module('main')
     function selecionaTime(time) {
       vm.minhasModalidades = time.modalidades;
       getModalidades();
-      vm.novoDesafio.data.desafiante  = {
+      vm.novoDesafio.data.desafiante = {
         id: time.$id,
         escudo: time.escudo,
         nome: time.nome
@@ -135,7 +141,7 @@ angular.module('main')
         else {
           var tpObj = {
             callback: function (val) {
-              if (!(typeof (val) === 'undefined')) {
+              if ((typeof (val) !== 'undefined')) {
                 var selectedTime = new Date(val * 1000);
                 var hora = moment(new Date(val * 1000)).add(moment(new Date(val * 1000))._d.getTimezoneOffset(), 'm').format('HH:mm');
 
@@ -198,7 +204,7 @@ angular.module('main')
 
     function openLocalPicker() {
       if (!vm.novoDesafio.arenaReservaCallback) {
-        $ionicModal.fromTemplateUrl('templates/modal/selecionar-local.html', {
+        $ionicModal.fromTemplateUrl('modal/selecionar-local.html', {
           scope: $scope,
           animation: 'slide-in-up'
         }).then(function (modal) {
@@ -243,7 +249,7 @@ angular.module('main')
                 latitude: $scope.location.geometry.location.lat(),
                 longitude: $scope.location.geometry.location.lng(),
                 endereco: $scope.location.formatted_address
-              }
+              };
               $scope.modalCriaLocal.hide();
               $scope.modalLocal.hide();
             }, function (error) {
@@ -251,7 +257,7 @@ angular.module('main')
             });
         };
       });
-      $ionicModal.fromTemplateUrl('templates/modal/criar-local.html', {
+      $ionicModal.fromTemplateUrl('modal/criar-local.html', {
         scope: $scope,
         animation: 'slide-in-up'
       }).then(function (modal) {
@@ -271,4 +277,6 @@ angular.module('main')
       vm.modalTimeDesafiado.show();
     }
 
-  });
+  }
+
+} ());
