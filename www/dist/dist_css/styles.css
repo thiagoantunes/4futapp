@@ -17284,10 +17284,20 @@ For example, you might change some of the default colors:
   left: initial; }
 
 .platform-ios #arenas-view .angular-google-map-container {
-  height: calc(100vh - 63px); }
+  height: 50vh; }
 
 .platform-android #arenas-view .angular-google-map-container {
-  height: calc(100vh - 43px); }
+  height: 50vh; }
+
+.scroll-arenas {
+  top: calc(100vh - 215px);
+  height: 220px;
+  padding-bottom: 100px; }
+
+.scroll-jogos {
+  top: calc(100vh - 215px);
+  height: 220px;
+  padding-bottom: 100px; }
 
 .map-container .card-2 .card {
   margin: 0px !important; }
@@ -17864,9 +17874,9 @@ For example, you might change some of the default colors:
   font-size: 0.7em !important; }
 
 .cards-view .bar-header {
-  background: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.5));
-  background: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.5));
-  background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.5));
+  background: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.8));
+  background: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.8));
+  background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.8));
   color: #FFF;
   border-bottom: none;
   box-shadow: none; }
@@ -17883,7 +17893,8 @@ For example, you might change some of the default colors:
     padding-bottom: 0px;
     margin: 16px 8px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 6px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 0px; }
+    border-radius: 0px;
+    height: 130px !important; }
   .cards-view .card-2 .card-outer {
     padding: 0px; }
     .cards-view .card-2 .card-outer .card-image {

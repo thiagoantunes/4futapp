@@ -1,8 +1,8 @@
 .cards-view{
   .bar-header{
-    background: -webkit-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.5));
-    background: -o-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.5));
-    background: linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.5));
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.8));
+    background: -o-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.8));
+    background: linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.8));
 	  color: $header-color;
     border-bottom: none;
     box-shadow: none;
@@ -26,6 +26,7 @@
 			margin: 16px 8px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.15), 0 6px 6px rgba(0,0,0,0.1);
             border-radius: 0px;
+			height: 130px !important;
 		}
 
 		.card-outer

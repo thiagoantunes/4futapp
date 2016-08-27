@@ -1,6 +1,10 @@
-<ion-view view-title="{{vm.arena.nome}}" class="profile-view">
+<ion-view hide-nav-bar="true" view-title="{{vm.arena.nome}}" class="profile-view">
+  <div class="bar bar-header" style="background: rgba(0,0,0,0.4); border-bottom: 0px !important;">
+    <button style="color:white;" ng-click="vm.goBack()" class="button button-icon button-clear ion-android-arrow-back"></button>
+    <div style="font-weight:bold" class="title">{{vm.arena.nome}}</div>
+  </div>
   <ion-content ng-class="{expanded:$scope.isExpanded}">
-    <div class="hero has-mask slide-up" style="min-height:200px; background-image: url('{{vm.album[0].thumb}}');">
+    <div class="hero has-mask slide-up" style="padding-top:230px; min-height:200px; background-image: url('{{vm.album[0].thumb}}');">
       <div class="content">
         <img class="avatar" cache-src="{{vm.arena.fotoPerfil}}">
         <h4>{{vm.arena.nome}}

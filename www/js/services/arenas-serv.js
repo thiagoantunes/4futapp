@@ -5,14 +5,16 @@
         .factory('GeoService', GeoService)
         .factory('SmsVerify', SmsVerify);
 
-    ArenasService.$inject = ['Ref', '$timeout', '$firebaseArray', '$firebaseObject', '$q'];
+    ArenasService.$inject = ['Ref', '$timeout', '$firebaseArray', '$firebaseObject', '$q', '$location', '$ionicScrollDelegate'];
     GeoService.$inject = ['$q', '$ionicPlatform', 'ArenasService', 'JogosService', 'TimesService', '$window'];
     SmsVerify.$inject = ['$resource'];
 
-    function ArenasService(Ref, $timeout, $firebaseArray, $firebaseObject, $q) {
+    function ArenasService(Ref, $timeout, $firebaseArray, $firebaseObject, $q, $location, $ionicScrollDelegate) {
         var service = {
             ref: Ref.child('arenas'),
             refArenaBasica: Ref.child('arenasBasicas'),
+            arenasMarkers: [],
+            arenasMap: {},
             arenas: [],
             arenasBasicas: [],
             geoFire: new GeoFire(Ref.child('arenasLocalizacao')),
@@ -29,6 +31,7 @@
             criaArenaBasica: criaArenaBasica,
             getQuadraArena: getQuadraArena,
             getArenaLocation: getArenaLocation,
+            onMarkerClicked: onMarkerClicked,
             arenaSelecionada: null
         };
 
@@ -42,13 +45,37 @@
                     arena.$id = key;
                     arena.latitude = location[0];
                     arena.longitude = location[1];
-                    arena.icon = 'img/pin.png';
+                    arena.icon = 'www/img/pin.png';
                     $timeout(function () {
                         _.remove(service.arenas, { '$id': key });
                         service.arenas.push(arena);
+                        addArenaMarker(arena);
                     });
                 });
             });
+        }
+
+        function addArenaMarker(arena) {
+            var arenaMarker =  _.find(service.arenasMarkers, {$id: arena.$id});
+            if(arenaMarker) {
+                arenaMarker.remove();
+            }
+            var data = {
+              'position': new plugin.google.maps.LatLng(arena.latitude, arena.longitude),
+              'title': arena.nome,
+              'icon': { 'url': arena.icon, }
+            };
+            service.arenasMap.addMarker(data, function (marker) {
+              marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, service.onMarkerClicked);
+              marker.nome = arena.nome;
+              marker.$id = arena.$id;
+              service.arenasMarkers.push(marker);
+            });
+        }
+
+        function onMarkerClicked(marker) {
+          $location.hash('anchor' + marker.$id);
+          $ionicScrollDelegate.anchorScroll(true);
         }
 
         function getArena(id) {
@@ -151,6 +178,29 @@
 
                 deferred.resolve(service.position);
             }, function (err) {
+                service.position = [-19.872510, -43.930562];
+                ArenasService.geoQuery = ArenasService.geoFire.query({
+                    center: service.position,
+                    radius: 100
+                });
+
+                ArenasService.geoArenasBasicasQuery = ArenasService.geoArenaBasica.query({
+                    center: service.position,
+                    radius: 100
+                });
+
+                JogosService.geoQuery = JogosService.geoFire.query({
+                    center: service.position,
+                    radius: 100
+                });
+
+                TimesService.geoQuery = TimesService.geoFire.query({
+                    center: service.position,
+                    radius: 100
+                });
+                //JogosService.getJogosRegiao();
+                //ArenasService.getArenas();
+                TimesService.getTimesRegiao();
                 console.log('Ative a localizaçao');
             }, posOptions);
 
@@ -162,7 +212,7 @@
                         center: service.position,
                         radius: 100
                     });
-                    ArenasService.getArenas();
+                    //ArenasService.getArenas();
                 }
                 else {
                     ArenasService.geoQuery.updateCriteria({
@@ -203,7 +253,7 @@
                         center: service.position,
                         radius: 100
                     });
-                    JogosService.getJogosRegiao();
+                    //JogosService.getJogosRegiao();
                 }
                 else {
                     JogosService.geoQuery.updateCriteria({
@@ -213,6 +263,7 @@
                 }
 
             }, function (err) {
+                service.position = [-19.872510, -43.930562];
                 console.log('Ative a localizaçao (watch)');
             }, watchOptions);
 

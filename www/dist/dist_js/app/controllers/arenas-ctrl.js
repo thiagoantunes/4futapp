@@ -5,59 +5,69 @@
     .controller('ArenasCtrl', ArenasCtrl)
     .controller('ArenaDetailsCtrl', ArenaDetailsCtrl);
 
-  ArenasCtrl.$inject = ['GeoService', '$scope', '$timeout', 'ArenasService'];
+  ArenasCtrl.$inject = ['GeoService', '$scope', '$timeout', 'ArenasService', 'JogosService', '$ionicHistory', '$window', '$ionicScrollDelegate', '$location'];
   ArenaDetailsCtrl.$inject = ['ArenasService', 'UserService', 'GeoService', 'JogosService', 'SmsVerify', '$scope', '$timeout', 'ReservasService', '$stateParams', '$ionicModal', 'ionicMaterialMotion', 'ionicMaterialInk', '$ionicPopup', '$ionicHistory', '$ionicLoading', '$window'];
 
-  function ArenasCtrl(GeoService, $scope, $timeout, ArenasService) {
+  function ArenasCtrl(GeoService, $scope, $timeout, ArenasService, JogosService, $ionicHistory, $window, $ionicScrollDelegate, $location) {
     var vm = this;
     vm.arenaService = ArenasService;
     vm.arenas = ArenasService.arenas;
-    vm.arenaMarkers = [];
+
+    vm.onMapInit = onMapInit;
+    vm.goBack = goBack;
+    vm.isDevice = isDevice;
 
     activate();
 
-    function activate() {
-      if (vm.arenas.length === 0) {
-        GeoService.getPosition().then(function () {
-          ArenasService.getArenas();
-        });
+    $scope.$on('$ionicView.enter', function () {
+      if (window.cordova) {
+        StatusBar.backgroundColorByName('black');
       }
-      setMap();
+    });
+
+    function activate() {
     }
 
-    function setMap() {
-      vm.showDetails = false;
-      vm.map = {
-        center: {
-          latitude: GeoService.position[0],
-          longitude: GeoService.position[1]
-        },
-        zoom: 14,
-        options: {
-          disableDefaultUI: true,
-        },
+    function onMapInit(map) {
+      if($ionicHistory.currentView().stateName === 'main.arenas') {
+          console.log('carregou o mapa');
+          ArenasService.arenasMap = map;
+          ArenasService.getArenas();
+          var mapPosition = new plugin.google.maps.LatLng(GeoService.position[0], GeoService.position[1]);
+        
+          ArenasService.arenasMap.animateCamera({
+            'target': mapPosition,
+            'tilt': 0,
+            'zoom': 14,
+            'bearing': 0,
+            'duration': 2000
+            // = 2 sec.
+          });
+          ArenasService.arenasMap.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, onMapCameraChanged);
+        
+          _.forEach(JogosService.jogosRegiaoMarkers, function(jogoMarker){
+            jogoMarker.setVisible(false);
+          });
 
-        mapEvents: {
-          click: function () {
-            $scope.$apply(function () {
-              vm.showDetails = false;
-            });
-          }
-        },
-
-        markersEvents: {
-          click: selecionaQuadraMapa
-        }
-      };
+          _.forEach(ArenasService.arenasMarkers, function(arenaMarker){
+            arenaMarker.setVisible(true);
+          });
+      }
     }
 
-    function selecionaQuadraMapa(marker, eventName, model) {
-      vm.arenaService.arenaSelecionada = _.find(vm.arenas, { $id: model.$id });
-      vm.map.center = {
-        latitude: vm.arenaService.arenaSelecionada.latitude,
-        longitude: vm.arenaService.arenaSelecionada.longitude
-      };
-      vm.showDetails = true;
+    function onMapCameraChanged(position) {
+      console.log(position);
+    }
+
+    function isDevice() {
+      return window.cordova;
+    }
+
+    function goBack() {
+      if (window.cordova) {
+        StatusBar.backgroundColorByHexString('#87c202');
+      }
+      $ionicHistory.goBack();
     }
 
   }
@@ -79,6 +89,7 @@
     vm.isAndroid = isAndroid;
     vm.navigateTo = navigateTo;
     vm.verificarCodigo = verificarCodigo;
+    vm.goBack = goBack;
 
     activate();
 
@@ -97,6 +108,10 @@
         template: 'misc/carousel-template.html'
       };
       vm.carouselData1 = createArray();
+    }
+
+    function goBack() {
+      $ionicHistory.goBack();
     }
 
     function openEstruturaModal() {

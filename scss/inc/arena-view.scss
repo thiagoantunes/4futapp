@@ -1,13 +1,25 @@
 .platform-ios {
     #arenas-view{
-        .angular-google-map-container { height: calc(100vh - 63px); }
+        .angular-google-map-container { height: 50vh; }
     }
 }
 
 .platform-android{
     #arenas-view{
-        .angular-google-map-container { height: calc(100vh - 43px); }
+        .angular-google-map-container { height: 50vh; }
     }
+}
+
+.scroll-arenas{
+    top: calc(100vh - 215px);
+    height: 220px;
+    padding-bottom: 100px;
+}
+
+.scroll-jogos{
+    top: calc(100vh - 215px);
+    height: 220px;
+    padding-bottom: 100px;
 }
 
 .map-container {

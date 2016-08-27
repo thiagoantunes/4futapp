@@ -317,7 +317,7 @@
           views: {
             'tab-home': {
               templateUrl: 'arenas/arenas-list.html',
-              controller: 'ArenasCtrl as actrl'
+              controller: 'ArenasCtrl as vm'
             }
           }
         })
@@ -756,8 +756,8 @@
       }
 
       GeoService.getPosition().then(function () {
-        JogosService.getJogosRegiao();
-        ArenasService.getArenas();
+        //JogosService.getJogosRegiao();
+        //ArenasService.getArenas();
         TimesService.getTimesRegiao();
       });
 

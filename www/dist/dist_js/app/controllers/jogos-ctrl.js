@@ -8,64 +8,60 @@
     .controller('NovaPartidaCtrl', NovaPartidaCtrl)
     .controller('JogosDetailCtrl', JogosDetailCtrl);
 
-  JogosCtrl.$inject = ['$scope', 'GeoService', 'JogosService', '$ionicModal'];
+  JogosCtrl.$inject = ['$scope', 'GeoService', 'JogosService', '$ionicModal' , '$window', 'ArenasService', '$ionicScrollDelegate', '$location', '$ionicHistory'];
   MeusJogosCtrl.$inject = ['JogosService', 'UserService', 'ReservasService', 'ArenasService', '$ionicModal'];
   ReservaCtrl.$inject = ['$scope', '$state', 'JogosService', 'UserService', 'ReservasService', 'ArenasService', 'GeoService', 'Enum', '$ionicModal', '$ionicPopup'];
   NovaPartidaCtrl.$inject = ['$scope', '$state', '$ionicHistory', 'Enum', 'UserService', 'ReservasService', 'JogosService', 'ArenasService', '$ionicModal', 'ionicTimePicker', 'ionicDatePicker', 'LocationService', '$ionicLoading', '$cordovaSocialSharing', '$window'];
   JogosDetailCtrl.$inject = ['$scope', '$state', '$timeout', '$rootScope', '$ionicPlatform', '$ionicHistory', 'JogosService', 'UserService', '$ionicModal', 'GeoService', '$ionicLoading', '$window', '$ionicActionSheet', '$cordovaSocialSharing', '$ionicPopup', '$cordovaVibration'];
 
-  function JogosCtrl($scope, GeoService, JogosService, $ionicModal) {
+  function JogosCtrl($scope, GeoService, JogosService, $ionicModal, $window, ArenasService, $ionicScrollDelegate, $location, $ionicHistory) {
     var vm = this;
     vm.jogosRegiao = JogosService.jogosRegiao;
     vm.jogosService = JogosService;
     vm.orderByConfirmacao = orderByConfirmacao;
+    vm.onMapInit= onMapInit;
+    vm.goBack = goBack;
     activate();
 
+    $scope.$on('$ionicView.enter', function () {
+      if (window.cordova) {
+        StatusBar.backgroundColorByName('black');
+      }
+    });
+
     function activate() {
-      if (vm.jogosRegiao.length === 0) {
-        GeoService.getPosition().then(function () {
-          JogosService.getJogosRegiao();
+    }
+
+    function onMapInit(map) {
+      if($ionicHistory.currentView().stateName === 'main.jogos') {
+        console.log('carregou o mapa');
+        JogosService.jogosRegiaoMap = map;
+        JogosService.getJogosRegiao();
+        var mapPosition = new plugin.google.maps.LatLng(GeoService.position[0], GeoService.position[1]);
+
+        JogosService.jogosRegiaoMap.animateCamera({
+        'target': mapPosition,
+        'tilt': 0,
+        'zoom': 14,
+        'bearing': 0,
+        'duration': 2000
+        // = 2 sec.
+        });
+
+        JogosService.jogosRegiaoMap.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, onMapCameraChanged);
+
+        _.forEach(ArenasService.arenasMarkers, function(arenaMarker){
+          arenaMarker.setVisible(false);
+        });
+
+        _.forEach(JogosService.jogosRegiaoMarkers, function(jogoMarker){
+          jogoMarker.setVisible(true);
         });
       }
-      setMap();
     }
 
-    function setMap() {
-      vm.map = {
-        center: {
-          latitude: GeoService.position[0],
-          longitude: GeoService.position[1]
-        },
-        zoom: 14,
-        options: {
-          disableDefaultUI: true,
-        },
-        clusterOptions: {
-          nearbyDistance: 2,
-        },
-        mapEvents: {
-          click: function () {
-            $scope.$apply(function () {
-              vm.showDetails = false;
-            });
-          }
-        },
-
-        markersEvents: {
-          click: selecionaJogoMapa
-        }
-      };
-    }
-
-    function selecionaJogoMapa(marker, eventName, model) {
-      if (model.visivel) {
-        vm.jogosService.jogoSelecionado = _.find(vm.jogosRegiao, { $id: model.$id });
-        vm.map.center = {
-          latitude: vm.jogosService.jogoSelecionado.latitude,
-          longitude: vm.jogosService.jogoSelecionado.longitude
-        };
-        vm.showDetails = true;
-      }
+    function onMapCameraChanged(position) {
+      console.log(position);
     }
 
     function orderByConfirmacao(jogador) {
@@ -78,6 +74,18 @@
       else if (jogador.confirmado === false) {
         return 3;
       }
+    }
+
+    function goToAnchor(x) {
+      $location.hash('anchor' + x);
+      $ionicScrollDelegate.anchorScroll(true);
+    }
+
+    function goBack() {
+      if (window.cordova) {
+        StatusBar.backgroundColorByHexString('#87c202');
+      }
+      $ionicHistory.goBack();
     }
 
   }
@@ -601,7 +609,7 @@
 
     function setMap() {
       vm.showDetails = false;
-      vm.map = {
+      JogosService.jogosRegiaoMap = {
         center: {
           latitude: vm.reservaSelecionada.arena.latitude,
           longitude: vm.reservaSelecionada.arena.longitude

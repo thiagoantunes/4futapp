@@ -3,13 +3,15 @@
   angular.module('main')
     .factory('JogosService', JogosService);
 
-  JogosService.$inject = ['Ref', '$timeout', '$firebaseObject', 'Enum', '$firebaseArray', '$q', 'UserService'];
+  JogosService.$inject = ['Ref', '$timeout', '$firebaseObject', 'Enum', '$firebaseArray', '$q', 'UserService', '$location', '$ionicScrollDelegate'];
 
-  function JogosService(Ref, $timeout, $firebaseObject, Enum, $firebaseArray, $q, UserService) {
+  function JogosService(Ref, $timeout, $firebaseObject, Enum, $firebaseArray, $q, UserService, $location, $ionicScrollDelegate) {
     var service = {
       jogoSelecionado: null,
       novaPartida: {},
       jogosRegiao: [],
+      jogosRegiaoMarkers: [],
+      jogosRegiaoMap: {},
       ref: Ref.child('jogos'),
       refLocalizacao: Ref.child('jogosLocalizacao'),
       refUserJogos: Ref.child('usersJogos'),
@@ -65,19 +67,21 @@
               jogo.jogadores = val;
               if (jogo.responsavel == firebase.auth().currentUser.uid) {
                 jogo.visivel = true;
-                jogo.icon = 'img/pin-jogos.png';
+                jogo.icon = 'www/img/pin-jogos.png';
                 $timeout(function () {
                   _.remove(service.jogosRegiao, { '$id': key });
                   service.jogosRegiao.push(jogo);
+                  addJogoMarker(jogo);
                 });
               }
               else {
                 verificaPermissao(jogo).then(function (visivel) {
                   jogo.visivel = visivel;
-                  jogo.icon = visivel ? 'img/pin-jogos.png' : 'img/pin-jogos-readonly.png';
+                  jogo.icon = visivel ? 'www/img/pin-jogos.png' : 'www/img/pin-jogos-readonly.png';
                   $timeout(function () {
                     _.remove(service.jogosRegiao, { '$id': key });
                     service.jogosRegiao.push(jogo);
+                    addJogoMarker(jogo);
                   });
                 });
               }
@@ -92,7 +96,37 @@
 
       service.geoQuery.on("key_exited", function (key, location, distance) {
         _.remove(service.jogosRegiao, { '$id': key });
+        var jogoMarker =  _.find(service.jogosRegiaoMarkers, {$id: key});
+        if(jogoMarker) {
+            jogoMarker.remove();
+        }
       });
+    }
+
+    function addJogoMarker(jogo) {
+      var jogoMarker =  _.find(service.jogosRegiaoMarkers, {$id: jogo.$id});
+      if(jogoMarker) {
+          jogoMarker.remove();
+      }
+      var data = {
+        'position': new plugin.google.maps.LatLng(jogo.latitude, jogo.longitude),
+        'title': jogo.nome,
+        'icon': { 'url': jogo.icon, }
+      };
+      service.arenasMap.addMarker(data, function (marker) {
+        if (jogo.visivel) {
+          marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, onMarkerClicked);
+        }
+        marker.nome = jogo.nome;
+        marker.visivel = jogo.visivel;
+        marker.$id = jogo.$id;
+        service.jogosRegiaoMarkers.push(marker);
+      });
+    }
+
+    function onMarkerClicked(marker) {
+      $location.hash('anchor' + marker.$id);
+      $ionicScrollDelegate.anchorScroll(true);
     }
 
     function getUserJogos(user) {
