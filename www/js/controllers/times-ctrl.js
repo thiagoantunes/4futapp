@@ -21,11 +21,11 @@
         activate();
 
         function activate() {
-            if(vm.times.length === 0){
-              GeoService.getPosition().then(function(){
-                TimesService.getTimesRegiao();
-              });
-            }
+            // if(vm.times.length === 0){
+            //   GeoService.getPosition().then(function(){
+            //     TimesService.getTimesRegiao();
+            //   });
+            // }
         }
 
         function filtrarModalidades(time) {

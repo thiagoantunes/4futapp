@@ -755,10 +755,11 @@
         });
       }
 
-      GeoService.getPosition().then(function () {
-        //JogosService.getJogosRegiao();
-        //ArenasService.getArenas();
-        TimesService.getTimesRegiao();
+      GeoService.getLocation().then(function (location) {
+        console.log(location);
+      }, function(err){
+        $window.alert(err);
+        console.log(err);
       });
 
       ReservasService.getMinhasReservas();
