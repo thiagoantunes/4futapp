@@ -48,7 +48,7 @@
     .filter('tel', tel);
 
     run.$inject = ['$ionicPlatform', '$ionicAnalytics', '$state', 'Ref', '$rootScope', 'UserService', '$ionicLoading'];
-    config.$inject = ['$stateProvider', '$urlRouterProvider', 'tmhDynamicLocaleProvider', '$ionicConfigProvider', '$facebookProvider', 'ionicTimePickerProvider', 'ionicDatePickerProvider', 'ionGalleryConfigProvider', 'uiGmapGoogleMapApiProvider'];
+    config.$inject = ['$stateProvider', '$urlRouterProvider', 'tmhDynamicLocaleProvider', '$ionicConfigProvider', '$ionicAutoTrackProvider', '$facebookProvider', 'ionicTimePickerProvider', 'ionicDatePickerProvider', 'ionGalleryConfigProvider', 'uiGmapGoogleMapApiProvider'];
     MenuCtrl.$inject = ['$state', '$window', '$rootScope', 'GeoService', 'ArenasService', 'UserService', 'ReservasService', 'JogosService', 'TimesService', '$ionicHistory', '$cordovaNetwork'];
     HomeCtrl.$inject = ['$scope', '$stateParams', '$state'];
 
@@ -208,12 +208,13 @@
       }
     }
 
-    function config($stateProvider, $urlRouterProvider, tmhDynamicLocaleProvider, $ionicConfigProvider, $facebookProvider, ionicTimePickerProvider, ionicDatePickerProvider, ionGalleryConfigProvider, uiGmapGoogleMapApiProvider) {
+    function config($stateProvider, $urlRouterProvider, tmhDynamicLocaleProvider, $ionicConfigProvider,$ionicAutoTrackProvider, $facebookProvider, ionicTimePickerProvider, ionicDatePickerProvider, ionGalleryConfigProvider, uiGmapGoogleMapApiProvider) {
       //$ionicConfigProvider.tabs.style('standard');
       //$ionicConfigProvider.tabs.position('top');
       // GoogleMapApiProviders.configure({
       //   brazil: true
       // });
+      $ionicAutoTrackProvider.disableTracking();
 
       uiGmapGoogleMapApiProvider.configure({
         //    key: 'your api key',
@@ -758,7 +759,7 @@
       GeoService.getLocation().then(function (location) {
         console.log(location);
       }, function(err){
-        $window.alert(err);
+        $window.alert(err.message);
         console.log(err);
       });
 

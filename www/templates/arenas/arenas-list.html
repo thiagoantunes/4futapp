@@ -1,7 +1,7 @@
 <ion-view hide-nav-bar="true" view-title="ARENAS" id="arenas-view" class="cards-view">
 
   <ion-content class="step-local" scroll="false">
-    <div style="width:100%;height:100vh" google-map on-map-ready="vm.onMapInit(map)">
+    <div style="width:100%;height:100vh" id="map-arenas">
       <div class="bar bar-header" style="border-bottom: 0px !important; background: rgba(0,0,0,0.4);">
         <button ng-click="vm.goBack()" class="button button-icon button-clear ion-android-arrow-back"></button>
         <div style="font-weight:bold" class="title">ARENAS</div>
@@ -13,8 +13,8 @@
             <div class="list card">
               <div class="row card-outer">
                 <div class="col col-40 card-image">
-                  <img ng-src="{{arena.fotoPerfil}}">
-                  <!--<img cache-src="{{arena.fotoPerfil}}">-->
+                  <!--<img ng-src="{{arena.fotoPerfil}}">-->
+                  <img cache-src="{{arena.fotoPerfil}}">
                 </div>
                 <div class="col card-content">
                   <h2 class="card-title">{{arena.nome}}</h2>
