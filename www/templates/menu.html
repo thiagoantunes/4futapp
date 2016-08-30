@@ -1,0 +1,59 @@
+<ion-side-menus enable-menu-with-back-views="false">
+  <ion-side-menu-content>
+    <ion-nav-bar align-title="center" class="bar-dark">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left" enable-menu-with-back-views="false">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu style="background-image: url('img/bg1.jpg');" side="left" ng-class="{ 'side-menu-hide': $root.hideMenu }">
+    <div class="header">
+      <div class="row">
+        <div class="col-33">
+          <img ng-src="{{menu.user.fotoPerfil}}" alt="" />
+        </div>
+        <div class="col">
+          <h4>{{menu.user.nome}}</h4>
+          <small><i class="icon ion-location"></i> {{menu.user.localizacao}}</small>
+        </div>
+      </div>
+    </div>
+    <ion-content>
+      <ion-list>
+        <ion-item menu-close href="#/app/map">
+          <i class="icon ion-android-home"></i> Início
+        </ion-item>
+        <ion-item menu-close href="#/app/notificacoes">
+          <i class="icon ion-android-notifications"></i> Notificações
+        </ion-item>
+        <ion-item menu-close href="#/app/meus-jogos">
+          <i class="icon ion-ios-football"></i> Meus Jogos
+        </ion-item>
+        <ion-item menu-close href="#/app/meus-times">
+          <i class="icon ion-tshirt"></i> Meus Times
+        </ion-item>
+        <ion-item menu-close href="#/app/minhas-reservas">
+          <i class="icon ion-ios-calendar"></i> Minhas Reservas
+        </ion-item>
+        <ion-item menu-close href="#/app/seguindo-seguidores">
+          <i class="icon ion-arrow-swap"></i> Seguindo/Seguidores
+        </ion-item>
+        <ion-item menu-close href="#/app/mensagens">
+          <i class="icon ion-chatbubbles"></i> Mensagens
+        </ion-item>
+        <ion-item menu-close href="#/app/configuracoes">
+          <i class="icon ion-ios-settings-strong"></i> Configurações
+        </ion-item>
+      </ion-list>
+      <div class="footer">
+        <div>Sair</div>
+      </div>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>

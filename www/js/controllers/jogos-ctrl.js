@@ -231,6 +231,7 @@
         }
 
         function salvarJogo() {
+            vm.novaPartida.data.local = vm.novaPartida.localSelecionado.nome;
             vm.novaPartida.data.endereco = vm.novaPartida.localSelecionado.endereco;
             var novaPartidaData = {
                 partida: vm.novaPartida.data,
@@ -247,12 +248,7 @@
                         $ionicLoading.hide();
                         JogosService.jogoSelecionado = val;
                         JogosService.jogoSelecionado.novoJogo = true;
-                        if (vm.novaPartida.arenaReserva) {
-                            $state.go('main.jogo-criado-reserva', { id: jogoId });
-                        }
-                        else {
-                            $state.go('main.meus-jogos-detail', { id: jogoId });
-                        }
+                        $state.go('app.detalhes-jogo', { id: jogoId });
                     });
                 }, function(err) {
                     console.log(err);
@@ -819,7 +815,7 @@
         }
 
         function openChat() {
-            $state.go('main.chat-' + Object.keys($state.current.views)[0], { id: vm.jogo.$id, tipoChat: 'partida' });
+            $state.go('app.chat' , { id: vm.jogo.$id, tipoChat: 'partida' });
         }
 
         function compartilhar() {
@@ -926,7 +922,7 @@
                     editing: true,
                     idPartida: vm.jogo.$id
                 };
-                $state.go('main.criar-partida');
+                $state.go('app.criar-partida');
             });
         }
 

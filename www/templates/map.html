@@ -1,0 +1,66 @@
+<ion-view hide-nav-bar="true" view-title="REI DA QUADRA" id="map-view" class="cards-view">
+  <ion-content class="step-local" scroll="false">
+    <div style="width:100%;height:100vh" id="map-arenas">
+      <div class="bar bar-header">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+        <div style="font-weight:bold" class="title">REI DA QUADRA</div>
+        <button ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="app.criar-partida" class="button button-icon button-clear ion-android-add icon"></button>
+      </div>
+      <ion-scroll class="scroll-markers" zooming="false" direction="y">
+        <div id="anchor{{marker.$id}}" ng-repeat="marker in $root.markers | orderBy:'data.distance '">
+          <div ng-if="marker.tipo == 'arena'" ng-click="vm.arenaService.arenaSelecionada = marker.data;" ui-sref="app.detalhes-arena({id: marker.$id})"
+            href="#/app/arenas/{{marker.$id}}" class="row item-arena">
+            <div class="col-20 avatar">
+              <img ng-src="{{marker.data.fotoPerfil}}" alt="">
+            </div>
+            <div class="col end">
+              <div class="nome-arena">{{marker.data.nome}}</div>
+              <small>{{marker.data.endereco}}</small><br/>
+              <small>{{marker.data.distance | number : 2}} km</small>
+            </div>
+            <div class="col-20 find-on-map" ng-click="vm.acharNoMapa(marker); $event.stopPropagation();">
+              <i class="icon ion-pinpoint positive"></i>
+            </div>
+          </div>
+          <div ng-if="marker.tipo == 'jogo'" ng-click="vm.jogosService.jogoSelecionado = marker.data;" ui-sref="app.detalhes-jogo({id: marker.$id})"
+            class="item-jogo">
+            <div class="card" style="margin: 0px; padding:0 7px; background-color:transparent!important;">
+              <div class="row" style="padding:0px 5px">
+                <div class="col-80">
+                  <div class="nome-jogo">{{marker.data.nome}}</div>
+                  <span class="dia-jogo" ng-if="vm.jogoEmAndamento(marker.data.inicio);">Em andamento...</span>
+                  <span class="dia-jogo" ng-if="vm.jogoAlgumasHoras(marker.data.inicio);" am-time-ago="marker.data.inicio"></span>
+                  <span class="dia-jogo" ng-if="vm.jogoHoje(marker.data.inicio) && !vm.jogoAlgumasHoras(marker.data.inicio) && !vm.jogoEmAndamento(marker.data.inicio);">HOJE </span>
+                  <span class="hora-jogo" ng-if="vm.jogoHoje(marker.data.inicio) && !vm.jogoAlgumasHoras(marker.data.inicio) && !vm.jogoEmAndamento(marker.data.inicio);"> - {{marker.data.inicio | date :" H:mm"}} </span>
+                  <span class="dia-jogo" ng-if="!vm.jogoHoje(marker.data.inicio)  && !vm.jogoEmAndamento(marker.data.inicio) && !vm.jogoAlgumasHoras(marker.data.inicio);">{{marker.data.inicio | date :"dd/MM}} </span>
+                  <span class="hora-jogo" ng-if="!vm.jogoHoje(marker.data.inicio)  && !vm.jogoEmAndamento(marker.data.inicio) && !vm.jogoAlgumasHoras(marker.data.inicio);"> - {{marker.data.inicio | date :" H:mm"}} </span>
+                  <span class="divider"><i class="icon ion-record"></i></span>
+                  <span class="local-jogo">{{marker.data.local}}</span>
+                </div>
+                <div class="col-20 find-on-map" ng-click="vm.acharNoMapa(marker); $event.stopPropagation();">
+                  <i class="icon ion-pinpoint"></i>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-75">
+                  <div class="jogadores">
+                    <div class="jogador" ng-repeat="jogador in marker.data.jogadores | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
+                      <img ng-if="!jogador.aguardandoConfirmacao" ng-class="{confirmado: jogador.confirmado}" ng-src="{{jogador.fotoPerfil | defaultImage}}">
+                    </div>
+                    <div ng-if="marker.data.jogadores.length > 4" class="plus">
+                      <div class="value"> + {{marker.data.jogadores.length - 4}}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col resumo">
+                  <b>{{marker.data.jogadores.length}}</b> / {{marker.data.maxJogadores}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ion-scroll>
+    </div>
+  </ion-content>
+</ion-view>

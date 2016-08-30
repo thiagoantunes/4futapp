@@ -1,0 +1,64 @@
+<ion-view id="chat-view" cache-view="false" view-title="Chat">
+  <div class="loader-center" ng-if="!vm.doneLoading">
+    <div class="loader">
+      <i class="icon ion-loading-c"></i>
+    </div>
+  </div>
+
+  <ion-content has-bouncing="true" class="has-header has-footer" delegate-handle="userMessageScroll">
+
+    <div ng-repeat="message in vm.mensagens" class="message-wrapper" on-hold="vm.onMessageHold($event, $index, message)">
+
+      <div ng-if="vm.currentUser.$id !== message.userId">
+
+        <img  class="profile-pic left" ng-src="{{vm.getUserData(message.userId).fotoPerfil | defaultImage}}"/>
+
+        <div class="chat-bubble left">
+
+          <div class="message" ng-bind-html="message.text | nl2br" autolinker>
+          </div>
+
+          <div class="message-detail">
+            <!--<span  class="bold">{{vm.getUserData(message.userId).nome}}</span>,-->
+            <span style="font-size: 0.8em; font-style: italic;" am-time-ago="message.date"></span>
+          </div>
+
+        </div>
+      </div>
+
+      <div ng-if="vm.currentUser.$id === message.userId">
+
+        <img  class="profile-pic right" ng-src="{{vm.currentUser.fotoPerfil | defaultImage}}" />
+
+        <div class="chat-bubble right">
+
+          <div class="message" ng-bind-html="message.text | nl2br" autolinker>
+          </div>
+
+          <div class="message-detail">
+            <!--<span class="bold">{{vm.currentUser.nome}}</span>,-->
+            <span style="font-size: 0.8em; font-style: italic;"  am-time-ago="message.date"></span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="cf"></div>
+
+    </div>
+  </ion-content>
+
+  <form name="sendMessageForm" ng-submit="vm.enviarMensagem()" novalidate>
+    <ion-footer-bar class="bar-dark item-input-inset message-footer" keyboard-attach>
+      <label class="item-input-wrapper">
+                      <textarea ng-model="vm.input.message" value="" placeholder="Envie uma mensagem" required minlength="1" maxlength="1500" msd-elastic></textarea>
+                  </label>
+      <div class="footer-btn-wrap">
+        <button style="margin-left:-25px; box-shadow: none;" class="button button-icon icon ion-android-send footer-btn" type="submit" ng-disabled="!vm.input.message || vm.input.message === ''">
+        </button>
+      </div>
+    </ion-footer-bar>
+  </form>
+
+</ion-view>

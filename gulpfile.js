@@ -26,6 +26,8 @@ var paths = {
     useref: ['./www/*.html']
 };
 
+gulp.task('serve:before', ['default']);
+
 gulp.task('default', ['sass' , 'templatecache', 'ng_annotate' , 'useref']);
 
 gulp.task('sass', function(done) {

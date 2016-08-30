@@ -1,5 +1,5 @@
 /*jshint loopfunc: true */
-(function() {
+(function () {
     'use strict';
     angular.module('main')
         .controller('ArenasCtrl', ArenasCtrl)
@@ -13,46 +13,55 @@
         vm.arenaService = ArenasService;
         vm.arenas = ArenasService.arenas;
 
+        vm.jogosService = JogosService;
         vm.goBack = goBack;
         vm.isDevice = isDevice;
 
         activate();
 
-        $scope.$on('$ionicView.enter', function() {
+        $scope.$on('$ionicView.enter', function () {
             if (window.cordova) {
                 StatusBar.backgroundColorByName('black');
             }
         });
 
         function activate() {
-            if ($rootScope.map) {
-                var mapPosition = new plugin.google.maps.LatLng(GeoService.position[0], GeoService.position[1]);
+            initMap();
+        }
 
-                $timeout(function() {
-                    $rootScope.map.setDiv(document.getElementById("map-arenas"));
-                    $rootScope.map.refreshLayout();
-                    _.forEach(JogosService.jogosRegiaoMarkers, function(jogoMarker) {
-                        jogoMarker.setVisible(false);
-                    });
+        function initMap() {
+            console.log('Getting map');
+            var mapPosition = new plugin.google.maps.LatLng(GeoService.position[0], GeoService.position[1]);
+            var mapParams = {
+                'backgroundColor': '#ffffff',
+                'mapType': plugin.google.maps.MapTypeId.ROADMAP,
+                'controls': {
+                    'compass': false,
+                    'myLocationButton': false,
+                    'indoorPicker': true,
+                    'zoom': false
+                    // Only for Android
+                },
+                'gestures': {
+                    'scroll': true,
+                    'tilt': false,
+                    'rotate': true,
+                    'zoom': true,
+                },
+                'camera': {
+                    'latLng': mapPosition,
+                    'tilt': 0,
+                    'zoom': 5,
+                    'bearing': 0
+                }
 
-                    _.forEach(ArenasService.arenasMarkers, function(arenaMarker) {
-                        arenaMarker.setVisible(true);
-                    });
-
-                    //  var data = {
-                    //     'position': new plugin.google.maps.LatLng(vm.arenas[0].latitude, vm.arenas[0].longitude),
-                    //     'title': vm.arenas[0].nome,
-                    //     'icon': { 'url': vm.arenas[0].icon, }
-                    // };
-
-                    // $rootScope.map.addMarker(data, function(marker) {
-                    //     marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, service.onMarkerClicked);
-                    //     marker.nome = arena.nome;
-                    //     marker.$id = arena.$id;
-                    //     service.arenasMarkers.push(marker);
-                    // });
-
-                    $rootScope.map.animateCamera({
+            };
+            $timeout(function () {
+                var map = plugin.google.maps.Map.getMap(document.getElementById("map-arenas"), mapParams);
+                map.on(plugin.google.maps.event.MAP_READY, function (map) {
+                    console.log('Map loaded');
+                    $rootScope.map = map;
+                    map.animateCamera({
                         'target': mapPosition,
                         'tilt': 0,
                         'zoom': 14,
@@ -60,8 +69,11 @@
                         'duration': 2000
                         // = 2 sec.
                     });
-                }, 100);
-            }
+                    ArenasService.getArenas();
+                    JogosService.getJogosRegiao();
+                    $rootScope.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, GeoService.onMapCameraChanged);
+                });
+            }, 500);
         }
 
         function isDevice() {
@@ -102,7 +114,7 @@
 
             UserService.getUserProfile(firebase.auth().currentUser.uid).$bindTo($scope, 'currentUser');
 
-            vm.quadras.$loaded().then(function() {
+            vm.quadras.$loaded().then(function () {
                 getReservas(new Date());
             });
             vm.carouselOptions1 = {
@@ -123,7 +135,7 @@
             $ionicModal.fromTemplateUrl('modal/estrutura-arena.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
-            }).then(function(modal) {
+            }).then(function (modal) {
                 $scope.modalEstrutura = modal;
                 $scope.estrutura = vm.estrutura;
                 modal.show();
@@ -134,7 +146,7 @@
             $ionicModal.fromTemplateUrl('modal/quadras-arena.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
-            }).then(function(modal) {
+            }).then(function (modal) {
                 $scope.modalQuadras = modal;
                 $scope.quadras = vm.quadras;
                 modal.show();
@@ -145,9 +157,9 @@
             $ionicModal.fromTemplateUrl('modal/album-arena.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
-            }).then(function(modal) {
+            }).then(function (modal) {
                 $scope.modalAlbum = modal;
-                $scope.albumArena = _.map(vm.album, function(val) {
+                $scope.albumArena = _.map(vm.album, function (val) {
                     return {
                         src: val.img,
                         thumb: val.thumb
@@ -192,14 +204,14 @@
         function getHorariosLivres(reservas) {
             vm.reservas = reservas;
             vm.horariosPorQuadra = [];
-            _.forEach(vm.quadras, function(quadra) {
+            _.forEach(vm.quadras, function (quadra) {
                 var horarios = getHorariosDia(quadra);
                 vm.horariosPorQuadra.push({
                     quadra: quadra,
                     horarios: horarios
                 });
             });
-            vm.nenhumHorario = _.every(vm.horariosPorQuadra, function(val) {
+            vm.nenhumHorario = _.every(vm.horariosPorQuadra, function (val) {
                 return val.horarios.length === 0;
             });
         }
@@ -209,7 +221,7 @@
             var func = _.orderBy(_.filter(quadra.funcionamento, { dow: diaSemana }), 'start', 'asc');
             var horariosLivres = [];
 
-            _.forEach(func, function(f) {
+            _.forEach(func, function (f) {
                 var start = moment(moment(vm.intervaloSelecionado.start).format('DD/MM/YYYY') + f.start, 'DD/MM/YYYYhh:mm');
                 var end = moment(moment(vm.intervaloSelecionado.start).format('DD/MM/YYYY') + f.start, 'DD/MM/YYYYhh:mm').add(1, 'h');
                 var limite = moment(moment(vm.intervaloSelecionado.start).format('DD/MM/YYYY') + f.end, 'DD/MM/YYYYhh:mm');
@@ -224,7 +236,7 @@
                         preco: f.precoAvulso,
                     };
 
-                    var horarioLivre = _.every(vm.reservas, function(r) {
+                    var horarioLivre = _.every(vm.reservas, function (r) {
                         return !(
                             r.start === horario.start ||
                             r.end === horario.end ||
@@ -265,21 +277,21 @@
                 duracao: 1,
                 horarioExtraDisponivel: getHorarioExtraDisponivel()
             };
-            $scope.SalvarReserva = function() {
+            $scope.SalvarReserva = function () {
                 confirmarReserva();
             };
 
             $ionicModal.fromTemplateUrl('modal/confirma-reserva.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
-            }).then(function(modal) {
+            }).then(function (modal) {
                 $scope.modal = modal;
                 $scope.modal.show();
             });
         }
 
         function getHorarioExtraDisponivel() {
-            var proximasReservas = _.orderBy(_.filter(vm.reservas, function(val) {
+            var proximasReservas = _.orderBy(_.filter(vm.reservas, function (val) {
                 return val.start >= vm.horarioSelecionado.end;
             }), 'start', 'asc');
 
@@ -310,7 +322,7 @@
                     {
                         text: '<b>Enviar</b>',
                         type: 'button-positive',
-                        onTap: function(e) {
+                        onTap: function (e) {
                             if (!$scope.currentUser.telefone) {
                                 e.preventDefault();
                             } else {
@@ -328,14 +340,14 @@
             $ionicModal.fromTemplateUrl('modal/codigo-verificacao.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
-            }).then(function(modal) {
+            }).then(function (modal) {
                 $scope.modalVerificacao = modal;
-                $scope.addPin = function(value) {
+                $scope.addPin = function (value) {
                     if (vm.verificacaoReserva.code.length < 4) {
                         vm.verificacaoReserva.code = vm.verificacaoReserva.code + value;
                     }
                 };
-                $scope.deletePin = function() {
+                $scope.deletePin = function () {
                     if (vm.verificacaoReserva.code.length > 0) {
                         vm.verificacaoReserva.code = vm.verificacaoReserva.code.substring(0, vm.verificacaoReserva.code.length - 1);
                     }
@@ -343,14 +355,14 @@
                 $scope.modalVerificacao.show();
             });
             $ionicLoading.show({ template: 'Carregando...' });
-            SmsVerify.numberVerify({ Number: '55' + $scope.currentUser.telefone, brand: 'Rei da Quadra' }, function(data) {
+            SmsVerify.numberVerify({ Number: '55' + $scope.currentUser.telefone, brand: 'Rei da Quadra' }, function (data) {
                 $ionicLoading.hide();
                 console.log(data);
                 vm.verificacaoReserva = {
                     requestId: data.request_id,
                     code: ''
                 };
-            }, function(err) {
+            }, function (err) {
                 console.log(err);
                 $ionicLoading.hide();
                 $window.alert('Erro ao enviar mensagem de verificação. Tente novamente mais tarde.');
@@ -359,14 +371,14 @@
 
         function verificarCodigo() {
             $ionicLoading.show({ template: 'Carregando...' });
-            SmsVerify.numberVerifyCheck(vm.verificacaoReserva, function(verification) {
+            SmsVerify.numberVerifyCheck(vm.verificacaoReserva, function (verification) {
                 $ionicLoading.hide();
                 console.log(verification);
                 if (verification.status === 0) {
                     salvarNovaReserva();
                     $scope.modalVerificacao.hide();
                 }
-            }, function(err) {
+            }, function (err) {
                 console.log(err);
                 $ionicLoading.hide();
                 $window.alert('Erro ao verificar código. Tente novamente mais tarde.');
@@ -386,7 +398,7 @@
                 status: 'agendado'
             };
             $ionicLoading.show({ template: 'Carregando...' });
-            ReservasService.criarReservaAvulsa(novaReserva, vm.arena.$id).then(function(reserva) {
+            ReservasService.criarReservaAvulsa(novaReserva, vm.arena.$id).then(function (reserva) {
                 $ionicLoading.hide();
                 if (vm.arena.criacaoPartidaAndamento) {
                     JogosService.novaPartida.data.reserva = reserva.$id;
@@ -411,14 +423,14 @@
                     reserva.novaReserva = true;
                     ReservasService.openReservaModal(reserva, vm.arena);
                 }
-            }, function(error) {
+            }, function (error) {
                 $ionicLoading.hide();
                 $window.alert('Ops! ' + error);
             });
         }
 
         // Set Motion
-        $timeout(function() {
+        $timeout(function () {
             ionicMaterialMotion.slideUp({
                 selector: '.slide-up'
             });

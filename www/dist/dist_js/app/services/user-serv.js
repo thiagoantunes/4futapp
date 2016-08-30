@@ -32,6 +32,7 @@
     $ionicPlatform) {
 
     var service = {
+      meuPerfil: {},
       jogos: [],
       amigos: [],
       times: [],
@@ -69,6 +70,7 @@
       var deferred = $q.defer();
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
+          service.meuPerfil = getUserProfile(user.uid);
           setConexao(user.uid);
           setDeviceToken(user.uid);
           deferred.resolve(user);

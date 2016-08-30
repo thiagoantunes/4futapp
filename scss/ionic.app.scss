@@ -1,33 +1,9 @@
-// $light:                           #fff !default;
-// $stable:                          #555 !default;
-// $positive:                        #009688 !default;
-// $calm:                            #00BCD4 !default;
-// $balanced:                        #03b7a5 !default;
-// $energized:                       #FFC107 !default;
-// $assertive:                       #F34235 !default;
-// $royal:                           #8a6de9 !default;
-// $dark:                            #2e2f31 !default;
-// $base-background-color:           #282828 !default;
-
-// $base-color:                      #efefef !default;
-// $card-header-bg:                  #444 !default;
-// $card-body-bg:                    #333 !default;
-// $card-footer-bg:                  #444 !default;
-
-// $button-stable-bg:                $stable !default;
-// $button-stable-text:              #efefef !default;
-// $button-stable-border:            #444 !default;
-// $button-stable-active-bg:         #444 !default;
-// $button-stable-active-border:     #333 !default;
-
-
-
 $light:                           #AABDC2 !default;
 $stable:                          #1A5463 !default;
 $positive:                        #AAF502 !default;
 $calm:                            #0084A8 !default;
 $balanced:                        #03b7a5 !default;
-$energized:                       #FFC107 !default;
+$energized:                       #FF6A00 !default;
 $assertive:                       #F34235 !default;
 $royal:                           #8a6de9 !default;
 $dark:                            #00303D !default;
@@ -90,6 +66,10 @@ $input-color: #fff;
 
 input[readonly]{
     background-color: $base-background-color !important;
+}
+
+.side-menu-hide{
+    display: none;
 }
 
 .input-label{
@@ -200,6 +180,195 @@ input[readonly]{
     "scss/inc/list-view",
     "scss/inc/login-view",
     "scss/inc/chat"; 
+
+.menu {
+  transform: translateX(-275px);
+  -webkit-transition: -webkit-transform 200ms ease;
+  transition: transform 200ms ease;
+}
+
+.menu-open {
+  .menu {
+    transform: translateX(0px);
+    -webkit-transition: -webkit-transform 200ms ease;
+    transition: transform 200ms ease;
+  }
+}
+
+ion-side-menu{
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+
+    .header{
+        padding: 40px 0px 0px 16px;
+        height: 160px;
+        .row{
+            padding:0px;
+            .col-33{
+                padding:0px;
+            }
+            .col{
+                padding:0px
+            }
+        }
+        img{
+            width:80px; height:80px; border-radius:50%;
+        }
+        h1,h2,h3,h4,h5,h6{
+            color: $base-background-color;
+            margin-bottom: 5px;
+        }
+        small{
+            color: $base-background-color;
+        }
+    }
+    ion-content{
+        top:160px !important;
+        color: $base-background-color;
+
+        ion-list{
+            .list{
+                ion-item{
+                    color: inherit;
+                    font-size: 1.2em;
+                    border: 0px !important;
+                    background-color: transparent !important;
+                    .item-content{
+                        padding: 12px 49px 12px 16px;
+                    }
+                    a{
+                        background: transparent !important;
+                    }
+                    i{
+                        font-size: 1.4em; margin-right: 10px;
+                    }
+                }
+            }
+        }
+        .footer{
+            margin: 10px 16px;
+            border-top: solid 1px $base-background-color;
+            padding-top:20px;
+            font-size: 1.3em;
+        }
+    }
+}
+#map-view{
+
+    .bar-header{
+        border-bottom: 0px !important; background: rgba( $base-background-color, .85 ); 
+    }
+
+    .scroll-markers{
+        top: 68vh;
+        height: 33vh;
+        padding-bottom: 100px;
+    }
+
+    .item-arena{
+        background: rgba( $base-background-color, .85 ); 
+        height: 90px; 
+
+        .avatar{
+            padding-top:15px; text-align:center;
+            img{
+                width:55px; height:55px; border-radius:50%
+            }
+        }
+
+        .nome-arena{
+            font-size:1.4em;
+            color: $light;             
+            font-weight: bold; margin:5px 0px 3px 0px
+        }
+
+        .end{
+            padding: 0px 10px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+
+        .find-on-map{
+            padding-top: 20px; 
+            text-align: right;
+            font-size:2em;
+            padding-right: 22px;
+        }
+    }
+
+    .item-jogo{
+        background: rgba( $positive, .8 );
+        color:  $base-background-color;
+        padding-top: 15px;
+
+        .find-on-map{
+            text-align: right;
+            font-size:2em;
+            padding-top:5px;
+            padding-right: 15px;
+        }
+
+        .divider{
+            font-size:0.7em;
+            padding: 0px 5px;
+            color: darken($positive, 10%);
+        }
+
+        .nome-jogo{
+            font-size:1.85em; font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .dia-jogo{
+            font-size: 1.3em;
+            font-weight: bold;
+            color: $energized
+        }
+
+        .hora-jogo{
+            font-size: 1.3em;
+            font-weight: bold;
+            color: darken($positive, 25%);
+        }
+
+        .local-jogo{
+            font-size: 1.2em;
+            font-weight: bold;
+            color: darken($positive, 25%);
+        }
+
+        .jogadores{
+            padding-top:10px;
+            .jogador{
+                position:relative; display:inline-block; padding:5px 1px;
+                img{
+                    width: 40px; height: 40px; border-radius: 50%;
+                }
+
+                .confirmado{
+                     border: 2px solid $positive;
+                }
+            }
+
+            .plus{
+                top:-17px; position:relative; display:inline-block; padding:5px 1px;
+                .value{
+                    font-size: 1.5em;
+                    font-weight: bold;
+                    color: darken($positive, 25%);
+                    
+                }
+            }
+        }
+        .resumo{
+            font-size:1.5em; font-weight: 300; text-align: right; padding-top: 25px
+        }
+
+    }
+}
 
 .bar{
     .title{

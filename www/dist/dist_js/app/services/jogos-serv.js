@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
     angular.module('main')
         .factory('JogosService', JogosService);
@@ -39,8 +39,8 @@
 
         function getJogo(jogoId) {
             var deferred = $q.defer();
-            service.ref.child(jogoId).on('value', function(snapJogo) {
-                getJogadoresJogo(jogoId).$loaded().then(function(val) {
+            service.ref.child(jogoId).on('value', function (snapJogo) {
+                getJogadoresJogo(jogoId).$loaded().then(function (val) {
                     var data = snapJogo.val();
                     data.$id = jogoId;
                     data.jogadores = val;
@@ -55,10 +55,10 @@
         }
 
         function getJogosRegiao() {
-            service.geoQuery.on('key_entered', function(key, location, distance) {
-                service.ref.child(key).on('value', function(snapshot) {
+            service.geoQuery.on('key_entered', function (key, location, distance) {
+                service.ref.child(key).on('value', function (snapshot) {
                     if (snapshot.val() && snapshot.val().inicio > moment(new Date()).subtract(1, 'H')._d.getTime()) {
-                        getJogadoresJogo(key).$loaded().then(function(val) {
+                        getJogadoresJogo(key).$loaded().then(function (val) {
                             var jogo = snapshot.val();
                             jogo.distance = distance;
                             jogo.$id = key;
@@ -68,17 +68,17 @@
                             if (jogo.responsavel == firebase.auth().currentUser.uid) {
                                 jogo.visivel = true;
                                 jogo.icon = 'www/img/pin-jogos.png';
-                                $timeout(function() {
+                                $timeout(function () {
                                     _.remove(service.jogosRegiao, { '$id': key });
                                     service.jogosRegiao.push(jogo);
                                     addJogoMarker(jogo);
                                 });
                             }
                             else {
-                                verificaPermissao(jogo).then(function(visivel) {
-                                    jogo.visivel = visivel;
+                                verificaPermissao(jogo).then(function (visivel) {
+                                    jogo.readOnly = !visivel;
                                     jogo.icon = visivel ? 'www/img/pin-jogos.png' : 'www/img/pin-jogos-readonly.png';
-                                    $timeout(function() {
+                                    $timeout(function () {
                                         _.remove(service.jogosRegiao, { '$id': key });
                                         service.jogosRegiao.push(jogo);
                                         addJogoMarker(jogo);
@@ -94,7 +94,7 @@
             });
 
 
-            service.geoQuery.on("key_exited", function(key, location, distance) {
+            service.geoQuery.on("key_exited", function (key, location, distance) {
                 _.remove(service.jogosRegiao, { '$id': key });
                 var jogoMarker = _.find(service.jogosRegiaoMarkers, { $id: key });
                 if (jogoMarker) {
@@ -108,21 +108,28 @@
             if (jogoMarker) {
                 jogoMarker.remove();
             }
-            var data = {
-                'position': new plugin.google.maps.LatLng(jogo.latitude, jogo.longitude),
-                'title': jogo.nome,
-                'icon': { 'url': jogo.icon, }
-            };
             if ($rootScope.map) {
-                $timeout(function() {
-                    $rootScope.map.addMarker(data, function(marker) {
-                        if (jogo.visivel) {
+                var data = {
+                    'position': new plugin.google.maps.LatLng(jogo.latitude, jogo.longitude),
+                    'title': jogo.nome,
+                    'icon': { 
+                        'url': jogo.icon, 
+                        'size': {
+                            width: 79,
+                            height: 48
+                        }
+                    }
+                };
+                $timeout(function () {
+                    $rootScope.map.addMarker(data, function (marker) {
+                        if (!jogo.readOnly) {
                             marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, onMarkerClicked);
                         }
-                        marker.nome = jogo.nome;
-                        marker.visivel = jogo.visivel;
+                        marker.tipo = 'jogo';
+                        marker.readOnly = jogo.readOnly;
                         marker.$id = jogo.$id;
-                        service.jogosRegiaoMarkers.push(marker);
+                        marker.data = jogo;
+                        $rootScope.markers.push(marker);
                     });
                 }, 100);
             }
@@ -165,15 +172,15 @@
                 id: firebase.auth().currentUser.uid,
                 confirmado: true
             };
-            _.forEach(data.jogadores, function(jogador) {
+            _.forEach(data.jogadores, function (jogador) {
                 jogoData['jogosJogadores/' + jogoId + '/' + jogador.$id] = {
                     fotoPerfil: jogador.fotoPerfil,
                     id: jogador.$id
                 };
                 jogoData['usersJogos/' + jogador.$id + '/' + jogoId] = true;
             });
-            _.forEach(data.times, function(time) {
-                _.forEach(time.jogadores, function(jogador) {
+            _.forEach(data.times, function (time) {
+                _.forEach(time.jogadores, function (jogador) {
                     if (jogador.id !== firebase.auth().currentUser.uid) {
                         jogoData['jogosJogadores/' + jogoId + '/' + jogador.id] = {
                             fotoPerfil: jogador.fotoPerfil,
@@ -187,7 +194,7 @@
                 jogoData['reservas/' + data.arenaId + '/' + data.partida.reserva + '/partida'] = jogoId;
             }
 
-            Ref.update(jogoData, function(error) {
+            Ref.update(jogoData, function (error) {
                 if (error) {
                     deferred.reject('Erro ao cadastrar nova turma');
                 }
@@ -199,7 +206,7 @@
                     };
                     UserService.schedulePushNotification(scheduleNotificationData);
 
-                    _.forEach(data.jogadores, function(jogador) {
+                    _.forEach(data.jogadores, function (jogador) {
                         UserService.enviaNotificacao({
                             msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
                             img: firebase.auth().currentUser.photoURL,
@@ -214,8 +221,8 @@
                         };
                         UserService.schedulePushNotification(scheduleNotificationData);
                     });
-                    _.forEach(data.times, function(time) {
-                        _.forEach(time.jogadores, function(jogador) {
+                    _.forEach(data.times, function (time) {
+                        _.forEach(time.jogadores, function (jogador) {
                             if (jogador.id !== firebase.auth().currentUser.uid) {
                                 var scheduleNotificationData = {
                                     id: jogador.$id,
@@ -249,15 +256,15 @@
             jogoData['jogos/' + jogoId] = null;
             jogoData['jogosJogadores/' + jogoId] = null;
             jogoData['jogosLocalizacao/' + jogoId] = null;
-            _.forEach(jogo.jogadores, function(jogador) {
+            _.forEach(jogo.jogadores, function (jogador) {
                 jogoData['usersJogos/' + jogador.$id + '/' + jogoId] = null;
             });
-            Ref.update(jogoData, function(error) {
+            Ref.update(jogoData, function (error) {
                 if (error) {
                     deferred.reject('Erro ao cancelar a partida');
                 }
                 else {
-                    _.forEach(jogo.jogadores, function(jogador) {
+                    _.forEach(jogo.jogadores, function (jogador) {
                         UserService.enviaNotificacao({
                             msg: firebase.auth().currentUser.displayName + ' cancelou uma partida ' + jogo.nome,
                             img: firebase.auth().currentUser.photoURL,
@@ -281,7 +288,7 @@
                 jogoData['reservas/' + data.arenaId + '/' + data.partida.reserva + '/partida'] = data.idPartida;
             }
 
-            Ref.update(jogoData, function(error) {
+            Ref.update(jogoData, function (error) {
                 if (error) {
                     deferred.reject('Erro ao cadastrar nova turma');
                 }
@@ -310,7 +317,7 @@
             conviteData['jogosJogadores/' + jogo.$id + '/' + firebase.auth().currentUser.uid] = solicitacao;
             conviteData['usersJogos/' + firebase.auth().currentUser.uid + '/' + jogo.$id] = true;
 
-            Ref.update(conviteData, function() {
+            Ref.update(conviteData, function () {
                 deferred.resolve(solicitacao);
                 if (jogo.aprovacaoManual) {
                     UserService.enviaNotificacao({
@@ -328,14 +335,14 @@
         }
 
         function getMeusJogos() {
-            service.refUserJogos.child(firebase.auth().currentUser.uid).on('child_added', function(snap) {
-                service.ref.child(snap.key).on('value', function(snapJogo) {
-                    getJogadoresJogo(snap.key).$loaded().then(function(val) {
+            service.refUserJogos.child(firebase.auth().currentUser.uid).on('child_added', function (snap) {
+                service.ref.child(snap.key).on('value', function (snapJogo) {
+                    getJogadoresJogo(snap.key).$loaded().then(function (val) {
                         if (snapJogo.val()) {
                             var data = snapJogo.val();
                             data.$id = snap.key;
                             data.jogadores = val;
-                            $timeout(function() {
+                            $timeout(function () {
                                 _.remove(UserService.jogos, { '$id': snap.key });
                                 UserService.jogos.push(data);
                             });
@@ -344,8 +351,8 @@
                 });
             });
 
-            service.refUserJogos.child(firebase.auth().currentUser.uid).on('child_removed', function(oldChild) {
-                $timeout(function() {
+            service.refUserJogos.child(firebase.auth().currentUser.uid).on('child_removed', function (oldChild) {
+                $timeout(function () {
                     _.remove(UserService.jogos, { '$id': oldChild.key });
                 });
             });
@@ -355,7 +362,7 @@
             var data = {};
             data['jogosJogadores/' + jogoId + '/' + userId + '/aguardandoConfirmacao'] = null;
 
-            Ref.update(data, function() {
+            Ref.update(data, function () {
                 UserService.enviaNotificacao({
                     msg: firebase.auth().currentUser.displayName + ' aprovou sua participação em uma partida',
                     userId: firebase.auth().currentUser.uid,
@@ -376,7 +383,7 @@
             };
             conviteData['usersJogos/' + amigo.$id + '/' + jogoId] = true;
 
-            Ref.update(conviteData, function() {
+            Ref.update(conviteData, function () {
                 UserService.enviaNotificacao({
                     msg: firebase.auth().currentUser.displayName + ' te convidou para uma partida',
                     userId: firebase.auth().currentUser.uid,
@@ -404,12 +411,12 @@
                 deferred.resolve(true);
             }
             else if (jogo.visibilidade == Enum.VisualizacaoJogo.amigosDeAmigos) {
-                UserService.verificaAmizadeDeAmizades(jogo.responsavel).then(function(val) {
+                UserService.verificaAmizadeDeAmizades(jogo.responsavel).then(function (val) {
                     deferred.resolve(val);
                 });
             }
             else if (jogo.visibilidade == Enum.VisualizacaoJogo.amigos) {
-                UserService.verificaAmizade(jogo.responsavel).then(function(val) {
+                UserService.verificaAmizade(jogo.responsavel).then(function (val) {
                     deferred.resolve(val);
                 });
             }
