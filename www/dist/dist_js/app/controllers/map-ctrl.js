@@ -4,9 +4,9 @@
     angular.module('main')
         .controller('MapCtrl', MapCtrl);
 
-    MapCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'ArenasService', 'JogosService', '$ionicHistory', '$window', 'GeoService', '$ionicSideMenuDelegate'];
+    MapCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'ArenasService', 'JogosService', '$ionicHistory', '$window', 'GeoService', '$ionicSideMenuDelegate', '$ionicModal'];
 
-    function MapCtrl($scope, $rootScope, $timeout, ArenasService, JogosService, $ionicHistory, $window, GeoService, $ionicSideMenuDelegate) {
+    function MapCtrl($scope, $rootScope, $timeout, ArenasService, JogosService, $ionicHistory, $window, GeoService, $ionicSideMenuDelegate, $ionicModal) {
         var vm = this;
         vm.arenaService = ArenasService;
         vm.jogosService = JogosService;
@@ -21,9 +21,18 @@
         vm.jogoAlgumasHoras = jogoAlgumasHoras;
         vm.jogoEmAndamento = jogoEmAndamento;
 
+        vm.openFiltroModal = openFiltroModal;
+        vm.toggleFiltroArenas = toggleFiltroArenas;
+        vm.toggleFiltroJogos = toggleFiltroJogos;
+
         activate();
 
         function activate() {
+            vm.filtro = {
+                arenas: true,
+                jogos: true
+            };
+
             if (isDevice()) {
                 initMap();
             }
@@ -48,53 +57,62 @@
             }
         }
 
+        function openFiltroModal() {
+            // $ionicModal.fromTemplateUrl('modal/filtro-mapa.html', {
+            //     scope: $scope,
+            //     animation: 'slide-in-up'
+            // }).then(function (modal) {
+            //     vm.filtroModal = modal;
+            //     modal.show();
+            // });
 
-        function initMap2() {
-            console.log('Getting map');
-            var mapPosition = new plugin.google.maps.LatLng(GeoService.position[0], GeoService.position[1]);
-            var mapParams = {
-                'backgroundColor': '#ffffff',
-                'mapType': plugin.google.maps.MapTypeId.ROADMAP,
-                'controls': {
-                    'compass': false,
-                    'myLocationButton': false,
-                    'indoorPicker': true,
-                    'zoom': false
-                    // Only for Android
-                },
-                'gestures': {
-                    'scroll': true,
-                    'tilt': false,
-                    'rotate': true,
-                    'zoom': true,
-                },
-                'camera': {
-                    'latLng': mapPosition,
-                    'tilt': 0,
-                    'zoom': 5,
-                    'bearing': 0
-                }
-
-            };
-            $timeout(function () {
-                var map = plugin.google.maps.Map.getMap(document.getElementById("map-arenas"), mapParams);
-                map.on(plugin.google.maps.event.MAP_READY, function (map) {
-                    console.log('Map loaded');
-                    $rootScope.map = map;
-                    $rootScope.markers = [];
-                    $rootScope.map.animateCamera({
-                        'target': mapPosition,
-                        'tilt': 0,
-                        'zoom': 14,
-                        'bearing': 0,
-                        'duration': 2000
-                        // = 2 sec.
-                    });
-                    ArenasService.getArenas();
-                    JogosService.getJogosRegiao();
-                    $rootScope.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, GeoService.onMapCameraChanged);
+            vm.filtro.arenas = false;
+            var markersArena = _.filter($rootScope.markers, {'tipo' : 'arena'});
+            if(vm.filtro.arenas) {
+                _.forEach(markersArena, function (marker){
+                    marker.setVisible(true);
                 });
-            }, 500);
+            }
+            else {
+                 $timeout(function () {
+                    _.forEach($rootScope.markers, function(jogoMarker){		
+                        if(jogoMarker.tipo == 'arena'){
+                            jogoMarker.setVisible(false);
+                        }		
+                   });
+ 
+                }, 100);
+
+                
+            }
+        }
+
+        function toggleFiltroArenas() {
+            var markersArena = _.filter($rootScope.markers, {'tipo' : 'arena'});
+            if(vm.filtro.arenas) {
+                _.forEach(markersArena, function (marker){
+                    marker.setVisible(true);
+                });
+            }
+            else {
+                 _.forEach(markersArena, function (marker){
+                    marker.setVisible(false);
+                });
+            }
+        }
+
+        function toggleFiltroJogos() {
+            var markersJogos = _.filter($rootScope.markers, {'tipo' : 'jogo'});
+            if(vm.filtro.jogos) {
+                _.forEach(markersJogos, function (marker){
+                    marker.setVisible(true);
+                });
+            }
+            else {
+                 _.forEach(markersJogos, function (marker){
+                    marker.setVisible(false);
+                });
+            }
         }
 
         function acharNoMapa(marker) {

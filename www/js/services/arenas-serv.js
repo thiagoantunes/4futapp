@@ -56,9 +56,10 @@
         }
 
         function addArenaMarker(arena) {
-            var arenaMarker = _.find(service.arenasMarkers, { $id: arena.$id });
+            var arenaMarker = _.find($rootScope.markers, { $id: arena.$id });
             if (arenaMarker) {
                 arenaMarker.remove();
+                _.remove($rootScope.markers, { '$id': arena.$id });
             }
             if ($rootScope.map) {
                 var data = {

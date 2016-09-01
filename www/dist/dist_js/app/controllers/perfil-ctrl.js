@@ -108,7 +108,7 @@
     }
 
     function openListaJogadores(tipoLista) {
-      UserService.jogadorSelecionado = vm.user;
+      UserService.jogadorSelecionado = UserService.meuPerfil;
       $state.go('app.listaJogadores', { tipoLista: tipoLista });
     }
 

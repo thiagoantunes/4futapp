@@ -1,0 +1,12 @@
+<ion-modal-view hide-nav-bar="true" class="criar-partida" style=" background-image: url('img/wizardbg.jpg');">
+  <div class="bar bar-header" style="background:transparent; border: 0px !important">
+    <button style="color:white" class="button button-icon button-clear ion-android-close" ng-click="vm.filtroModal.hide()"></button>
+    <div style="font-weight:bold" class="title"></div>
+  </div>
+  <ion-content class="has-header step-local">
+    <ion-list>
+      <ion-checkbox ng-change="vm.toggleFiltroArenas();" ng-model="vm.filtro.arenas">Arenas</ion-checkbox>
+      <ion-checkbox ng-change="vm.toggleFiltroJogos();" ng-model="vm.filtro.jogos">Jogos</ion-checkbox>
+    </ion-list>
+  </ion-content>
+</ion-modal-view>

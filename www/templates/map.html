@@ -7,6 +7,8 @@
         <h1 class="title"><img class="title-image" src="img/header-logo.png" width="151" height="43" /></h1>
         <button ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="app.criar-partida" class="button button-icon button-clear ion-android-add icon"></button>
       </div>
+      <button ng-click="vm.openFiltroModal();" style="top: 60vh; color: red; font-size: 3em; position: absolute;" class="button button-icon button-clear ion-navicon">
+        </button>
       <ion-scroll class="scroll-markers" zooming="false" direction="y">
         <div id="anchor{{marker.$id}}" ng-repeat="marker in $root.markers | orderBy:'data.distance '">
           <div ng-if="marker.tipo == 'arena'" ng-click="vm.arenaService.arenaSelecionada = marker.data;" ui-sref="app.detalhes-arena({id: marker.$id})"
@@ -33,7 +35,7 @@
                   <span class="dia-jogo" ng-if="vm.jogoAlgumasHoras(marker.data.inicio);" am-time-ago="marker.data.inicio"></span>
                   <span class="dia-jogo" ng-if="vm.jogoHoje(marker.data.inicio) && !vm.jogoAlgumasHoras(marker.data.inicio) && !vm.jogoEmAndamento(marker.data.inicio);">HOJE </span>
                   <span class="hora-jogo" ng-if="vm.jogoHoje(marker.data.inicio) && !vm.jogoAlgumasHoras(marker.data.inicio) && !vm.jogoEmAndamento(marker.data.inicio);"> - {{marker.data.inicio | date :" H:mm"}} </span>
-                  <span class="dia-jogo" ng-if="!vm.jogoHoje(marker.data.inicio)  && !vm.jogoEmAndamento(marker.data.inicio) && !vm.jogoAlgumasHoras(marker.data.inicio);">{{marker.data.inicio | date :"dd/MM}} </span>
+                  <span class="dia-jogo" ng-if="!vm.jogoHoje(marker.data.inicio)  && !vm.jogoEmAndamento(marker.data.inicio) && !vm.jogoAlgumasHoras(marker.data.inicio);">{{marker.data.inicio | date :"dd/MM"}} </span>
                   <span class="hora-jogo" ng-if="!vm.jogoHoje(marker.data.inicio)  && !vm.jogoEmAndamento(marker.data.inicio) && !vm.jogoAlgumasHoras(marker.data.inicio);"> - {{marker.data.inicio | date :" H:mm"}} </span>
                   <span class="divider"><i class="icon ion-record"></i></span>
                   <span class="local-jogo">{{marker.data.local}}</span>

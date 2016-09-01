@@ -96,7 +96,7 @@
 
             service.geoQuery.on("key_exited", function (key, location, distance) {
                 _.remove(service.jogosRegiao, { '$id': key });
-                var jogoMarker = _.find(service.jogosRegiaoMarkers, { $id: key });
+                var jogoMarker = _.find($rootScope.markers, { $id: key });
                 if (jogoMarker) {
                     jogoMarker.remove();
                 }
@@ -104,9 +104,10 @@
         }
 
         function addJogoMarker(jogo) {
-            var jogoMarker = _.find(service.jogosRegiaoMarkers, { $id: jogo.$id });
+            var jogoMarker = _.find($rootScope.markers, { $id: jogo.$id });
             if (jogoMarker) {
                 jogoMarker.remove();
+                _.remove($rootScope.markers, { '$id': jogo.$id });
             }
             if ($rootScope.map) {
                 var data = {
