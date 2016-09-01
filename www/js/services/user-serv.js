@@ -15,7 +15,8 @@
     '$http',
     '$ionicModal',
     '$resource',
-    '$ionicPlatform'
+    '$ionicPlatform',
+    '$ionicPush'
   ];
 
   function UserService(
@@ -29,7 +30,8 @@
     $http,
     $ionicModal,
     $resource,
-    $ionicPlatform) {
+    $ionicPlatform,
+    $ionicPush) {
 
     var service = {
       meuPerfil: {},
@@ -267,15 +269,13 @@
     function setDeviceToken(id) {
       if (window.cordova) {
         $ionicPlatform.ready(function () {
-          var push = new Ionic.Push({
-            "debug": true
-          });
-
-          push.register(function (token) {
+          $ionicPush.register().then(function (token) {
             service.deviceToken = token.token;
             service.ref.child(id + '/token').set(token.token);
             console.log('token:' + token);
-            push.saveToken(token);
+            return $ionicPush.saveToken(token);
+          }).then(function (t) {
+            console.log('Token saved:', token.token);
           });
         });
       }

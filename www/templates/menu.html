@@ -12,7 +12,7 @@
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 
-  <ion-side-menu style="background-image: url('img/bg1.jpg');" side="left" ng-class="{ 'side-menu-hide': $root.hideMenu }">
+  <ion-side-menu side="left" ng-class="{ 'side-menu-hide': $root.hideMenu }">
     <div class="header">
       <div class="row">
         <div class="col-33">
@@ -35,9 +35,9 @@
         <ion-item menu-close href="#/app/meus-jogos">
           <i class="icon ion-ios-football"></i> Meus Jogos
         </ion-item>
-        <ion-item menu-close href="#/app/meus-times">
+        <!--<ion-item menu-close href="#/app/meus-times">
           <i class="icon ion-tshirt"></i> Meus Times
-        </ion-item>
+        </ion-item>-->
         <ion-item menu-close href="#/app/minhas-reservas">
           <i class="icon ion-ios-calendar"></i> Minhas Reservas
         </ion-item>
@@ -51,7 +51,7 @@
           <i class="icon ion-ios-settings-strong"></i> Configurações
         </ion-item>
       </ion-list>
-      <div class="footer">
+      <div ng-click="menu.logOut();" class="footer">
         <div>Sair</div>
       </div>
     </ion-content>

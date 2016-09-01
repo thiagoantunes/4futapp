@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
     angular.module('main')
         .factory('ArenasService', ArenasService)
@@ -38,15 +38,15 @@
         return service;
 
         function getArenas() {
-            service.geoQuery.on('key_entered', function(key, location, distance) {
-                service.ref.child(key).once('value').then(function(snapshot) {
+            service.geoQuery.on('key_entered', function (key, location, distance) {
+                service.ref.child(key).once('value').then(function (snapshot) {
                     var arena = snapshot.val();
                     arena.distance = distance;
                     arena.$id = key;
                     arena.latitude = location[0];
                     arena.longitude = location[1];
                     arena.icon = 'www/img/pin.png';
-                    $timeout(function() {
+                    $timeout(function () {
                         _.remove(service.arenas, { '$id': key });
                         service.arenas.push(arena);
                         addArenaMarker(arena);
@@ -64,21 +64,23 @@
                 var data = {
                     'position': new plugin.google.maps.LatLng(arena.latitude, arena.longitude),
                     'title': arena.nome,
-                    'icon': { 
-                        'url': arena.icon, 
+                    'icon': {
+                        'url': arena.icon,
                         'size': {
                             width: 79,
                             height: 48
-                        }    
+                        }
                     }
                 };
-                $timeout(function() {
-                    $rootScope.map.addMarker(data, function(marker) {
+                $timeout(function () {
+                    $rootScope.map.addMarker(data, function (marker) {
                         marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, service.onMarkerClicked);
                         marker.tipo = 'arena';
                         marker.$id = arena.$id;
                         marker.data = arena;
                         $rootScope.markers.push(marker);
+                    }, function (err) {
+                        console.log(err);
                     });
                 }, 100);
             }
@@ -119,10 +121,10 @@
             service.refArenaBasica.child(key).set({
                 endereco: endereco,
                 nome: nomeLocal
-            }).then(function() {
-                service.geoArenaBasica.set(key, coords).then(function() {
+            }).then(function () {
+                service.geoArenaBasica.set(key, coords).then(function () {
                     deferred.resolve(key);
-                }, function(error) {
+                }, function (error) {
                     deferred.reject('Erro ao cadastrar novo local');
                 });
             });
@@ -131,14 +133,14 @@
         }
 
         function getArenasBasicas() {
-            service.geoArenasBasicasQuery.on('key_entered', function(key, location, distance) {
-                service.refArenaBasica.child(key).once('value').then(function(snapshot) {
+            service.geoArenasBasicasQuery.on('key_entered', function (key, location, distance) {
+                service.refArenaBasica.child(key).once('value').then(function (snapshot) {
                     if (snapshot.val()) {
                         var arena = snapshot.val();
                         arena.$id = key;
                         arena.latitude = location[0];
                         arena.longitude = location[1];
-                        $timeout(function() {
+                        $timeout(function () {
                             _.remove(service.arenasBasicas, { '$id': key });
                             service.arenasBasicas.push(arena);
                         });
@@ -168,12 +170,11 @@
 
             service.position = [-19.872510, -43.930562];
             setGeoQuery(service.position);
-            initMap();
             deferred.resolve(service.position);
 
             function isLocationAvailable() {
                 console.log('Getting location');
-                cordova.plugins.diagnostic.isLocationAvailable(function(available) {
+                cordova.plugins.diagnostic.isLocationAvailable(function (available) {
                     if (available) {
                         console.log('Location available');
                         doGetLocation();
@@ -182,7 +183,7 @@
                         console.log('Location not available');
                         isLocationAuthorized();
                     }
-                }, function(err) {
+                }, function (err) {
                     deferred.reject(err);
                 });
             }
@@ -191,19 +192,18 @@
 
                 console.log('Actually Getting location');
                 //var posOptions = { timeout: 30000, maximumAge: 5 * 60 * 1000 };
-                navigator.geolocation.getCurrentPosition(function(position) {
+                navigator.geolocation.getCurrentPosition(function (position) {
                     service.position = [position.coords.latitude, position.coords.longitude];
-                    initMap();
-                    watchPosition();
                     setGeoQuery(service.position);
+                    watchPosition();
                     deferred.resolve(service.position);
-                }, function(err) {
+                }, function (err) {
                     deferred.reject(err);
                 });
             }
 
             function isLocationAuthorized() {
-                cordova.plugins.diagnostic.isLocationAuthorized(function(authorized) {
+                cordova.plugins.diagnostic.isLocationAuthorized(function (authorized) {
                     if (authorized) {
                         console.log('Location authorized');
                         isLocationEnabled();
@@ -212,31 +212,31 @@
                         console.log('Location not authorized');
                         requestLocationAuthorization();
                     }
-                }, function(err) {
+                }, function (err) {
                     deferred.reject(err);
                 });
             }
 
             function isLocationEnabled() {
-                cordova.plugins.diagnostic.isLocationEnabled(function(enabled) {
+                cordova.plugins.diagnostic.isLocationEnabled(function (enabled) {
                     if (enabled) {
                         doGetLocation();
                     }
                     else {
-                        cordova.plugins.locationAccuracy.request(function(success) {
+                        cordova.plugins.locationAccuracy.request(function (success) {
                             isLocationAvailable();
-                        }, function(err) {
+                        }, function (err) {
                             deferred.reject(err);
                         });
                     }
-                }, function(err) {
+                }, function (err) {
                     deferred.reject(err);
                 });
             }
 
             function requestLocationAuthorization() {
                 console.log('Requesting location');
-                cordova.plugins.diagnostic.requestLocationAuthorization(function(status) {
+                cordova.plugins.diagnostic.requestLocationAuthorization(function (status) {
                     switch (status) {
                         case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
                             isLocationAvailable();
@@ -254,7 +254,7 @@
                             eferred.reject('Permission permanently denied');
                             break;
                     }
-                }, function(err) {
+                }, function (err) {
                     deferred.reject(err);
                 });
             }
@@ -282,7 +282,7 @@
             }
 
             function watchPosition() {
-                navigator.geolocation.watchPosition(function(position) {
+                navigator.geolocation.watchPosition(function (position) {
                     service.position = [position.coords.latitude, position.coords.longitude];
                     if (!_.isEmpty(ArenasService.geoQuery)) {
                         ArenasService.geoQuery.updateCriteria({
@@ -311,7 +311,7 @@
                             radius: 100
                         });
                     }
-                }, function(err) {
+                }, function (err) {
                     deferred.reject(err);
                     console.log(err);
                 });
@@ -320,43 +320,52 @@
             return deferred.promise;
         }
 
-        function initMap() {
-            // console.log('Getting map');
-            // var mapPosition = new plugin.google.maps.LatLng(service.position[0], service.position[1]);
-            // var mapParams = {
-            //     'backgroundColor': '#ffffff',
-            //     'mapType': plugin.google.maps.MapTypeId.ROADMAP,
-            //     'controls': {
-            //         'compass': false,
-            //         'myLocationButton': false,
-            //         'indoorPicker': true,
-            //         'zoom': false
-            //         // Only for Android
-            //     },
-            //     'gestures': {
-            //         'scroll': true,
-            //         'tilt': false,
-            //         'rotate': true,
-            //         'zoom': true,
-            //     },
-            //     'camera': {
-            //         'latLng': mapPosition,
-            //         'tilt': 0,
-            //         'zoom': 5,
-            //         'bearing': 0
-            //     }
+        function initMap(div) {
+            console.log('Getting map');
+            var mapPosition = new plugin.google.maps.LatLng(service.position[0], service.position[1]);
+            var mapParams = {
+                'backgroundColor': '#ffffff',
+                'mapType': plugin.google.maps.MapTypeId.ROADMAP,
+                'controls': {
+                    'compass': false,
+                    'myLocationButton': false,
+                    'indoorPicker': true,
+                    'zoom': false
+                    // Only for Android
+                },
+                'gestures': {
+                    'scroll': true,
+                    'tilt': false,
+                    'rotate': true,
+                    'zoom': true,
+                },
+                'camera': {
+                    'latLng': mapPosition,
+                    'tilt': 0,
+                    'zoom': 5,
+                    'bearing': 0
+                }
 
-            // };
-            // $timeout(function() {
-            //     var map = plugin.google.maps.Map.getMap(mapParams);
-            //     map.on(plugin.google.maps.event.MAP_READY, function(map) {
-            //         console.log('Map loaded');
-            //         $rootScope.map = map;
-            //         ArenasService.getArenas();
-            //         JogosService.getJogosRegiao();
-            //         $rootScope.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, service.onMapCameraChanged);
-            //     });
-            // }, 500);
+            };
+            $timeout(function () {
+                var map = plugin.google.maps.Map.getMap(div, mapParams);
+                map.on(plugin.google.maps.event.MAP_READY, function (map) {
+                    console.log('Map loaded');
+                    $rootScope.map = map;
+                    $rootScope.markers = [];
+                    $rootScope.map.animateCamera({
+                        'target': mapPosition,
+                        'tilt': 0,
+                        'zoom': 14,
+                        'bearing': 0,
+                        'duration': 2000
+                        // = 2 sec.
+                    });
+                    ArenasService.getArenas();
+                    JogosService.getJogosRegiao();
+                    $rootScope.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, service.onMapCameraChanged);
+                });
+            }, 500);
         }
 
         function onMapCameraChanged(position) {
@@ -364,7 +373,7 @@
         }
 
         function navigateTo(endereco) {
-            launchnavigator.isAppAvailable(launchnavigator.APP.WAZE, function(isAvailable) {
+            launchnavigator.isAppAvailable(launchnavigator.APP.WAZE, function (isAvailable) {
                 var app;
                 if (isAvailable) {
                     app = launchnavigator.APP.WAZE;

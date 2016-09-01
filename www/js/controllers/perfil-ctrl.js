@@ -42,7 +42,7 @@
 
     function openSeguindoSeguidores() {
       UserService.jogadorSelecionado = vm.user;
-      $state.go('main.seguindoSeguidores');
+      $state.go('app.seguindoSeguidores');
     }
 
     function isAndroid() {
@@ -79,9 +79,9 @@
     }
 
     function getSeguidores() {
-      if (UserService.jogadorSelecionado.seguidores) {
-        var ids = Object.keys(UserService.jogadorSelecionado.seguidores).map(function (key) {
-          return UserService.jogadorSelecionado.seguidores[key];
+      if (UserService.meuPerfil.seguidores) {
+        var ids = Object.keys(UserService.meuPerfil.seguidores).map(function (key) {
+          return UserService.meuPerfil.seguidores[key];
         });
         UserService.getListaJogadores(ids).then(function (list) {
           vm.seguidores = list;
@@ -90,9 +90,9 @@
     }
 
     function getSeguindo() {
-      if (UserService.jogadorSelecionado.seguindo) {
-        var ids = Object.keys(UserService.jogadorSelecionado.seguindo).map(function (key) {
-          return UserService.jogadorSelecionado.seguindo[key];
+      if (UserService.meuPerfil.seguindo) {
+        var ids = Object.keys(UserService.meuPerfil.seguindo).map(function (key) {
+          return UserService.meuPerfil.seguindo[key];
         });
         UserService.getListaJogadores(ids).then(function (list) {
           vm.seguindo = list;
@@ -101,13 +101,13 @@
     }
 
     function openListaJogadores(tipoLista) {
-      UserService.jogadorSelecionado = vm.user;
-      $state.go('main.listaJogadores-' + Object.keys($state.current.views)[0], { tipoLista: tipoLista });
+      UserService.jogadorSelecionado = UserService.meuPerfil;
+      $state.go('app.listaJogadores', { tipoLista: tipoLista });
     }
 
     function openPerfilJogador(jogador) {
       UserService.jogadorSelecionado = jogador;
-      $state.go('main.perfilJogador-' + Object.keys($state.current.views)[0], { $id: jogador.$id });
+      $state.go('app.detalhes-jogador', { $id: jogador.$id });
     }
 
     function seguirJogador(jogador) {
@@ -192,12 +192,12 @@
     }
 
     function openListaJogadores(tipoLista) {
-      $state.go('main.listaJogadores-' + Object.keys($state.current.views)[0], { tipoLista: tipoLista });
+      $state.go('app.listaJogadores', { tipoLista: tipoLista });
     }
 
     function openChat() {
       ChatService.destinatario = vm.jogador;
-      $state.go('main.chat-' + Object.keys($state.current.views)[0], { id: vm.jogador.$id, tipoChat: 'jogador' });
+      $state.go('app.chat', { id: vm.jogador.$id, tipoChat: 'jogador' });
     }
 
     // Set Motion
@@ -264,7 +264,7 @@
 
     function openPerfilJogador(jogador) {
       UserService.jogadorSelecionado = jogador;
-      $state.go('main.perfilJogador-' + Object.keys($state.current.views)[0], { $id: jogador.$id });
+      $state.go('app.detalhes-jogador', { $id: jogador.$id });
     }
 
     function checkAmizade(usuario) {
@@ -493,7 +493,7 @@
     function openChat(jogador) {
       jogador.$id = jogador.id;
       ChatService.destinatario = jogador;
-      $state.go('main.chat-' + Object.keys($state.current.views)[0], { id: jogador.id, tipoChat: 'jogador' });
+      $state.go('app.chat', { id: jogador.id, tipoChat: 'jogador' });
     }
 
   }

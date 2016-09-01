@@ -3,12 +3,25 @@
   angular.module('main')
   .controller('LoginCtrl', LoginCtrl);
 
-  LoginCtrl.$inhect = ['$state', '$facebook', 'Ref', '$ionicPlatform', '$cordovaOauth', '$ionicLoading', '$window'];
+  LoginCtrl.$inhect = ['$scope', '$state', '$facebook', 'Ref', '$ionicPlatform', '$cordovaOauth', '$ionicLoading', '$window'];
 
-  function LoginCtrl($state, $facebook, Ref, $ionicPlatform, $cordovaOauth, $ionicLoading, $window) {
+  function LoginCtrl($scope, $state, $facebook, Ref, $ionicPlatform, $cordovaOauth, $ionicLoading, $window) {
     var vm = this;
     vm.facebookLogin = facebookLogin;
     vm.googleLogin = googleLogin;
+
+    // $scope.$on('$ionicView.enter', function() {
+    //     if (window.cordova) {
+    //         AndroidFullScreen.immersiveMode();
+    //     }
+    // });
+
+    // $scope.$on('$ionicView.leave', function() {
+    //     if (window.cordova) {
+    //         AndroidFullScreen.showSystemUI();
+    //     }
+    // });
+
 
     activate();
 

@@ -25,18 +25,18 @@
             });
         }
 
+        ReservasService.getMinhasReservas();
+        JogosService.getMeusJogos();
+        UserService.getMeusAmigos();
+        UserService.getNotificacoes();
+        TimesService.getMeusTimes();
+
         GeoService.getLocation().then(function (location) {
             console.log(location);
         }, function (err) {
             $window.alert(err.message);
             console.log(err);
         });
-
-        ReservasService.getMinhasReservas();
-        JogosService.getMeusJogos();
-        UserService.getMeusAmigos();
-        UserService.getNotificacoes();
-        TimesService.getMeusTimes();
 
         UserService.notificacoesNaoLidas.$loaded().then(function (val) {
             vm.notificacoes = UserService.notificacoesNaoLidas;

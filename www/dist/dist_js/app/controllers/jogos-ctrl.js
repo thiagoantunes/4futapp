@@ -189,25 +189,6 @@
         vm.compartilharWhatsapp = compartilharWhatsapp;
         vm.compartilharEmail = compartilharEmail;
 
-        $scope.$on('$ionicView.enter', function() {
-            // AndroidFullScreen.showUnderStatusBar(function (){
-            //   $rootScope.underStatusBar = true;
-            //   console.info("showUnderStatusBar");
-            // }, function(){
-            //   console.error(error);
-            // });
-            if (window.cordova) {
-                AndroidFullScreen.immersiveMode();
-            }
-        });
-
-        $scope.$on('$ionicView.leave', function() {
-            if (window.cordova) {
-                AndroidFullScreen.showSystemUI();
-            }
-        });
-
-
         activate();
 
         function activate() {
@@ -575,7 +556,7 @@
                 }
             };
 
-            $state.go('main.criar-partida-reserva');
+            $state.go('app.criar-partida');
             closeModal();
         }
 
@@ -583,7 +564,7 @@
             closeModal();
             var partida = _.find(UserService.jogos, { '$id': vm.reservaSelecionada.partida });
             JogosService.jogoSelecionado = partida;
-            $state.go('main.meus-jogos-detail', { '$id': partida.$id });
+            $state.go('app.detalhes-jogo', { '$id': partida.$id });
         }
 
         function isAndroid() {
@@ -810,7 +791,7 @@
         function openPerfilJogador(jogador) {
             UserService.getUserProfile(jogador).$loaded().then(function(val) {
                 UserService.jogadorSelecionado = val;
-                $state.go('main.perfilJogador-' + Object.keys($state.current.views)[0], { id: jogador });
+                $state.go('app.detalhes-jogador', { id: jogador });
             });
         }
 

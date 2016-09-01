@@ -18063,52 +18063,47 @@ For example, you might change some of the default colors:
   -webkit-transition: -webkit-transform 200ms ease;
   transition: transform 200ms ease; }
 
-ion-side-menu {
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center; }
-  ion-side-menu .header {
-    padding: 40px 0px 0px 16px;
-    height: 160px; }
-    ion-side-menu .header .row {
+ion-side-menu .header {
+  background: #00242E;
+  padding: 40px 0px 0px 16px;
+  height: 160px; }
+  ion-side-menu .header .row {
+    padding: 0px; }
+    ion-side-menu .header .row .col-33 {
       padding: 0px; }
-      ion-side-menu .header .row .col-33 {
-        padding: 0px; }
-      ion-side-menu .header .row .col {
-        padding: 0px; }
-    ion-side-menu .header img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%; }
-    ion-side-menu .header h1, ion-side-menu .header h2, ion-side-menu .header h3, ion-side-menu .header h4, ion-side-menu .header h5, ion-side-menu .header h6 {
-      color: #00242E;
-      margin-bottom: 5px; }
-    ion-side-menu .header small {
-      color: #00242E; }
-  ion-side-menu ion-content {
-    top: 160px !important;
-    color: #00242E; }
-    ion-side-menu ion-content ion-list .list ion-item {
-      color: inherit;
-      font-size: 1.2em;
-      border: 0px !important;
-      background-color: transparent !important; }
-      ion-side-menu ion-content ion-list .list ion-item .item-content {
-        padding: 12px 49px 12px 16px; }
-      ion-side-menu ion-content ion-list .list ion-item a {
-        background: transparent !important; }
-      ion-side-menu ion-content ion-list .list ion-item i {
-        font-size: 1.4em;
-        margin-right: 10px; }
-    ion-side-menu ion-content .footer {
-      margin: 10px 16px;
-      border-top: solid 1px #00242E;
-      padding-top: 20px;
-      font-size: 1.3em; }
+    ion-side-menu .header .row .col {
+      padding: 0px; }
+  ion-side-menu .header img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%; }
+  ion-side-menu .header h1, ion-side-menu .header h2, ion-side-menu .header h3, ion-side-menu .header h4, ion-side-menu .header h5, ion-side-menu .header h6 {
+    color: #F1F7E9;
+    margin-bottom: 5px; }
+  ion-side-menu .header small {
+    color: #F1F7E9; }
+
+ion-side-menu ion-content {
+  top: 160px !important;
+  color: #F1F7E9;
+  background: #00242E; }
+  ion-side-menu ion-content ion-list .list ion-item {
+    color: inherit;
+    font-size: 1.2em;
+    border: 0px !important;
+    background-color: transparent !important; }
+    ion-side-menu ion-content ion-list .list ion-item .item-content {
+      padding: 12px 49px 12px 16px; }
+    ion-side-menu ion-content ion-list .list ion-item a {
+      background: transparent !important; }
+    ion-side-menu ion-content ion-list .list ion-item i {
+      font-size: 1.4em;
+      margin-right: 10px; }
+  ion-side-menu ion-content .footer {
+    margin: 10px 16px;
+    border-top: solid 1px #00242E;
+    padding-top: 20px;
+    font-size: 1.3em; }
 
 #map-view .bar-header {
   border-bottom: 0px !important;
@@ -18187,7 +18182,7 @@ ion-side-menu {
       #map-view .item-jogo .jogadores .jogador .confirmado {
         border: 2px solid #AAF502; }
     #map-view .item-jogo .jogadores .plus {
-      top: -17gpx;
+      top: -17px;
       position: relative;
       display: inline-block;
       padding: 5px 1px; }

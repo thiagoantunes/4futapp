@@ -13,10 +13,11 @@
     angular
         .module('main', [
             'ionic',
+            'ionic.cloud',
             'ngCordova',
             'templates',
             'ui.router',
-            'ionic.service.analytics',
+            //'ionic.service.analytics',
             'firebase',
             'uiGmapgoogle-maps',
             'aCarousel',
@@ -46,11 +47,11 @@
         .filter('defaultImage', defaultImage)
         .filter('tel', tel);
 
-    run.$inject = ['$ionicPlatform', '$ionicAnalytics', '$state', 'Ref', '$rootScope', 'UserService', '$ionicLoading'];
-    config.$inject = ['$stateProvider', '$urlRouterProvider', 'tmhDynamicLocaleProvider', '$ionicConfigProvider', '$ionicAutoTrackProvider', '$facebookProvider', 'ionicTimePickerProvider', 'ionicDatePickerProvider', 'ionGalleryConfigProvider', 'uiGmapGoogleMapApiProvider'];
+    run.$inject = ['$ionicPlatform', '$state', 'Ref', '$rootScope', 'UserService', '$ionicLoading', '$ionicDeploy'];
+    config.$inject = ['$stateProvider', '$urlRouterProvider', '$ionicCloudProvider', 'tmhDynamicLocaleProvider', '$ionicConfigProvider', '$facebookProvider', 'ionicTimePickerProvider', 'ionicDatePickerProvider', 'ionGalleryConfigProvider', 'uiGmapGoogleMapApiProvider'];
     HomeCtrl.$inject = ['$scope', '$stateParams', '$state'];
 
-    function run($ionicPlatform, $ionicAnalytics, $state, Ref, $rootScope, UserService, $ionicLoading) {
+    function run($ionicPlatform, $state, Ref, $rootScope, UserService, $ionicLoading, $ionicDeploy) {
         firebase.auth().onAuthStateChanged(checkLogin);
 
         $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
@@ -77,7 +78,7 @@
         // }
 
         $ionicPlatform.ready(function () {
-            $ionicAnalytics.register();
+            //$ionicAnalytics.register();
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
             if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -91,32 +92,23 @@
                 //StatusBar.styleDefault();
             }
 
-            var deploy = new Ionic.Deploy();
-            deploy.watch().then(
-                function noop() {
-                },
-                function noop() {
-                },
-                function hasUpdate(has) {
-                    console.log('Has Update ', has);
-                    if (has) {
-                        console.log('Calling ionicDeploy.update()');
-                        deploy.update().then(function (deployResult) {
-                            console.log(deployResult);
-                            // deployResult will be true when successfull and
-                            // false otherwise
-                        }, function (deployUpdateError) {
-                            // fired if we're unable to check for updates or if any
-                            // errors have occured.
-                            console.log('Ionic Deploy: Update error! ', deployUpdateError);
-                        }, function (deployProgress) {
-                            // this is a progress callback, so it will be called a lot
-                            // deployProgress will be an Integer representing the current
-                            // completion percentage.
-                            console.log('Ionic Deploy: Progress... ', deployProgress);
+            $ionicDeploy.check().then(function (snapshotAvailable) {
+                if (snapshotAvailable) {
+                    $ionicDeploy.download().then(function () {
+                        return $ionicDeploy.extract().then(function () {
+                            $ionicDeploy.load();
                         });
-                    }
-                });
+                    }, function (err) {
+                        console.log(err);
+                    });
+
+                    // $ionicDeploy.getVersions().then(function(snapshots) {
+                    //     _.forEach(snapshots, function(snap) {
+                    //         window.alert(snap);
+                    //     });
+                    // });
+                }
+            });
 
         }).then(function () {
             if (window.cordova) {
@@ -151,7 +143,6 @@
             }
             else {
                 $state.go('app.map');
-                //$state.go('main.home');
                 var providerData = {};
                 Ref.child('users/' + currentUser.uid).once('value', function (snap) {
                     $ionicLoading.hide();
@@ -201,13 +192,29 @@
         }
     }
 
-    function config($stateProvider, $urlRouterProvider, tmhDynamicLocaleProvider, $ionicConfigProvider, $ionicAutoTrackProvider, $facebookProvider, ionicTimePickerProvider, ionicDatePickerProvider, ionGalleryConfigProvider, uiGmapGoogleMapApiProvider) {
+    function config($stateProvider, $urlRouterProvider, $ionicCloudProvider, tmhDynamicLocaleProvider, $ionicConfigProvider, $facebookProvider, ionicTimePickerProvider, ionicDatePickerProvider, ionGalleryConfigProvider, uiGmapGoogleMapApiProvider) {
         //$ionicConfigProvider.tabs.style('standard');
         //$ionicConfigProvider.tabs.position('top');
         // GoogleMapApiProviders.configure({
         //   brazil: true
         // });
-        $ionicAutoTrackProvider.disableTracking();
+        $ionicCloudProvider.init({
+            'core': {
+                'app_id': '2666a895'
+            },
+            'push': {
+                'sender_id': 'AIzaSyAfkQ7QG4LY6w0x5XNKzvu1VRiGOVyOxCY',
+                'pluginConfig': {
+                    'ios': {
+                        'badge': true,
+                        'sound': true
+                    },
+                    'android': {
+                        'iconColor': '#343434'
+                    }
+                }
+            }
+        });
 
         uiGmapGoogleMapApiProvider.configure({
             //    key: 'your api key',
@@ -874,7 +881,7 @@
     function HomeCtrl($scope, $stateParams, $state) {
 
         if ($stateParams.origem == 'reservas') {
-            $state.go('main.arenas');
+            $state.go('app.map');
         }
 
     }

@@ -28,12 +28,28 @@
                 initMap();
             }
             else {
-                ArenasService.getArenas();
-                JogosService.getJogosRegiao();
+                GeoService.getLocation().then(function (location) {
+                    ArenasService.getArenas();
+                    JogosService.getJogosRegiao();
+                });
             }
         }
 
         function initMap() {
+            if (!$rootScope.map) {
+                if(GeoService.position.length === 0){
+                    GeoService.getLocation().then(function (location) {
+                        GeoService.initMap(document.getElementById("map-arenas"));
+                    });
+                }
+                else{
+                    GeoService.initMap(document.getElementById("map-arenas"));
+                }
+            }
+        }
+
+
+        function initMap2() {
             console.log('Getting map');
             var mapPosition = new plugin.google.maps.LatLng(GeoService.position[0], GeoService.position[1]);
             var mapParams = {

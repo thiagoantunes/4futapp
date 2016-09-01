@@ -36,7 +36,7 @@
         Enum.TipoNotificacao.solicitacaoPresenca) {
         UserService.getUserProfile(notificacao.userId).$loaded().then(function (jogador) {
           UserService.jogadorSelecionado = jogador;
-        $state.go('main.perfilJogador-tab-notificacoes', {id : jogador.$id});
+        $state.go('app.detalhes-jogador', {id : jogador.$id});
         });
       }
     }
@@ -48,12 +48,12 @@
         var jogo = _.find(UserService.jogos, { id: notificacao.jogoId });
         if (jogo) {
           JogosService.jogoSelecionado = jogo;
-          $state.go('main.meus-jogos-detail-notificacoes', { id: notificacao.jogoId });
+          $state.go('app.detalhes-jogador', { id: notificacao.jogoId });
         }
         else {
           JogosService.getJogo(notificacao.jogoId).then(function (val) {
             JogosService.jogoSelecionado = val;
-            $state.go('main.meus-jogos-detail-notificacoes', { id: notificacao.jogoId });
+            $state.go('app.detalhes-jogador', { id: notificacao.jogoId });
           });
         }
       }

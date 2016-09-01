@@ -196,15 +196,9 @@ input[readonly]{
 }
 
 ion-side-menu{
-    -webkit-box-align: center;
-    -webkit-align-items: center;
-    -ms-flex-align: center;
-    align-items: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
 
     .header{
+        background: $base-background-color;
         padding: 40px 0px 0px 16px;
         height: 160px;
         .row{
@@ -220,17 +214,17 @@ ion-side-menu{
             width:80px; height:80px; border-radius:50%;
         }
         h1,h2,h3,h4,h5,h6{
-            color: $base-background-color;
+            color: $base-color;
             margin-bottom: 5px;
         }
         small{
-            color: $base-background-color;
+            color: $base-color;
         }
     }
     ion-content{
         top:160px !important;
-        color: $base-background-color;
-
+        color: $base-color;
+        background: $base-background-color;
         ion-list{
             .list{
                 ion-item{

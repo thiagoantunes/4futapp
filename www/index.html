@@ -36,9 +36,12 @@
         }, 500);
       });
   </script>
+    <script src="cordova.js"></script>
 
   <!-- build:js dist_js/app.js -->
+  <script src="lib/bluebird.min.js"></script> 
   <script src="lib/ionic/js/ionic.bundle.js"></script>
+  <script src="lib/ionic.cloud.min.js"></script>
   <script src="lib/angular-animate/angular-animate.js"></script>
   <script src="lib/angular-sanitize/angular-sanitize.js"></script>
   <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
@@ -47,7 +50,6 @@
   <script src="lib/angular-translate/angular-translate.js"></script>
   <script src="lib/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
   <script src="lib/localforage/dist/localforage.js"></script>
-  <script src="lib/ionic-platform-web-client/dist/ionic.io.bundle.min.js"></script>
   <script src="lib/firebase/firebase.js"></script>
   <script src="lib/angularfire/dist/angularfire.js"></script>
   <script src="lib/geofire/dist/geofire.js"></script>
@@ -113,7 +115,7 @@
 
   <!-- cordova script (this will be a 404 during development) -->
   <!-- Cordova is bootstrapped by ionic-platform-web-client, uncomment this if you remove ionic-platform-web-client... -->
-  <!-- <script src="cordova.js"></script> -->
+
 
 
   <script>
@@ -132,7 +134,7 @@
   </script>
 </head>
 
-<body ng-strict-di>
+<body ng-strict-di="">
   <ion-nav-bar align-title="center" class="bar-positive">
     <ion-nav-back-button class="no-text">
     </ion-nav-back-button>
