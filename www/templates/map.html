@@ -5,13 +5,12 @@
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
         <h1 class="title"><img class="title-image" src="img/header-logo.png" width="151" height="43" /></h1>
+        <button style="right: 45px; position: absolute;" ng-click="vm.openFiltroModal();" class="button button-icon button-clear ion-android-funnel icon"></button>
         <button ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="app.criar-partida" class="button button-icon button-clear ion-android-add icon"></button>
       </div>
-      <button ng-click="vm.openFiltroModal();" style="top: 60vh; color: red; font-size: 3em; position: absolute;" class="button button-icon button-clear ion-navicon">
-        </button>
       <ion-scroll class="scroll-markers" zooming="false" direction="y">
         <div id="anchor{{marker.$id}}" ng-repeat="marker in $root.markers | orderBy:'data.distance '">
-          <div ng-if="marker.tipo == 'arena'" ng-click="vm.arenaService.arenaSelecionada = marker.data;" ui-sref="app.detalhes-arena({id: marker.$id})"
+          <div ng-if="marker[vm.filtro.tipo] && marker.arena" ng-click="vm.arenaService.arenaSelecionada = marker.data;" ui-sref="app.detalhes-arena({id: marker.$id})"
             href="#/app/arenas/{{marker.$id}}" class="row item-arena">
             <div class="col-20 avatar">
               <img ng-src="{{marker.data.fotoPerfil}}" alt="">
@@ -25,7 +24,7 @@
               <i class="icon ion-pinpoint positive"></i>
             </div>
           </div>
-          <div ng-if="marker.tipo == 'jogo'" ng-click="vm.jogosService.jogoSelecionado = marker.data;" ui-sref="app.detalhes-jogo({id: marker.$id})"
+          <div ng-if="marker[vm.filtro.tipo] && marker.jogo" ng-click="vm.jogosService.jogoSelecionado = marker.data;" ui-sref="app.detalhes-jogo({id: marker.$id})"
             class="item-jogo">
             <div class="card" style="margin: 0px; padding:0 7px; background-color:transparent!important;">
               <div class="row" style="padding:0px 5px">
@@ -38,7 +37,7 @@
                   <span class="dia-jogo" ng-if="!vm.jogoHoje(marker.data.inicio)  && !vm.jogoEmAndamento(marker.data.inicio) && !vm.jogoAlgumasHoras(marker.data.inicio);">{{marker.data.inicio | date :"dd/MM"}} </span>
                   <span class="hora-jogo" ng-if="!vm.jogoHoje(marker.data.inicio)  && !vm.jogoEmAndamento(marker.data.inicio) && !vm.jogoAlgumasHoras(marker.data.inicio);"> - {{marker.data.inicio | date :" H:mm"}} </span>
                   <span class="divider"><i class="icon ion-record"></i></span>
-                  <span class="local-jogo">{{marker.data.local}}</span>
+                  <span class="local-jogo">{{marker.data.local.nome}}</span>
                 </div>
                 <div class="col-20 find-on-map" ng-click="vm.acharNoMapa(marker); $event.stopPropagation();">
                   <i class="icon ion-pinpoint"></i>

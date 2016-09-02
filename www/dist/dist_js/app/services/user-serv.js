@@ -307,24 +307,19 @@
     }
 
     function setConexao(id) {
-      var myConnectionsRef = service.ref.child(id + '/connections');
-      var lastOnlineRef = service.ref.child(id + '/lastOnline');
+      // var myConnectionsRef = service.ref.child(id + '/connections');
+      // var lastOnlineRef = service.ref.child(id + '/lastOnline');
 
-      var connectedRef = Ref.child('.info/connected');
-      connectedRef.on('value', function (snap) {
-        if (snap.val() === true) {
-          // We're connected (or reconnected)! Do anything here that should happen only if online (or on reconnect)
+      // var connectedRef = Ref.child('.info/connected');
+      // connectedRef.on('value', function (snap) {
+      //   if (snap.val() === true) {
 
-          // add this device to my connections list
-          // this value could contain info about the device or a timestamp too
-          var con = myConnectionsRef.push(true);
-          // when I disconnect, remove this device
-          con.onDisconnect().remove();
+      //     var con = myConnectionsRef.push(true);
+      //     con.onDisconnect().remove();
 
-          // when I disconnect, update the last time I was seen online
-          lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
-        }
-      });
+      //     lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+      //   }
+      // });
     }
 
   }

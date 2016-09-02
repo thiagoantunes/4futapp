@@ -22,15 +22,15 @@
         vm.jogoEmAndamento = jogoEmAndamento;
 
         vm.openFiltroModal = openFiltroModal;
-        vm.toggleFiltroArenas = toggleFiltroArenas;
-        vm.toggleFiltroJogos = toggleFiltroJogos;
+        vm.applyFilter = applyFilter;
 
         activate();
 
         function activate() {
             vm.filtro = {
+                tipo: 'todos',
                 arenas: true,
-                jogos: true
+                jogos: true,
             };
 
             if (isDevice()) {
@@ -58,60 +58,28 @@
         }
 
         function openFiltroModal() {
-            // $ionicModal.fromTemplateUrl('modal/filtro-mapa.html', {
-            //     scope: $scope,
-            //     animation: 'slide-in-up'
-            // }).then(function (modal) {
-            //     vm.filtroModal = modal;
-            //     modal.show();
-            // });
-
-            vm.filtro.arenas = false;
-            var markersArena = _.filter($rootScope.markers, {'tipo' : 'arena'});
-            if(vm.filtro.arenas) {
-                _.forEach(markersArena, function (marker){
-                    marker.setVisible(true);
-                });
-            }
-            else {
-                 $timeout(function () {
-                    _.forEach($rootScope.markers, function(jogoMarker){		
-                        if(jogoMarker.tipo == 'arena'){
-                            jogoMarker.setVisible(false);
-                        }		
-                   });
- 
-                }, 100);
-
-                
-            }
+            $ionicModal.fromTemplateUrl('modal/filtro-mapa.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                vm.filtroModal = modal;
+                modal.show();
+            });
         }
 
-        function toggleFiltroArenas() {
-            var markersArena = _.filter($rootScope.markers, {'tipo' : 'arena'});
-            if(vm.filtro.arenas) {
-                _.forEach(markersArena, function (marker){
-                    marker.setVisible(true);
-                });
+        function applyFilter() {
+            console.log('clicked');
+            if(vm.filtro.arenas && vm.filtro.jogos){
+                vm.filtro.tipo = 'todos';
+                $rootScope.map.trigger('category_change', 'todos');
             }
-            else {
-                 _.forEach(markersArena, function (marker){
-                    marker.setVisible(false);
-                });
+            else if(vm.filtro.arenas){
+                vm.filtro.tipo = 'arena';
+                $rootScope.map.trigger('category_change', 'arena');
             }
-        }
-
-        function toggleFiltroJogos() {
-            var markersJogos = _.filter($rootScope.markers, {'tipo' : 'jogo'});
-            if(vm.filtro.jogos) {
-                _.forEach(markersJogos, function (marker){
-                    marker.setVisible(true);
-                });
-            }
-            else {
-                 _.forEach(markersJogos, function (marker){
-                    marker.setVisible(false);
-                });
+            else if(vm.filtro.jogos) {
+                vm.filtro.tipo = 'jogo';
+                $rootScope.map.trigger('category_change', 'jogo');
             }
         }
 

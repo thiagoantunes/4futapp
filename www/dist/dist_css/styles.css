@@ -18105,96 +18105,105 @@ ion-side-menu ion-content {
     padding-top: 20px;
     font-size: 1.3em; }
 
-#map-view .bar-header {
-  border-bottom: 0px !important;
-  background: rgba(0, 36, 46, 0.85); }
+#map-container {
+  width: 100%;
+  height: 100vh; }
+  #map-container ion-side-menus {
+    background: transparent !important; }
+    #map-container ion-side-menus ion-side-menu-content {
+      background: transparent !important; }
 
-#map-view .scroll-markers {
-  top: 68vh;
-  height: 33vh;
-  padding-bottom: 100px; }
-
-#map-view .item-arena {
-  background: rgba(0, 36, 46, 0.85);
-  height: 90px; }
-  #map-view .item-arena .avatar {
-    padding-top: 15px;
-    text-align: center; }
-    #map-view .item-arena .avatar img {
-      width: 55px;
-      height: 55px;
-      border-radius: 50%; }
-  #map-view .item-arena .nome-arena {
-    font-size: 1.4em;
-    color: #AABDC2;
-    font-weight: bold;
-    margin: 5px 0px 3px 0px; }
-  #map-view .item-arena .end {
-    padding: 0px 10px 0px 5px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap; }
-  #map-view .item-arena .find-on-map {
-    padding-top: 20px;
-    text-align: right;
-    font-size: 2em;
-    padding-right: 22px; }
-
-#map-view .item-jogo {
-  background: rgba(170, 245, 2, 0.8);
-  color: #00242E;
-  padding-top: 15px; }
-  #map-view .item-jogo .find-on-map {
-    text-align: right;
-    font-size: 2em;
-    padding-top: 5px;
-    padding-right: 15px; }
-  #map-view .item-jogo .divider {
-    font-size: 0.7em;
-    padding: 0px 5px;
-    color: #87c202; }
-  #map-view .item-jogo .nome-jogo {
-    font-size: 1.85em;
-    font-weight: bold;
-    margin-bottom: 7px; }
-  #map-view .item-jogo .dia-jogo {
-    font-size: 1.3em;
-    font-weight: bold;
-    color: #FF6A00; }
-  #map-view .item-jogo .hora-jogo {
-    font-size: 1.3em;
-    font-weight: bold;
-    color: #527701; }
-  #map-view .item-jogo .local-jogo {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #527701; }
-  #map-view .item-jogo .jogadores {
-    padding-top: 10px; }
-    #map-view .item-jogo .jogadores .jogador {
-      position: relative;
-      display: inline-block;
-      padding: 5px 1px; }
-      #map-view .item-jogo .jogadores .jogador img {
-        width: 40px;
-        height: 40px;
+#map-view {
+  background: transparent !important; }
+  #map-view ion-content {
+    background: transparent !important; }
+  #map-view .bar-header {
+    border-bottom: 0px !important;
+    background: rgba(0, 36, 46, 0.85); }
+  #map-view .scroll-markers {
+    top: 73vh;
+    height: 28vh;
+    padding-bottom: 100px; }
+  #map-view .item-arena {
+    background: rgba(0, 36, 46, 0.85);
+    height: 90px; }
+    #map-view .item-arena .avatar {
+      padding-top: 15px;
+      text-align: center; }
+      #map-view .item-arena .avatar img {
+        width: 55px;
+        height: 55px;
         border-radius: 50%; }
-      #map-view .item-jogo .jogadores .jogador .confirmado {
-        border: 2px solid #AAF502; }
-    #map-view .item-jogo .jogadores .plus {
-      top: -17px;
-      position: relative;
-      display: inline-block;
-      padding: 5px 1px; }
-      #map-view .item-jogo .jogadores .plus .value {
-        font-size: 1.5em;
-        font-weight: bold;
-        color: #527701; }
-  #map-view .item-jogo .resumo {
-    font-size: 1.5em;
-    font-weight: 300;
-    text-align: right;
-    padding-top: 25px; }
+    #map-view .item-arena .nome-arena {
+      font-size: 1.4em;
+      color: #AABDC2;
+      font-weight: bold;
+      margin: 5px 0px 3px 0px; }
+    #map-view .item-arena .end {
+      padding: 0px 10px 0px 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+    #map-view .item-arena .find-on-map {
+      padding-top: 20px;
+      text-align: right;
+      font-size: 2em;
+      padding-right: 22px; }
+  #map-view .item-jogo {
+    background: rgba(170, 245, 2, 0.8);
+    color: #00242E;
+    padding-top: 15px; }
+    #map-view .item-jogo .find-on-map {
+      text-align: right;
+      font-size: 2em;
+      padding-top: 5px;
+      padding-right: 15px; }
+    #map-view .item-jogo .divider {
+      font-size: 0.7em;
+      padding: 0px 5px;
+      color: #87c202; }
+    #map-view .item-jogo .nome-jogo {
+      font-size: 1.85em;
+      font-weight: bold;
+      margin-bottom: 7px; }
+    #map-view .item-jogo .dia-jogo {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #FF6A00; }
+    #map-view .item-jogo .hora-jogo {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #527701; }
+    #map-view .item-jogo .local-jogo {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #527701; }
+    #map-view .item-jogo .jogadores {
+      padding-top: 10px; }
+      #map-view .item-jogo .jogadores .jogador {
+        position: relative;
+        display: inline-block;
+        padding: 5px 1px; }
+        #map-view .item-jogo .jogadores .jogador img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%; }
+        #map-view .item-jogo .jogadores .jogador .confirmado {
+          border: 2px solid #AAF502; }
+      #map-view .item-jogo .jogadores .plus {
+        top: -17px;
+        position: relative;
+        display: inline-block;
+        padding: 5px 1px; }
+        #map-view .item-jogo .jogadores .plus .value {
+          font-size: 1.5em;
+          font-weight: bold;
+          color: #527701; }
+    #map-view .item-jogo .resumo {
+      font-size: 1.5em;
+      font-weight: 300;
+      text-align: right;
+      padding-top: 25px; }
 
 .bar .title {
   font-size: 17px !important; }

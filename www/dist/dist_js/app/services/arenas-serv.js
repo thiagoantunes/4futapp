@@ -76,9 +76,16 @@
                 $timeout(function () {
                     $rootScope.map.addMarker(data, function (marker) {
                         marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, service.onMarkerClicked);
-                        marker.tipo = 'arena';
                         marker.$id = arena.$id;
                         marker.data = arena;
+                        marker.todos = true;
+                        marker.jogo = false;
+                        marker.arena = true;
+                        $rootScope.map.on('category_change', function (category) {
+                            $timeout(function () {
+                                marker.setVisible(marker[category] ? true : false);
+                            }, 100);
+                        });
                         $rootScope.markers.push(marker);
                     }, function (err) {
                         console.log(err);
@@ -362,7 +369,7 @@
                         'duration': 2000
                         // = 2 sec.
                     });
-                    ArenasService.getArenas();
+                   // ArenasService.getArenas();
                     JogosService.getJogosRegiao();
                     $rootScope.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, service.onMapCameraChanged);
                 });

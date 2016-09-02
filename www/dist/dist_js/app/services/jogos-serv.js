@@ -8,6 +8,7 @@
     function JogosService(Ref, $timeout, $rootScope, $firebaseObject, Enum, $firebaseArray, $q, UserService, $location, $ionicScrollDelegate) {
         var service = {
             jogoSelecionado: null,
+            geoQueryLoaded: false,
             novaPartida: {},
             jogosRegiao: [],
             jogosRegiaoMarkers: [],
@@ -55,6 +56,11 @@
         }
 
         function getJogosRegiao() {
+            service.geoQuery.on('ready', function () {
+                service.geoQueryLoaded = true;
+                addMarkers();
+                console.log("GeoQuery has loaded and fired all other events for initial data");
+            });
             service.geoQuery.on('key_entered', function (key, location, distance) {
                 service.ref.child(key).on('value', function (snapshot) {
                     if (snapshot.val() && snapshot.val().inicio > moment(new Date()).subtract(1, 'H')._d.getTime()) {
@@ -68,20 +74,24 @@
                             if (jogo.responsavel == firebase.auth().currentUser.uid) {
                                 jogo.visivel = true;
                                 jogo.icon = 'www/img/pin-jogos.png';
+                                if (service.geoQueryLoaded) {
+                                    addJogoMarker(jogo);
+                                }
                                 $timeout(function () {
                                     _.remove(service.jogosRegiao, { '$id': key });
                                     service.jogosRegiao.push(jogo);
-                                    addJogoMarker(jogo);
                                 });
                             }
                             else {
                                 verificaPermissao(jogo).then(function (visivel) {
                                     jogo.readOnly = !visivel;
                                     jogo.icon = visivel ? 'www/img/pin-jogos.png' : 'www/img/pin-jogos-readonly.png';
+                                    if (service.geoQueryLoaded) {
+                                        addJogoMarker(jogo);
+                                    }
                                     $timeout(function () {
                                         _.remove(service.jogosRegiao, { '$id': key });
                                         service.jogosRegiao.push(jogo);
-                                        addJogoMarker(jogo);
                                     });
                                 });
                             }
@@ -103,18 +113,15 @@
             });
         }
 
-        function addJogoMarker(jogo) {
-            var jogoMarker = _.find($rootScope.markers, { $id: jogo.$id });
-            if (jogoMarker) {
-                jogoMarker.remove();
-                _.remove($rootScope.markers, { '$id': jogo.$id });
-            }
-            if ($rootScope.map) {
+        function addMarkers() {
+            var teste = _.groupBy(service.jogosRegiao, 'local.id');
+            console.log(teste);
+            _.forEach(service.jogosRegiao, function (jogo) {
                 var data = {
                     'position': new plugin.google.maps.LatLng(jogo.latitude, jogo.longitude),
                     'title': jogo.nome,
-                    'icon': { 
-                        'url': jogo.icon, 
+                    'icon': {
+                        'url': jogo.icon,
                         'size': {
                             width: 79,
                             height: 48
@@ -130,9 +137,79 @@
                         marker.readOnly = jogo.readOnly;
                         marker.$id = jogo.$id;
                         marker.data = jogo;
-                        $rootScope.markers.push(marker);
+                        marker.todos = true;
+                        marker.jogo = true;
+                        marker.arena = false;
+                        $rootScope.map.on('category_change', function (category) {
+                            $timeout(function () {
+                                marker.setVisible(marker[category] ? true : false);
+                            }, 100);
+                        });
+                        $timeout(function () {
+                            $rootScope.markers.push(marker);
+                        });
                     });
-                }, 100);
+                });
+            });
+        }
+
+        function addJogoMarker(jogo) {
+            var jogoMarker = _.find($rootScope.markers, { $id: jogo.$id });
+            if (jogoMarker) {
+                jogoMarker.remove();
+                _.remove($rootScope.markers, { '$id': jogo.$id });
+            }
+            if ($rootScope.map) {
+                var markerMesmaLocalizacao = _.find($rootScope.markers, function (m) {
+                    return m.data.latitude == jogo.latitude && m.data.longitude == jogo.longitude;
+                });
+                if (markerMesmaLocalizacao) {
+                    $timeout(function () {
+                        markerMesmaLocalizacao.setIcon({
+                            'url': 'www/img/pin-jogos-multiple.png',
+                            'size': {
+                                width: 79,
+                                height: 48
+                            }
+                        });
+                    }, 100);
+                    markerMesmaLocalizacao.multiple = true;
+                }
+                else {
+                    var data = {
+                        'position': new plugin.google.maps.LatLng(jogo.latitude, jogo.longitude),
+                        'title': jogo.nome,
+                        'icon': {
+                            'url': jogo.icon,
+                            'size': {
+                                width: 79,
+                                height: 48
+                            }
+                        }
+                    };
+                    $timeout(function () {
+                        $rootScope.map.addMarker(data, function (marker) {
+                            if (!jogo.readOnly) {
+                                marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, onMarkerClicked);
+                            }
+                            marker.tipo = 'jogo';
+                            marker.readOnly = jogo.readOnly;
+                            marker.$id = jogo.$id;
+                            marker.data = jogo;
+                            marker.todos = true;
+                            marker.jogo = true;
+                            marker.arena = false;
+                            $rootScope.map.on('category_change', function (category) {
+                                $timeout(function () {
+                                    marker.setVisible(marker[category] ? true : false);
+                                }, 100);
+                            });
+                            $timeout(function () {
+                                $rootScope.markers.push(marker);
+                            });
+                        });
+                    });
+                }
             }
         }
 

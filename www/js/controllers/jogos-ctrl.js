@@ -212,8 +212,12 @@
         }
 
         function salvarJogo() {
-            vm.novaPartida.data.local = vm.novaPartida.localSelecionado.nome;
-            vm.novaPartida.data.endereco = vm.novaPartida.localSelecionado.endereco;
+            vm.novaPartida.data.local = {
+                id: vm.novaPartida.localSelecionado.$id,
+                nome: vm.novaPartida.localSelecionado.nome,
+                endereco: vm.novaPartida.localSelecionado.endereco,
+                arenaComercial: vm.novaPartida.localSelecionado.arenaComercial ? true: false
+            };
             var novaPartidaData = {
                 partida: vm.novaPartida.data,
                 coords: [vm.novaPartida.localSelecionado.latitude, vm.novaPartida.localSelecionado.longitude],
