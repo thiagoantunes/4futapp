@@ -7,7 +7,7 @@
   <author email="thiago.antunes@outlook.com" href="http://reidaquadra.com/">
       Thiago Antunes Henriques
     </author>
-  <content src="index.html"/>
+  <content src="http://192.168.25.12:8100" original-src="index.html"/>
   <access origin="*"/>
   <allow-intent href="http://*/*"/>
   <allow-intent href="https://*/*"/>

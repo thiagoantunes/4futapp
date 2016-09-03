@@ -18105,6 +18105,10 @@ ion-side-menu ion-content {
     padding-top: 20px;
     font-size: 1.3em; }
 
+.flex-cols {
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap; }
+
 #map-container {
   width: 100%;
   height: 100vh; }

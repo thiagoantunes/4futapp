@@ -32,7 +32,7 @@
             <div class="row">
               <div class="col-75">
                 <div class="jogadores">
-                  <div class="jogador" ng-repeat="jogador in jogo.jogadores | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
+                  <div class="jogador" ng-repeat="jogador in jogo.jogadores | toArray : false | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
                     <img ng-if="!jogador.aguardandoConfirmacao" ng-class="{confirmado: jogador.confirmado}" cache-src="{{jogador.fotoPerfil | defaultImage}}">
                   </div>
                   <div ng-if="jogo.jogadores.length > 4" class="plus">
@@ -41,7 +41,7 @@
                 </div>
               </div>
               <div class="col resumo">
-                <b>{{jogo.jogadores.length}}</b> / {{jogo.maxJogadores}}
+                <b>{{ vm.getLength(jogo.jogadores) }}</b> / {{jogo.maxJogadores}}
               </div>
             </div>
             <div class="row ">
@@ -66,7 +66,7 @@
             <div class="row">
               <div class="col-75">
                 <div class="jogadores">
-                  <div class="jogador" ng-repeat="jogador in jogo.jogadores | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
+                  <div class="jogador" ng-repeat="jogador in jogo.jogadores | toArray : false | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
                     <img ng-if="!jogador.aguardandoConfirmacao" ng-class="{confirmado: jogador.confirmado}" cache-src="{{jogador.fotoPerfil | defaultImage}}">
                   </div>
                   <div ng-if="jogo.jogadores.length > 4" class="plus">

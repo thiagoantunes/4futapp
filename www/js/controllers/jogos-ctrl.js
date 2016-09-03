@@ -12,7 +12,7 @@
     MeusJogosCtrl.$inject = ['JogosService', 'UserService', 'ReservasService', 'ArenasService', '$ionicModal'];
     ReservaCtrl.$inject = ['$scope', '$state', 'JogosService', 'UserService', 'ReservasService', 'ArenasService', 'GeoService', 'Enum', '$ionicModal', '$ionicPopup'];
     NovaPartidaCtrl.$inject = ['$scope', '$state', '$ionicHistory', 'Enum', 'UserService', 'ReservasService', 'JogosService', 'ArenasService', '$ionicModal', 'ionicTimePicker', 'ionicDatePicker', 'LocationService', '$ionicLoading', '$cordovaSocialSharing', '$window'];
-    JogosDetailCtrl.$inject = ['$scope', '$state', '$timeout', '$rootScope', '$ionicPlatform', '$ionicHistory', 'JogosService', 'UserService', '$ionicModal', 'GeoService', '$ionicLoading', '$window', '$ionicActionSheet', '$cordovaSocialSharing', '$ionicPopup', '$cordovaVibration'];
+    JogosDetailCtrl.$inject = ['$scope', '$state','$stateParams' ,'$timeout', '$rootScope', '$ionicPlatform', '$ionicHistory', 'JogosService', 'UserService', '$ionicModal', 'GeoService', '$ionicLoading', '$window', '$ionicActionSheet', '$cordovaSocialSharing', '$ionicPopup', '$cordovaVibration'];
 
     function JogosCtrl($scope, $rootScope, JogosService, $ionicModal, $window, ArenasService, $ionicScrollDelegate, $location, $ionicHistory, GeoService, $timeout) {
         var vm = this;
@@ -98,6 +98,7 @@
         vm.jogosAnteriores = jogosAnteriores;
         vm.numeroPartidasPassadas = numeroPartidasPassadas;
         vm.jogoEmAndamento = jogoEmAndamento;
+        vm.getLength = getLength;
 
         activate();
 
@@ -158,6 +159,10 @@
 
         function numeroPartidasPassadas() {
             return _.filter(vm.jogos, jogosAnteriores).length;
+        }
+
+        function getLength(obj) {
+            return Object.keys(obj).length;
         }
 
     }
@@ -229,7 +234,7 @@
             JogosService.criarJogo(novaPartidaData)
                 .then(function(jogoId) {
                     //goBack();
-                    JogosService.getJogo(jogoId).then(function(val) {
+                    JogosService.getJogo(jogoId).$loaded().then(function(val) {
                         $ionicLoading.hide();
                         JogosService.jogoSelecionado = val;
                         JogosService.jogoSelecionado.novoJogo = true;
@@ -253,7 +258,7 @@
             $ionicLoading.show({ template: 'Carregando...' });
             JogosService.editarJogo(partida)
                 .then(function(jogoId) {
-                    JogosService.getJogo(jogoId).then(function(val) {
+                    JogosService.getJogo(jogoId).$loaded().then(function(val) {
                         $ionicLoading.hide();
                         JogosService.jogoSelecionado = val;
                         goBack();
@@ -609,14 +614,13 @@
 
     }
 
-    function JogosDetailCtrl($scope, $state, $timeout, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService, $ionicLoading, $window, $ionicActionSheet, $cordovaSocialSharing, $ionicPopup, $cordovaVibration) {
+    function JogosDetailCtrl($scope, $state, $stateParams, $timeout, $rootScope, $ionicPlatform, $ionicHistory, JogosService, UserService, $ionicModal, GeoService, $ionicLoading, $window, $ionicActionSheet, $cordovaSocialSharing, $ionicPopup, $cordovaVibration) {
         var vm = this;
         vm.jogo = JogosService.jogoSelecionado;
         vm.amigos = UserService.amigos;
-
+        vm.meuId = firebase.auth().currentUser.uid;
         vm.atualizaPresenca = atualizaPresenca;
         vm.getPresencaClass = getPresencaClass;
-        vm.checkPresencaAmigo = checkPresencaAmigo;
         vm.checkOrganizador = checkOrganizador;
         vm.convidarAmigo = convidarAmigo;
         vm.desconvidarAmigo = desconvidarAmigo;
@@ -645,17 +649,9 @@
         vm.humanizeDurationTimer = humanizeDurationTimer;
         vm.addTime = addTime;
 
-        $scope.$on('$ionicView.enter', function() {
-            $timeout(function() {
-                vm.jogo = JogosService.jogoSelecionado;
-            }, 0);
-        });
-
         activate();
 
         function activate() {
-            vm.minhaPresenca = _.find(vm.jogo.jogadores, { '$id': firebase.auth().currentUser.uid });
-
             $ionicModal.fromTemplateUrl('modal/convidar-amigos.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
@@ -706,19 +702,19 @@
         }
 
         function atualizaPresenca(bool) {
-            if (vm.minhaPresenca) {
-                if (vm.minhaPresenca.confirmado !== undefined) {
-                    vm.minhaPresenca.confirmado = bool === vm.minhaPresenca.confirmado ? null : bool;
+            if (vm.jogo.jogadores[vm.meuId]) {
+                if (vm.jogo.jogadores[vm.meuId].confirmado !== undefined) {
+                    vm.jogo.jogadores[vm.meuId].confirmado = bool === vm.jogo.jogadores[vm.meuId].confirmado ? null : bool;
                 }
                 else {
-                    vm.minhaPresenca.confirmado = bool;
+                    vm.jogo.jogadores[vm.meuId].confirmado = bool;
                 }
-
-                vm.jogo.jogadores.$save(vm.minhaPresenca);
+                vm.jogo.jogadores[firebase.auth().currentUser.uid].confirmado = vm.jogo.jogadores[vm.meuId].confirmado;
+                vm.jogo.$save();
             }
             else {
                 JogosService.solicitarPresenca(vm.jogo).then(function(val) {
-                    vm.minhaPresenca = val;
+                    vm.jogo.jogadores[vm.meuId] = val;
                 });
             }
         }
@@ -734,10 +730,6 @@
                 }
             }
             return val;
-        }
-
-        function checkPresencaAmigo(amigo) {
-            return _.some(vm.jogo.jogadores, { '$id': amigo.$id });
         }
 
         function checkOrganizador() {

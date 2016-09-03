@@ -23,7 +23,6 @@
             getJogo: getJogo,
             getAndamentoJogo: getAndamentoJogo,
             getJogosRegiao: getJogosRegiao,
-            getJogadoresJogo: getJogadoresJogo,
             getMeusJogos: getMeusJogos,
             getUserJogos: getUserJogos,
             getLocalizacaoJogo: getLocalizacaoJogo,
@@ -39,16 +38,7 @@
         return service;
 
         function getJogo(jogoId) {
-            var deferred = $q.defer();
-            service.ref.child(jogoId).on('value', function (snapJogo) {
-                getJogadoresJogo(jogoId).$loaded().then(function (val) {
-                    var data = snapJogo.val();
-                    data.$id = jogoId;
-                    data.jogadores = val;
-                    deferred.resolve(data);
-                });
-            });
-            return deferred.promise;
+            return $firebaseObject(service.ref.child(jogoId));
         }
 
         function getAndamentoJogo(jogoId) {
@@ -82,32 +72,30 @@
 
             function setMatch(snapshot) {
                 if (snapshot.val() && snapshot.val().inicio > moment(new Date()).subtract(1, 'H')._d.getTime()) {
-                    getJogadoresJogo(snapshot.key).$loaded().then(function (val) {
-                        var jogo = snapshot.val();
-                        jogo.distance = distance;
-                        jogo.$id = snapshot.key;
-                        jogo.latitude = location[0];
-                        jogo.longitude = location[1];
-                        jogo.jogadores = val;
-                        if (jogo.responsavel == firebase.auth().currentUser.uid) {
-                            jogo.visivel = true;
-                            jogo.icon = 'www/img/pin-jogos.png';
+                    var jogo = snapshot.val();
+                    jogo.distance = distance;
+                    jogo.$id = snapshot.key;
+                    jogo.latitude = location[0];
+                    jogo.longitude = location[1];
+                    //jogo.jogadores = val;
+                    if (jogo.responsavel == firebase.auth().currentUser.uid) {
+                        jogo.visivel = true;
+                        jogo.icon = 'www/img/pin-jogos.png';
+                        $timeout(function () {
+                            _.remove(service.jogosRegiao, { '$id': snapshot.key });
+                            service.jogosRegiao.push(jogo);
+                        });
+                    }
+                    else {
+                        verificaPermissao(jogo).then(function (visivel) {
+                            jogo.readOnly = !visivel;
+                            jogo.icon = visivel ? 'www/img/pin-jogos.png' : 'www/img/pin-jogos-readonly.png';
                             $timeout(function () {
                                 _.remove(service.jogosRegiao, { '$id': snapshot.key });
                                 service.jogosRegiao.push(jogo);
                             });
-                        }
-                        else {
-                            verificaPermissao(jogo).then(function (visivel) {
-                                jogo.readOnly = !visivel;
-                                jogo.icon = visivel ? 'www/img/pin-jogos.png' : 'www/img/pin-jogos-readonly.png';
-                                $timeout(function () {
-                                    _.remove(service.jogosRegiao, { '$id': snapshot.key });
-                                    service.jogosRegiao.push(jogo);
-                                });
-                            });
-                        }
-                    });
+                        });
+                    }
                 }
                 else {
                     service.geoFire.remove(key);
@@ -125,16 +113,32 @@
             service.geoQuery.on('key_entered', function (key, location, distance) {
                 service.ref.child(key).on('value', function (snapshot) {
                     if (snapshot.val() && snapshot.val().inicio > moment(new Date()).subtract(1, 'H')._d.getTime()) {
-                        getJogadoresJogo(key).$loaded().then(function (val) {
-                            var jogo = snapshot.val();
-                            jogo.distance = distance;
-                            jogo.$id = key;
-                            jogo.latitude = location[0];
-                            jogo.longitude = location[1];
-                            jogo.jogadores = val;
-                            if (jogo.responsavel == firebase.auth().currentUser.uid) {
-                                jogo.visivel = true;
-                                jogo.icon = 'www/img/pin-jogos.png';
+                        var jogo = snapshot.val();
+                        jogo.distance = distance;
+                        jogo.$id = key;
+                        jogo.latitude = location[0];
+                        jogo.longitude = location[1];
+                        //jogo.jogadores = val;
+                        jogo.jogadores = Object.keys(jogo.jogadores).map(function (key) {
+                            var j = jogo.jogadores[key];
+                            j.$id = key;
+                            return j;
+                        });
+                        if (jogo.responsavel == firebase.auth().currentUser.uid) {
+                            jogo.visivel = true;
+                            jogo.icon = 'www/img/pin-jogos.png';
+                            if (service.geoQueryLoaded) {
+                                addJogoMarker(jogo);
+                            }
+                            $timeout(function () {
+                                _.remove(service.jogosRegiao, { '$id': key });
+                                service.jogosRegiao.push(jogo);
+                            });
+                        }
+                        else {
+                            verificaPermissao(jogo).then(function (visivel) {
+                                jogo.readOnly = !visivel;
+                                jogo.icon = visivel ? 'www/img/pin-jogos.png' : 'www/img/pin-jogos-readonly.png';
                                 if (service.geoQueryLoaded) {
                                     addJogoMarker(jogo);
                                 }
@@ -142,21 +146,8 @@
                                     _.remove(service.jogosRegiao, { '$id': key });
                                     service.jogosRegiao.push(jogo);
                                 });
-                            }
-                            else {
-                                verificaPermissao(jogo).then(function (visivel) {
-                                    jogo.readOnly = !visivel;
-                                    jogo.icon = visivel ? 'www/img/pin-jogos.png' : 'www/img/pin-jogos-readonly.png';
-                                    if (service.geoQueryLoaded) {
-                                        addJogoMarker(jogo);
-                                    }
-                                    $timeout(function () {
-                                        _.remove(service.jogosRegiao, { '$id': key });
-                                        service.jogosRegiao.push(jogo);
-                                    });
-                                });
-                            }
-                        });
+                            });
+                        }
                     }
                     else {
                         service.geoFire.remove(key);
@@ -284,10 +275,6 @@
             return $firebaseArray(ref);
         }
 
-        function getJogadoresJogo(jogoId) {
-            return $firebaseArray(service.refJogadoresJogo.child(jogoId));
-        }
-
         function getLocalizacaoJogo(jogoId) {
             return service.refLocalizacao.child(jogoId).once('value');
         }
@@ -304,24 +291,23 @@
 
             var jogoId = service.ref.push().key;
             var jogoData = {};
-            jogoData['usersJogos/' + firebase.auth().currentUser.uid + '/' + jogoId] = true;
             jogoData['jogos/' + jogoId] = data.partida;
-            jogoData['jogosJogadores/' + jogoId + '/' + firebase.auth().currentUser.uid] = {
-                fotoPerfil: firebase.auth().currentUser.photoURL,
-                id: firebase.auth().currentUser.uid,
-                confirmado: true
-            };
+            jogoData['jogos/' + jogoId].jogadores = {};
+
+            //Adiciona os amigos selecionados ao jogo
             _.forEach(data.jogadores, function (jogador) {
-                jogoData['jogosJogadores/' + jogoId + '/' + jogador.$id] = {
+                jogoData['jogos/' + jogoId].jogadores[jogador.$id] = {
                     fotoPerfil: jogador.fotoPerfil,
                     id: jogador.$id
                 };
                 jogoData['usersJogos/' + jogador.$id + '/' + jogoId] = true;
             });
+
+            //Adiciona os membros dos grupos ao jogo
             _.forEach(data.times, function (time) {
                 _.forEach(time.jogadores, function (jogador) {
                     if (jogador.id !== firebase.auth().currentUser.uid) {
-                        jogoData['jogosJogadores/' + jogoId + '/' + jogador.id] = {
+                        jogoData['jogos/' + jogoId].jogadores[jogador.id] = {
                             fotoPerfil: jogador.fotoPerfil,
                             id: jogador.id
                         };
@@ -329,6 +315,17 @@
                     }
                 });
             });
+
+            //Me adiciona ao jogo
+            jogoData['jogos/' + jogoId].jogadores[firebase.auth().currentUser.uid] = {
+                fotoPerfil: firebase.auth().currentUser.photoURL,
+                id: firebase.auth().currentUser.uid,
+                confirmado: true
+            };
+            jogoData['usersJogos/' + firebase.auth().currentUser.uid + '/' + jogoId] = true;
+
+
+            //Vincula partida a reserva
             if (data.partida.reserva && data.arenaId) {
                 jogoData['reservas/' + data.arenaId + '/' + data.partida.reserva + '/partida'] = jogoId;
             }
@@ -393,10 +390,9 @@
             var jogoData = {};
             var jogoId = jogo.$id;
             jogoData['jogos/' + jogoId] = null;
-            jogoData['jogosJogadores/' + jogoId] = null;
             jogoData['jogosLocalizacao/' + jogoId] = null;
             _.forEach(jogo.jogadores, function (jogador) {
-                jogoData['usersJogos/' + jogador.$id + '/' + jogoId] = null;
+                jogoData['usersJogos/' + jogador.id + '/' + jogoId] = null;
             });
             Ref.update(jogoData, function (error) {
                 if (error) {
@@ -410,7 +406,7 @@
                             tipo: Enum.TipoNotificacao.cancelamentoPartida,
                             lida: false,
                             dateTime: new Date().getTime()
-                        }, jogador.$id);
+                        }, jogador.id);
                     });
                     deferred.resolve(jogoId);
                 }
@@ -453,7 +449,7 @@
             if (jogo.aprovacaoManual) {
                 solicitacao.aguardandoConfirmacao = true;
             }
-            conviteData['jogosJogadores/' + jogo.$id + '/' + firebase.auth().currentUser.uid] = solicitacao;
+            conviteData['jogos/' + jogo.$id + '/jogadores/' + firebase.auth().currentUser.uid] = solicitacao;
             conviteData['usersJogos/' + firebase.auth().currentUser.uid + '/' + jogo.$id] = true;
 
             Ref.update(conviteData, function () {
@@ -475,17 +471,10 @@
 
         function getMeusJogos() {
             service.refUserJogos.child(firebase.auth().currentUser.uid).on('child_added', function (snap) {
-                service.ref.child(snap.key).on('value', function (snapJogo) {
-                    getJogadoresJogo(snap.key).$loaded().then(function (val) {
-                        if (snapJogo.val()) {
-                            var data = snapJogo.val();
-                            data.$id = snap.key;
-                            data.jogadores = val;
-                            $timeout(function () {
-                                _.remove(UserService.jogos, { '$id': snap.key });
-                                UserService.jogos.push(data);
-                            });
-                        }
+                getJogo(snap.key).$loaded().then(function (val) {
+                    $timeout(function () {
+                        _.remove(UserService.jogos, { '$id': val.$id });
+                        UserService.jogos.push(val);
                     });
                 });
             });
@@ -499,7 +488,7 @@
 
         function aprovarSolicitacaoPresenca(userId, jogoId) {
             var data = {};
-            data['jogosJogadores/' + jogoId + '/' + userId + '/aguardandoConfirmacao'] = null;
+            data['jogos/' + jogoId + '/jogadores/' + userId + '/aguardandoConfirmacao'] = null;
 
             Ref.update(data, function () {
                 UserService.enviaNotificacao({
@@ -516,9 +505,10 @@
 
         function convidarAmigo(amigo, jogoId) {
             var conviteData = {};
-            conviteData['jogosJogadores/' + jogoId + '/' + amigo.$id] = {
+            conviteData['jogos/' + jogoId + '/jogadores/' + amigo.$id] = {
                 nome: amigo.nome,
-                fotoPerfil: amigo.fotoPerfil
+                fotoPerfil: amigo.fotoPerfil,
+                id: amigo.$id
             };
             conviteData['usersJogos/' + amigo.$id + '/' + jogoId] = true;
 
@@ -537,7 +527,7 @@
 
         function desconvidarAmigo(amigo, jogoId) {
             var conviteData = {};
-            conviteData['jogosJogadores/' + jogoId + '/' + amigo.$id] = null;
+            conviteData['jogos/' + jogoId + '/jogadores/' + amigo.$id] = null;
             conviteData['usersJogos/' + amigo.$id + '/' + jogoId] = null;
 
             Ref.update(conviteData);

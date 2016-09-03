@@ -37,7 +37,8 @@
             'ui.utils.masks',
             'angularMoment',
             'monospaced.elastic',
-            'angular-svg-round-progress'
+            'angular-svg-round-progress',
+            'angular-toArrayFilter'
         ])
         .run(run)
         .config(config)
