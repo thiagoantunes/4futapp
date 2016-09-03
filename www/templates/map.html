@@ -9,7 +9,7 @@
         <button ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="app.criar-partida" class="button button-icon button-clear ion-android-add icon"></button>
       </div>
       <ion-scroll class="scroll-markers" zooming="false" direction="y">
-        <div id="anchor{{marker.$id}}" ng-repeat="marker in $root.markers | orderBy:'data.distance '">
+        <div id="anchor{{marker.$id}}" ng-repeat="marker in $root.markers | orderBy:'distance '">
           <div ng-if="marker[vm.filtro.tipo] && marker.arena" ng-click="vm.arenaService.arenaSelecionada = marker.data;" ui-sref="app.detalhes-arena({id: marker.$id})"
             href="#/app/arenas/{{marker.$id}}" class="row item-arena">
             <div class="col-20 avatar">
@@ -18,7 +18,7 @@
             <div class="col end">
               <div class="nome-arena">{{marker.data.nome}}</div>
               <small>{{marker.data.endereco}}</small><br/>
-              <small>{{marker.data.distance | number : 2}} km</small>
+              <small>{{marker.distance | number : 2}} km</small>
             </div>
             <div class="col-20 find-on-map" ng-click="vm.acharNoMapa(marker); $event.stopPropagation();">
               <i class="icon ion-pinpoint positive"></i>
@@ -46,16 +46,16 @@
               <div class="row">
                 <div class="col-75">
                   <div class="jogadores">
-                    <div class="jogador" ng-repeat="jogador in marker.data.jogadores | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
+                    <div class="jogador" ng-repeat="jogador in marker.data.jogadores | toArray : false | orderBy : vm.orderByConfirmacao" ng-if="$index < 4">
                       <img ng-if="!jogador.aguardandoConfirmacao" ng-class="{confirmado: jogador.confirmado}" ng-src="{{jogador.fotoPerfil | defaultImage}}">
                     </div>
-                    <div ng-if="marker.data.jogadores.length > 4" class="plus">
-                      <div class="value"> + {{marker.data.jogadores.length - 4}}</div>
+                    <div ng-if="vm.getLength(marker.data.jogadores) > 4" class="plus">
+                      <div class="value"> + {{vm.getLength(marker.data.jogadores) - 4}}</div>
                     </div>
                   </div>
                 </div>
                 <div class="col resumo">
-                  <b>{{marker.data.jogadores.length}}</b> / {{marker.data.maxJogadores}}
+                  <b>{{vm.getLength(marker.data.jogadores)}}</b> / {{marker.data.maxJogadores}}
                 </div>
               </div>
             </div>

@@ -11,9 +11,9 @@
 
     function ArenasService(Ref, $timeout, $rootScope, $firebaseArray, $firebaseObject, $q, $location, $ionicScrollDelegate) {
         var service = {
+            geoQueryLoaded: false,
             ref: Ref.child('arenas'),
             refArenaBasica: Ref.child('arenasBasicas'),
-            arenasMarkers: [],
             arenasMap: {},
             arenas: [],
             arenasBasicas: [],
@@ -38,60 +38,129 @@
         return service;
 
         function getArenas() {
+            var deferred = $q.defer();
+
             service.geoQuery.on('key_entered', function (key, location, distance) {
-                service.ref.child(key).once('value').then(function (snapshot) {
-                    var arena = snapshot.val();
-                    arena.distance = distance;
-                    arena.$id = key;
-                    arena.latitude = location[0];
-                    arena.longitude = location[1];
-                    arena.icon = 'www/img/pin.png';
+                var existingMarker = _.find($rootScope.markers, { '$id': key });
+                if (existingMarker) {
+                    existingMarker.distance = distance;
+                    existingMarker.latitude = location[0];
+                    existingMarker.longitude = location[1];
+                }
+                else {
+                    $rootScope.markers.push({
+                        $id: key,
+                        distance: distance,
+                        latitude: location[0],
+                        longitude: location[1],
+                        icon: 'www/img/pin.png',
+                        todos: true,
+                        arena: true
+                    });
+                }
+                if (service.geoQueryLoaded) {
+                    getJogo(key).$loaded().then(function (obj) {
+                        setMatch(obj);
+                        addMarkerToMap(key);
+                    });
+                }
+            });
+
+            service.geoQuery.on("key_exited", function (key, location, distance) {
+                _.remove($rootScope.markers, { '$id': key });
+                var arenaMarker = _.find($rootScope.markers, { $id: key });
+                if (arenaMarker) {
+                    arenaMarker.marker.remove();
+                }
+            });
+
+            service.geoQuery.on('ready', function () {
+                onFirstLoadReady();
+            });
+
+            function onFirstLoadReady() {
+                service.geoQueryLoaded = true;
+
+                var promises = [];
+                _.forEach($rootScope.markers, function (a) {
+                    var promise = getArena(a.$id).$loaded();
+                    promises.push(promise);
+                });
+                $q.all(promises).then(function (requests) {
+                    _.forEach(requests, function (arena) {
+                        setArena(arena);
+                    });
+                    addMarkersToMap();
+                    deferred.resolve();
+                });
+
+            }
+
+            function setArena(arena) {
+                var marker = _.find($rootScope.markers, { $id: arena.$id });
+                marker.data = arena;
+            }
+
+            function addMarkersToMap() {
+                $rootScope.markers.map(function (markArena) {
+                    if (markArena.marker) {
+                        markArena.marker.remove();
+                    }
+                    var latLng = new plugin.google.maps.LatLng(markArena.latitude, markArena.longitude);
                     $timeout(function () {
-                        _.remove(service.arenas, { '$id': key });
-                        service.arenas.push(arena);
-                        addArenaMarker(arena);
+                        $rootScope.map.addMarker({
+                            'position': latLng,
+                            'title': markArena.data.nome,
+                            'icon': {
+                                'url': markArena.icon,
+                                'size': {
+                                    width: 79,
+                                    height: 48
+                                }
+                            }
+                        }, function (marker) {
+                            markArena.marker = marker;
+                            $rootScope.map.on('category_change', function (category) {
+                                $timeout(function () {
+                                    markArena.marker.setVisible(marker[category] ? true : false);
+                                }, 100);
+                            });
+                        });
                     });
                 });
-            });
-        }
-
-        function addArenaMarker(arena) {
-            var arenaMarker = _.find($rootScope.markers, { $id: arena.$id });
-            if (arenaMarker) {
-                arenaMarker.remove();
-                _.remove($rootScope.markers, { '$id': arena.$id });
             }
-            if ($rootScope.map) {
-                var data = {
-                    'position': new plugin.google.maps.LatLng(arena.latitude, arena.longitude),
-                    'title': arena.nome,
-                    'icon': {
-                        'url': arena.icon,
-                        'size': {
-                            width: 79,
-                            height: 48
-                        }
-                    }
-                };
+
+            function addMarkerToMap(key) {
+                var markArena = _.find($rootScope.markers, { '$id': key });
+                if (markArena.marker) {
+                    markArena.marker.remove();
+                }
+                var latLng = new plugin.google.maps.LatLng(markArena.latitude, markArena.longitude);
                 $timeout(function () {
-                    $rootScope.map.addMarker(data, function (marker) {
-                        marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, service.onMarkerClicked);
-                        marker.$id = arena.$id;
-                        marker.data = arena;
-                        marker.todos = true;
-                        marker.jogo = false;
-                        marker.arena = true;
+                    $rootScope.map.addMarker({
+                        'position': latLng,
+                        'title': markArena.data.nome,
+                        'icon': {
+                            'url': markArena.icon,
+                            'size': {
+                                width: 79,
+                                height: 48
+                            }
+                        }
+                    }, function (marker) {
+                        markArena.marker = marker;
                         $rootScope.map.on('category_change', function (category) {
                             $timeout(function () {
-                                marker.setVisible(marker[category] ? true : false);
+                                markArena.marker.setVisible(marker[category] ? true : false);
                             }, 100);
                         });
-                        $rootScope.markers.push(marker);
-                    }, function (err) {
-                        console.log(err);
                     });
-                }, 100);
+                });
             }
+
+
+            return deferred.promise;
+
         }
 
         function onMarkerClicked(marker) {
@@ -369,7 +438,8 @@
                         'duration': 2000
                         // = 2 sec.
                     });
-                   // ArenasService.getArenas();
+                    $rootScope.markers = [];
+                    ArenasService.getArenas();
                     JogosService.getJogosRegiao();
                     $rootScope.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, service.onMapCameraChanged);
                 });

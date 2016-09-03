@@ -1,5 +1,5 @@
 /*jshint loopfunc: true */
-(function() {
+(function () {
     'use strict';
     angular.module('main')
         .controller('JogosCtrl', JogosCtrl)
@@ -12,7 +12,7 @@
     MeusJogosCtrl.$inject = ['JogosService', 'UserService', 'ReservasService', 'ArenasService', '$ionicModal'];
     ReservaCtrl.$inject = ['$scope', '$state', 'JogosService', 'UserService', 'ReservasService', 'ArenasService', 'GeoService', 'Enum', '$ionicModal', '$ionicPopup'];
     NovaPartidaCtrl.$inject = ['$scope', '$state', '$ionicHistory', 'Enum', 'UserService', 'ReservasService', 'JogosService', 'ArenasService', '$ionicModal', 'ionicTimePicker', 'ionicDatePicker', 'LocationService', '$ionicLoading', '$cordovaSocialSharing', '$window'];
-    JogosDetailCtrl.$inject = ['$scope', '$state','$stateParams' ,'$timeout', '$rootScope', '$ionicPlatform', '$ionicHistory', 'JogosService', 'UserService', '$ionicModal', 'GeoService', '$ionicLoading', '$window', '$ionicActionSheet', '$cordovaSocialSharing', '$ionicPopup', '$cordovaVibration'];
+    JogosDetailCtrl.$inject = ['$scope', '$state', '$stateParams', '$timeout', '$rootScope', '$ionicPlatform', '$ionicHistory', 'JogosService', 'UserService', '$ionicModal', 'GeoService', '$ionicLoading', '$window', '$ionicActionSheet', '$cordovaSocialSharing', '$ionicPopup', '$cordovaVibration'];
 
     function JogosCtrl($scope, $rootScope, JogosService, $ionicModal, $window, ArenasService, $ionicScrollDelegate, $location, $ionicHistory, GeoService, $timeout) {
         var vm = this;
@@ -22,7 +22,7 @@
         vm.goBack = goBack;
         activate();
 
-        $scope.$on('$ionicView.enter', function() {
+        $scope.$on('$ionicView.enter', function () {
             if (window.cordova) {
                 StatusBar.backgroundColorByName('black');
             }
@@ -32,14 +32,14 @@
             if ($rootScope.map) {
                 var mapPosition = new plugin.google.maps.LatLng(GeoService.position[0], GeoService.position[1]);
 
-                $timeout(function() {
+                $timeout(function () {
                     $rootScope.map.setDiv(document.getElementById("map-jogos"));
 
-                    _.forEach(ArenasService.arenasMarkers, function(arenaMarker) {
+                    _.forEach(ArenasService.arenasMarkers, function (arenaMarker) {
                         arenaMarker.setVisible(false);
                     });
 
-                    _.forEach(JogosService.jogosRegiaoMarkers, function(jogoMarker) {
+                    _.forEach(JogosService.jogosRegiaoMarkers, function (jogoMarker) {
                         jogoMarker.setVisible(true);
                     });
 
@@ -162,7 +162,9 @@
         }
 
         function getLength(obj) {
-            return Object.keys(obj).length;
+            if (obj) {
+                return Object.keys(obj).length;
+            }
         }
 
     }
@@ -221,7 +223,7 @@
                 id: vm.novaPartida.localSelecionado.$id,
                 nome: vm.novaPartida.localSelecionado.nome,
                 endereco: vm.novaPartida.localSelecionado.endereco,
-                arenaComercial: vm.novaPartida.localSelecionado.arenaComercial ? true: false
+                arenaComercial: vm.novaPartida.localSelecionado.arenaComercial ? true : false
             };
             var novaPartidaData = {
                 partida: vm.novaPartida.data,
@@ -232,15 +234,15 @@
             };
             $ionicLoading.show({ template: 'Carregando...' });
             JogosService.criarJogo(novaPartidaData)
-                .then(function(jogoId) {
+                .then(function (jogoId) {
                     //goBack();
-                    JogosService.getJogo(jogoId).$loaded().then(function(val) {
+                    JogosService.getJogo(jogoId).$loaded().then(function (val) {
                         $ionicLoading.hide();
                         JogosService.jogoSelecionado = val;
                         JogosService.jogoSelecionado.novoJogo = true;
                         $state.go('app.detalhes-jogo', { id: jogoId });
                     });
-                }, function(err) {
+                }, function (err) {
                     console.log(err);
                     $ionicLoading.hide();
                     $window.alert('Ops! Ocorreu um erro ao criar a partida. Tente novamente mais tarde.');
@@ -257,13 +259,13 @@
             };
             $ionicLoading.show({ template: 'Carregando...' });
             JogosService.editarJogo(partida)
-                .then(function(jogoId) {
-                    JogosService.getJogo(jogoId).$loaded().then(function(val) {
+                .then(function (jogoId) {
+                    JogosService.getJogo(jogoId).$loaded().then(function (val) {
                         $ionicLoading.hide();
                         JogosService.jogoSelecionado = val;
                         goBack();
                     });
-                }, function(err) {
+                }, function (err) {
                     console.log(err);
                     $ionicLoading.hide();
                     $window.alert('Ops! Ocorreu um erro ao editar a partida. Tente novamente mais tarde.');
@@ -332,8 +334,8 @@
                         cancelText: 'Cancelar',
 
                     };
-                    datePicker.show(options, function(date) {
-                        $scope.$apply(function() {
+                    datePicker.show(options, function (date) {
+                        $scope.$apply(function () {
                             var activeElement = document.activeElement;
                             if (activeElement) {
                                 activeElement.blur();
@@ -345,7 +347,7 @@
                 }
                 else {
                     var tpObj = {
-                        callback: function(val) {
+                        callback: function (val) {
                             if ((typeof (val) !== 'undefined')) {
                                 var selectedTime = new Date(val * 1000);
                                 var hora = moment(new Date(val * 1000)).add(moment(new Date(val * 1000))._d.getTimezoneOffset(), 'm').format('HH:mm');
@@ -376,8 +378,8 @@
                         okText: 'Ok',
                         cancelText: 'Cancelar',
                     };
-                    datePicker.show(options, function(date) {
-                        $scope.$apply(function() {
+                    datePicker.show(options, function (date) {
+                        $scope.$apply(function () {
                             var activeElement = document.activeElement;
                             if (activeElement) {
                                 activeElement.blur();
@@ -395,7 +397,7 @@
                 }
                 else {
                     var ipObj1 = {
-                        callback: function(val) {
+                        callback: function (val) {
                             openTimePicker();
                             vm.novaPartida.data.inicio = moment(val).format('DD/MM/YYYY');
                         },
@@ -412,7 +414,7 @@
                 $ionicModal.fromTemplateUrl('modal/selecionar-local.html', {
                     scope: $scope,
                     animation: 'slide-in-up'
-                }).then(function(modal) {
+                }).then(function (modal) {
                     $scope.modalLocal = modal;
                     $scope.modalLocal.show();
                 });
@@ -424,17 +426,17 @@
             $scope.search.suggestions = [];
             $scope.search.query = '';
             $scope.search.justSelected = false;
-            $scope.$watch('search.query', function(newValue) {
+            $scope.$watch('search.query', function (newValue) {
                 if (newValue && !$scope.search.justSelected) {
-                    LocationService.searchAddress(newValue).then(function(result) {
+                    LocationService.searchAddress(newValue).then(function (result) {
                         $scope.search.error = null;
                         $scope.search.suggestions = result;
-                    }, function(status) {
+                    }, function (status) {
                         $scope.search.error = 'There was an error :( ' + status;
                     });
                 }
-                $scope.choosePlace = function(place) {
-                    LocationService.getDetails(place.place_id).then(function(location) {
+                $scope.choosePlace = function (place) {
+                    LocationService.getDetails(place.place_id).then(function (location) {
                         $scope.search.query = location.formatted_address;
                         $scope.location = location;
                         $scope.search.justSelected = true;
@@ -442,13 +444,13 @@
                     });
                 };
 
-                $scope.salvarNovoLocal = function() {
+                $scope.salvarNovoLocal = function () {
                     ArenasService.criaArenaBasica(
                         $scope.search.nome,
                         [$scope.location.geometry.location.lat(), $scope.location.geometry.location.lng()],
                         $scope.location.formatted_address
                     )
-                        .then(function() {
+                        .then(function () {
                             vm.novaPartida.localSelecionado = {
                                 nome: $scope.search.nome,
                                 latitude: $scope.location.geometry.location.lat(),
@@ -457,7 +459,7 @@
                             };
                             $scope.modalCriaLocal.hide();
                             $scope.modalLocal.hide();
-                        }, function(error) {
+                        }, function (error) {
                             console.log('Erro ao cadastrar novo local');
                         });
                 };
@@ -465,7 +467,7 @@
             $ionicModal.fromTemplateUrl('modal/criar-local.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
-            }).then(function(modal) {
+            }).then(function (modal) {
                 $scope.modalCriaLocal = modal;
                 $scope.modalCriaLocal.show();
             });
@@ -481,9 +483,9 @@
             $ionicLoading.show({ template: 'Carregando...' });
             $cordovaSocialSharing
                 .shareViaFacebook('Mensagem de teste', 'http://pt.seaicons.com/wp-content/uploads/2016/05/Sport-football-pitch-icon.png', 'http://reidaquadra.com/')
-                .then(function(result) {
+                .then(function (result) {
                     $ionicLoading.hide();
-                }, function(err) {
+                }, function (err) {
                     $ionicLoading.hide();
                 });
         }
@@ -492,9 +494,9 @@
             $ionicLoading.show({ template: 'Carregando...' });
             $cordovaSocialSharing
                 .shareViaWhatsApp('Mensagem de teste', 'http://pt.seaicons.com/wp-content/uploads/2016/05/Sport-football-pitch-icon.png', 'http://reidaquadra.com/')
-                .then(function(result) {
+                .then(function (result) {
                     $ionicLoading.hide();
-                }, function(err) {
+                }, function (err) {
                     $ionicLoading.hide();
                 });
         }
@@ -503,9 +505,9 @@
             $ionicLoading.show({ template: 'Carregando...' });
             $cordovaSocialSharing
                 .shareViaEmail('Mensagem de teste', 'Mensagem de teste')
-                .then(function(result) {
+                .then(function (result) {
                     $ionicLoading.hide();
-                }, function(err) {
+                }, function (err) {
                     $ionicLoading.hide();
                 });
         }
@@ -535,14 +537,14 @@
                 buttons: [{
                     text: 'Não',
                     type: 'button-default',
-                    onTap: function(e) {
+                    onTap: function (e) {
                         e.preventDefault();
                         popup.close();
                     }
                 }, {
                         text: 'Sim',
                         type: 'button-assertive',
-                        onTap: function(e) {
+                        onTap: function (e) {
                             ReservasService.cancelarReserva(vm.reservaSelecionada.arenaId, vm.reservaSelecionada.$id);
                             vm.modal.hide();
                         }
@@ -655,11 +657,11 @@
             $ionicModal.fromTemplateUrl('modal/convidar-amigos.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
-            }).then(function(modal) {
+            }).then(function (modal) {
                 $scope.modal = modal;
             });
 
-            JogosService.getAndamentoJogo(vm.jogo.$id).$bindTo($scope, 'andamentoJogo').then(function() {
+            JogosService.getAndamentoJogo(vm.jogo.$id).$bindTo($scope, 'andamentoJogo').then(function () {
                 if ($scope.andamentoJogo.started) {
                     mytimeout = $timeout(onTimeout, 1000);
                 }
@@ -671,7 +673,7 @@
                 }
             });
 
-            $scope.$watch('andamentoJogo', function() {
+            $scope.$watch('andamentoJogo', function () {
                 if ($scope.andamentoJogo.started) {
                     mytimeout = $timeout(onTimeout, 1000);
                 }
@@ -713,7 +715,7 @@
                 vm.jogo.$save();
             }
             else {
-                JogosService.solicitarPresenca(vm.jogo).then(function(val) {
+                JogosService.solicitarPresenca(vm.jogo).then(function (val) {
                     vm.jogo.jogadores[vm.meuId] = val;
                 });
             }
@@ -758,17 +760,17 @@
 
         function getNumJogadores(confirmado) {
             if (confirmado === true) {
-                return _.filter(vm.jogo.jogadores, function(val) {
+                return _.filter(vm.jogo.jogadores, function (val) {
                     return val.confirmado === true && !val.aguardandoConfirmacao;
                 }).length;
             }
             else if (confirmado === false) {
-                return _.filter(vm.jogo.jogadores, function(val) {
+                return _.filter(vm.jogo.jogadores, function (val) {
                     return val.confirmado === false && !val.aguardandoConfirmacao;
                 }).length;
             }
             else {
-                return _.filter(vm.jogo.jogadores, function(val) {
+                return _.filter(vm.jogo.jogadores, function (val) {
                     return val.confirmado === undefined && !val.aguardandoConfirmacao;
                 }).length;
             }
@@ -779,29 +781,29 @@
                 'buttonLabels': ['Navegar para endereço'],
                 'addCancelButtonWithLabel': 'Fechar'
             };
-            window.plugins.actionsheet.show(options, function(_btnIndex) {
+            window.plugins.actionsheet.show(options, function (_btnIndex) {
                 GeoService.navigateTo(vm.jogo.endereco);
             });
         }
 
         function openPerfilJogador(jogador) {
-            UserService.getUserProfile(jogador).$loaded().then(function(val) {
+            UserService.getUserProfile(jogador).$loaded().then(function (val) {
                 UserService.jogadorSelecionado = val;
                 $state.go('app.detalhes-jogador', { id: jogador });
             });
         }
 
         function openChat() {
-            $state.go('app.chat' , { id: vm.jogo.$id, tipoChat: 'partida' });
+            $state.go('app.chat', { id: vm.jogo.$id, tipoChat: 'partida' });
         }
 
         function compartilhar() {
             $ionicLoading.show({ template: 'Carregando...' });
             $cordovaSocialSharing
                 .share('Mensagem de teste', 'teste', 'http://pt.seaicons.com/wp-content/uploads/2016/05/Sport-football-pitch-icon.png', 'http://reidaquadra.com/')
-                .then(function(result) {
+                .then(function (result) {
                     $ionicLoading.hide();
-                }, function(err) {
+                }, function (err) {
                     $ionicLoading.hide();
                 });
         }
@@ -810,9 +812,9 @@
             $ionicLoading.show({ template: 'Carregando...' });
             $cordovaSocialSharing
                 .shareViaFacebook('Mensagem de teste', 'http://pt.seaicons.com/wp-content/uploads/2016/05/Sport-football-pitch-icon.png', 'http://reidaquadra.com/')
-                .then(function(result) {
+                .then(function (result) {
                     $ionicLoading.hide();
-                }, function(err) {
+                }, function (err) {
                     $ionicLoading.hide();
                 });
         }
@@ -821,9 +823,9 @@
             $ionicLoading.show({ template: 'Carregando...' });
             $cordovaSocialSharing
                 .shareViaWhatsApp('Mensagem de teste', 'http://pt.seaicons.com/wp-content/uploads/2016/05/Sport-football-pitch-icon.png', 'http://reidaquadra.com/')
-                .then(function(result) {
+                .then(function (result) {
                     $ionicLoading.hide();
-                }, function(err) {
+                }, function (err) {
                     $ionicLoading.hide();
                 });
         }
@@ -832,9 +834,9 @@
             $ionicLoading.show({ template: 'Carregando...' });
             $cordovaSocialSharing
                 .shareViaEmail('Mensagem de teste', 'Mensagem de teste')
-                .then(function(result) {
+                .then(function (result) {
                     $ionicLoading.hide();
-                }, function(err) {
+                }, function (err) {
                     $ionicLoading.hide();
                 });
         }
@@ -846,7 +848,7 @@
                 'addCancelButtonWithLabel': 'Fechar'
             };
             if (window.cordova) {
-                window.plugins.actionsheet.show(options, function(_btnIndex) {
+                window.plugins.actionsheet.show(options, function (_btnIndex) {
                     if (_btnIndex === 1) {
                         cancelarPartida();
                     } else if (_btnIndex === 2) {
@@ -861,7 +863,7 @@
                     }, {
                             text: 'Cancelar Partida'
                         }],
-                    buttonClicked: function(index) {
+                    buttonClicked: function (index) {
                         switch (index) {
                             case 0: // Copy Text
                                 editarPartida();
@@ -878,7 +880,7 @@
         }
 
         function editarPartida() {
-            JogosService.getLocalizacaoJogo(vm.jogo.$id).then(function(snapLocalizacao) {
+            JogosService.getLocalizacaoJogo(vm.jogo.$id).then(function (snapLocalizacao) {
                 JogosService.novaPartida = {
                     data: {
                         nome: vm.jogo.nome,
@@ -913,18 +915,18 @@
                     {
                         text: '<b>SIM</b>',
                         type: 'button-assertive',
-                        onTap: function(e) {
+                        onTap: function (e) {
                             $ionicLoading.show({ template: 'Carregando...' });
-                            JogosService.cancelarJogo(vm.jogo).then(function() {
+                            JogosService.cancelarJogo(vm.jogo).then(function () {
                                 $ionicLoading.hide();
                                 var alertPopup = $ionicPopup.alert({
                                     title: 'PARTIDA CANCELADA',
                                     template: ''
                                 });
-                                alertPopup.then(function(res) {
+                                alertPopup.then(function (res) {
                                     $ionicHistory.goBack();
                                 });
-                            }, function(err) {
+                            }, function (err) {
                                 console.log(err);
                                 $ionicLoading.hide();
                             });
@@ -944,18 +946,18 @@
                     {
                         text: '<b>Emitir</b>',
                         type: 'button-positive',
-                        onTap: function(e) {
+                        onTap: function (e) {
                             $ionicLoading.show({ template: 'Carregando...' });
-                            JogosService.cancelarJogo(vm.jogo).then(function() {
+                            JogosService.cancelarJogo(vm.jogo).then(function () {
                                 $ionicLoading.hide();
                                 var alertPopup = $ionicPopup.alert({
                                     title: 'Chamado emitido!',
                                     template: ''
                                 });
-                                alertPopup.then(function(res) {
+                                alertPopup.then(function (res) {
                                     $ionicHistory.goBack();
                                 });
-                            }, function(err) {
+                            }, function (err) {
                                 console.log(err);
                                 $ionicLoading.hide();
                             });
@@ -1028,7 +1030,7 @@
             }
         }
 
-        $scope.$on('timer-stopped', function(event, remaining) {
+        $scope.$on('timer-stopped', function (event, remaining) {
             if (remaining === 0) {
                 $scope.timer = $scope.andamentoJogo.timeForTimer;
                 $scope.andamentoJogo.done = true;
@@ -1052,7 +1054,7 @@
                         {
                             text: 'COMEÇAR OUTRA',
                             type: 'button-positive',
-                            onTap: function(e) {
+                            onTap: function (e) {
 
                             }
                         }
@@ -1065,7 +1067,7 @@
 
         var oldSoftBack = $rootScope.$ionicGoBack;
 
-        var doCustomBack = function() {
+        var doCustomBack = function () {
             if (vm.jogo.novoJogo) {
                 $ionicHistory.goBack(-5);
             }
@@ -1074,10 +1076,10 @@
             }
         };
 
-        $rootScope.$ionicGoBack = function() {
+        $rootScope.$ionicGoBack = function () {
             doCustomBack();
         };
-        var deregisterSoftBack = function() {
+        var deregisterSoftBack = function () {
             $rootScope.$ionicGoBack = oldSoftBack;
         };
 
@@ -1085,7 +1087,7 @@
             doCustomBack, 101
         );
 
-        $scope.$on('$destroy', function() {
+        $scope.$on('$destroy', function () {
             deregisterHardBack();
             deregisterSoftBack();
         });

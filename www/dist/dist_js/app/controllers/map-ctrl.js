@@ -23,6 +23,7 @@
 
         vm.openFiltroModal = openFiltroModal;
         vm.applyFilter = applyFilter;
+        vm.getLength = getLength;
 
         activate();
 
@@ -84,8 +85,8 @@
         }
 
         function acharNoMapa(marker) {
-            var mapPosition = new plugin.google.maps.LatLng(marker.data.latitude, marker.data.longitude);
-            marker.showInfoWindow();
+            var mapPosition = new plugin.google.maps.LatLng(marker.latitude, marker.longitude);
+            marker.marker.showInfoWindow();
             $rootScope.map.animateCamera({
                 'target': mapPosition,
                 'tilt': 0,
@@ -139,6 +140,12 @@
                 $rootScope.hideMenu = false;
             }
             $ionicSideMenuDelegate.toggleLeft();
+        }
+
+        function getLength(obj) {
+            if (obj) {
+                return Object.keys(obj).length;
+            }
         }
 
     }

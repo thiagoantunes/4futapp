@@ -48,221 +48,141 @@
         function getJogosRegiao() {
             var deferred = $q.defer();
 
+            service.geoQuery.on('key_entered', function (key, location, distance) {
+                var existingMarker = _.find($rootScope.markers, { '$id': key });
+                if (existingMarker) {
+                    existingMarker.distance = distance;
+                    existingMarker.latitude = location[0];
+                    existingMarker.longitude = location[1];
+                }
+                else {
+                    $rootScope.markers.push({
+                        $id: key,
+                        distance: distance,
+                        latitude: location[0],
+                        longitude: location[1],
+                        icon: 'www/img/pin-jogos.png',
+                        todos: true,
+                        jogo: true
+                    });
+                }
+                if (service.geoQueryLoaded) {
+                    getJogo(key).$loaded().then(function (obj) {
+                        setMatch(obj);
+                        addMarkerToMap(key);
+                    });
+                }
+            });
+
+            service.geoQuery.on("key_exited", function (key, location, distance) {
+                _.remove($rootScope.markers, { '$id': key });
+                var matchMarker = _.find($rootScope.markers, { $id: key });
+                if (matchMarker) {
+                    matchMarker.marker.remove();
+                }
+            });
+
             service.geoQuery.on('ready', function () {
-                //onFirstLoadReady();
+                onFirstLoadReady();
             });
 
             function onFirstLoadReady() {
                 service.geoQueryLoaded = true;
 
                 var promises = [];
-                _.forEach(keysJogosRegiao, function (key) {
-                    var promise = service.ref.child(key).on('value');
+                _.forEach($rootScope.markers, function (j) {
+                    var promise = getJogo(j.$id).$loaded();
                     promises.push(promise);
                 });
                 $q.all(promises).then(function (requests) {
-                    _.forEach(requests, function (snap) {
-                        setMatch(snap);
+                    _.forEach(requests, function (jogo) {
+                        setMatch(jogo);
                     });
-                    addMarkers();
+                    addMarkersToMap();
                     deferred.resolve();
                 });
 
             }
 
-            function setMatch(snapshot) {
-                if (snapshot.val() && snapshot.val().inicio > moment(new Date()).subtract(1, 'H')._d.getTime()) {
-                    var jogo = snapshot.val();
-                    jogo.distance = distance;
-                    jogo.$id = snapshot.key;
-                    jogo.latitude = location[0];
-                    jogo.longitude = location[1];
-                    //jogo.jogadores = val;
-                    if (jogo.responsavel == firebase.auth().currentUser.uid) {
-                        jogo.visivel = true;
-                        jogo.icon = 'www/img/pin-jogos.png';
-                        $timeout(function () {
-                            _.remove(service.jogosRegiao, { '$id': snapshot.key });
-                            service.jogosRegiao.push(jogo);
-                        });
-                    }
-                    else {
-                        verificaPermissao(jogo).then(function (visivel) {
-                            jogo.readOnly = !visivel;
-                            jogo.icon = visivel ? 'www/img/pin-jogos.png' : 'www/img/pin-jogos-readonly.png';
-                            $timeout(function () {
-                                _.remove(service.jogosRegiao, { '$id': snapshot.key });
-                                service.jogosRegiao.push(jogo);
-                            });
+            function setMatch(jogo) {
+                if (jogo.inicio > moment(new Date()).subtract(1, 'H')._d.getTime()) {
+                    var marker = _.find($rootScope.markers, { $id: jogo.$id });
+                    marker.data = jogo;
+
+                    if (!_.some(marker.data.jogadores, { 'id': firebase.auth().currentUser.uid })) {
+                        verificaPermissao(marker.data).then(function (visivel) {
+                            if (!visivel) {
+                                marker.readOnly = true;
+                                marker.icon = 'www/img/pin-jogos-readonly.png';
+                            }
                         });
                     }
                 }
                 else {
-                    service.geoFire.remove(key);
+                    service.geoFire.remove(jogo.$id);
                 }
             }
 
-
-            //return deferred.promise;
-
-
-
-
-
-
-            service.geoQuery.on('key_entered', function (key, location, distance) {
-                service.ref.child(key).on('value', function (snapshot) {
-                    if (snapshot.val() && snapshot.val().inicio > moment(new Date()).subtract(1, 'H')._d.getTime()) {
-                        var jogo = snapshot.val();
-                        jogo.distance = distance;
-                        jogo.$id = key;
-                        jogo.latitude = location[0];
-                        jogo.longitude = location[1];
-                        //jogo.jogadores = val;
-                        jogo.jogadores = Object.keys(jogo.jogadores).map(function (key) {
-                            var j = jogo.jogadores[key];
-                            j.$id = key;
-                            return j;
-                        });
-                        if (jogo.responsavel == firebase.auth().currentUser.uid) {
-                            jogo.visivel = true;
-                            jogo.icon = 'www/img/pin-jogos.png';
-                            if (service.geoQueryLoaded) {
-                                addJogoMarker(jogo);
-                            }
-                            $timeout(function () {
-                                _.remove(service.jogosRegiao, { '$id': key });
-                                service.jogosRegiao.push(jogo);
-                            });
-                        }
-                        else {
-                            verificaPermissao(jogo).then(function (visivel) {
-                                jogo.readOnly = !visivel;
-                                jogo.icon = visivel ? 'www/img/pin-jogos.png' : 'www/img/pin-jogos-readonly.png';
-                                if (service.geoQueryLoaded) {
-                                    addJogoMarker(jogo);
+            function addMarkersToMap() {
+                $rootScope.markers.map(function (markMatch) {
+                    if (markMatch.marker) {
+                        markMatch.marker.remove();
+                    }
+                    var latLng = new plugin.google.maps.LatLng(markMatch.latitude, markMatch.longitude);
+                    $timeout(function () {
+                        $rootScope.map.addMarker({
+                            'position': latLng,
+                            'title': markMatch.data.nome,
+                            'icon': {
+                                'url': markMatch.icon,
+                                'size': {
+                                    width: 79,
+                                    height: 48
                                 }
-                                $timeout(function () {
-                                    _.remove(service.jogosRegiao, { '$id': key });
-                                    service.jogosRegiao.push(jogo);
-                                });
-                            });
-                        }
-                    }
-                    else {
-                        service.geoFire.remove(key);
-                    }
-                });
-            });
-
-
-            service.geoQuery.on("key_exited", function (key, location, distance) {
-                _.remove(service.jogosRegiao, { '$id': key });
-                var jogoMarker = _.find($rootScope.markers, { $id: key });
-                if (jogoMarker) {
-                    jogoMarker.remove();
-                }
-            });
-        }
-
-        function addMarkers() {
-            var teste = _.groupBy(service.jogosRegiao, 'local.id');
-            console.log(teste);
-            _.forEach(service.jogosRegiao, function (jogo) {
-                var data = {
-                    'position': new plugin.google.maps.LatLng(jogo.latitude, jogo.longitude),
-                    'title': jogo.nome,
-                    'icon': {
-                        'url': jogo.icon,
-                        'size': {
-                            width: 79,
-                            height: 48
-                        }
-                    }
-                };
-                $timeout(function () {
-                    $rootScope.map.addMarker(data, function (marker) {
-                        if (!jogo.readOnly) {
-                            marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, onMarkerClicked);
-                        }
-                        marker.tipo = 'jogo';
-                        marker.readOnly = jogo.readOnly;
-                        marker.$id = jogo.$id;
-                        marker.data = jogo;
-                        marker.todos = true;
-                        marker.jogo = true;
-                        marker.arena = false;
-                        $rootScope.map.on('category_change', function (category) {
-                            $timeout(function () {
-                                marker.setVisible(marker[category] ? true : false);
-                            }, 100);
-                        });
-                        $timeout(function () {
-                            $rootScope.markers.push(marker);
-                        });
-                    });
-                });
-            });
-        }
-
-        function addJogoMarker(jogo) {
-            var jogoMarker = _.find($rootScope.markers, { $id: jogo.$id });
-            if (jogoMarker) {
-                jogoMarker.remove();
-                _.remove($rootScope.markers, { '$id': jogo.$id });
-            }
-            if ($rootScope.map) {
-                var markerMesmaLocalizacao = _.find($rootScope.markers, function (m) {
-                    return m.data.latitude == jogo.latitude && m.data.longitude == jogo.longitude;
-                });
-                if (markerMesmaLocalizacao) {
-                    $timeout(function () {
-                        markerMesmaLocalizacao.setIcon({
-                            'url': 'www/img/pin-jogos-multiple.png',
-                            'size': {
-                                width: 79,
-                                height: 48
                             }
-                        });
-                    }, 100);
-                    markerMesmaLocalizacao.multiple = true;
-                }
-                else {
-                    var data = {
-                        'position': new plugin.google.maps.LatLng(jogo.latitude, jogo.longitude),
-                        'title': jogo.nome,
-                        'icon': {
-                            'url': jogo.icon,
-                            'size': {
-                                width: 79,
-                                height: 48
-                            }
-                        }
-                    };
-                    $timeout(function () {
-                        $rootScope.map.addMarker(data, function (marker) {
-                            if (!jogo.readOnly) {
-                                marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, onMarkerClicked);
-                            }
-                            marker.tipo = 'jogo';
-                            marker.readOnly = jogo.readOnly;
-                            marker.$id = jogo.$id;
-                            marker.data = jogo;
-                            marker.todos = true;
-                            marker.jogo = true;
-                            marker.arena = false;
+                        }, function (marker) {
+                            markMatch.marker = marker;
                             $rootScope.map.on('category_change', function (category) {
                                 $timeout(function () {
-                                    marker.setVisible(marker[category] ? true : false);
+                                    markMatch.marker.setVisible(marker[category] ? true : false);
                                 }, 100);
-                            });
-                            $timeout(function () {
-                                $rootScope.markers.push(marker);
                             });
                         });
                     });
-                }
+                });
             }
+
+            function addMarkerToMap(key) {
+                var markMatch = _.find($rootScope.markers, { '$id': key });
+                if (markMatch.marker) {
+                    markMatch.marker.remove();
+                }
+                var latLng = new plugin.google.maps.LatLng(markMatch.latitude, markMatch.longitude);
+                $timeout(function () {
+                    $rootScope.map.addMarker({
+                        'position': latLng,
+                        'title': markMatch.data.nome,
+                        'icon': {
+                            'url': markMatch.icon,
+                            'size': {
+                                width: 79,
+                                height: 48
+                            }
+                        }
+                    }, function (marker) {
+                        markMatch.marker = marker;
+                        $rootScope.map.on('category_change', function (category) {
+                            $timeout(function () {
+                                markMatch.marker.setVisible(marker[category] ? true : false);
+                            }, 100);
+                        });
+                    });
+                });
+            }
+
+
+            return deferred.promise;
+
         }
 
         function onMarkerClicked(marker) {
