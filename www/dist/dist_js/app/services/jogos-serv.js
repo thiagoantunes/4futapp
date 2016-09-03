@@ -32,7 +32,8 @@
             convidarAmigo: convidarAmigo,
             desconvidarAmigo: desconvidarAmigo,
             solicitarPresenca: solicitarPresenca,
-            aprovarSolicitacaoPresenca: aprovarSolicitacaoPresenca
+            aprovarSolicitacaoPresenca: aprovarSolicitacaoPresenca,
+            setMatchOnMarker: setMatchOnMarker
         };
 
         return service;
@@ -62,14 +63,8 @@
                         latitude: location[0],
                         longitude: location[1],
                         icon: 'www/img/pin-jogos.png',
-                        todos: true,
-                        jogo: true
-                    });
-                }
-                if (service.geoQueryLoaded) {
-                    getJogo(key).$loaded().then(function (obj) {
-                        setMatch(obj);
-                        addMarkerToMap(key);
+                        jogo: true,
+                        todos: true
                     });
                 }
             });
@@ -96,98 +91,34 @@
                 });
                 $q.all(promises).then(function (requests) {
                     _.forEach(requests, function (jogo) {
-                        setMatch(jogo);
+                        setMatchOnMarker(jogo);
                     });
-                    addMarkersToMap();
                     deferred.resolve();
                 });
 
             }
 
-            function setMatch(jogo) {
-                if (jogo.inicio > moment(new Date()).subtract(1, 'H')._d.getTime()) {
-                    var marker = _.find($rootScope.markers, { $id: jogo.$id });
-                    marker.data = jogo;
-
-                    if (!_.some(marker.data.jogadores, { 'id': firebase.auth().currentUser.uid })) {
-                        verificaPermissao(marker.data).then(function (visivel) {
-                            if (!visivel) {
-                                marker.readOnly = true;
-                                marker.icon = 'www/img/pin-jogos-readonly.png';
-                            }
-                        });
-                    }
-                }
-                else {
-                    service.geoFire.remove(jogo.$id);
-                }
-            }
-
-            function addMarkersToMap() {
-                $rootScope.markers.map(function (markMatch) {
-                    if (markMatch.marker) {
-                        markMatch.marker.remove();
-                    }
-                    var latLng = new plugin.google.maps.LatLng(markMatch.latitude, markMatch.longitude);
-                    $timeout(function () {
-                        $rootScope.map.addMarker({
-                            'position': latLng,
-                            'title': markMatch.data.nome,
-                            'icon': {
-                                'url': markMatch.icon,
-                                'size': {
-                                    width: 79,
-                                    height: 48
-                                }
-                            }
-                        }, function (marker) {
-                            markMatch.marker = marker;
-                            $rootScope.map.on('category_change', function (category) {
-                                $timeout(function () {
-                                    markMatch.marker.setVisible(marker[category] ? true : false);
-                                }, 100);
-                            });
-                        });
-                    });
-                });
-            }
-
-            function addMarkerToMap(key) {
-                var markMatch = _.find($rootScope.markers, { '$id': key });
-                if (markMatch.marker) {
-                    markMatch.marker.remove();
-                }
-                var latLng = new plugin.google.maps.LatLng(markMatch.latitude, markMatch.longitude);
-                $timeout(function () {
-                    $rootScope.map.addMarker({
-                        'position': latLng,
-                        'title': markMatch.data.nome,
-                        'icon': {
-                            'url': markMatch.icon,
-                            'size': {
-                                width: 79,
-                                height: 48
-                            }
-                        }
-                    }, function (marker) {
-                        markMatch.marker = marker;
-                        $rootScope.map.on('category_change', function (category) {
-                            $timeout(function () {
-                                markMatch.marker.setVisible(marker[category] ? true : false);
-                            }, 100);
-                        });
-                    });
-                });
-            }
-
-
             return deferred.promise;
 
         }
 
-        function onMarkerClicked(marker) {
-            $location.hash('anchor' + marker.$id);
-            $ionicScrollDelegate.anchorScroll(true);
+        function setMatchOnMarker(jogo) {
+            if (jogo.inicio > moment(new Date()).subtract(1, 'H')._d.getTime()) {
+                var marker = _.find($rootScope.markers, { $id: jogo.$id });
+                marker.data = jogo;
+
+                if (!_.some(marker.data.jogadores, { 'id': firebase.auth().currentUser.uid })) {
+                    verificaPermissao(marker.data).then(function (visivel) {
+                        if (!visivel) {
+                            marker.readOnly = true;
+                            marker.icon = 'www/img/pin-jogos-readonly.png';
+                        }
+                    });
+                }
+            }
+            else {
+                service.geoFire.remove(jogo.$id);
+            }
         }
 
         function getUserJogos(user) {

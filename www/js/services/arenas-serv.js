@@ -31,7 +31,7 @@
             criaArenaBasica: criaArenaBasica,
             getQuadraArena: getQuadraArena,
             getArenaLocation: getArenaLocation,
-            onMarkerClicked: onMarkerClicked,
+            setArenaOnMarker: setArenaOnMarker,
             arenaSelecionada: null
         };
 
@@ -54,14 +54,8 @@
                         latitude: location[0],
                         longitude: location[1],
                         icon: 'www/img/pin.png',
-                        todos: true,
-                        arena: true
-                    });
-                }
-                if (service.geoQueryLoaded) {
-                    getJogo(key).$loaded().then(function (obj) {
-                        setMatch(obj);
-                        addMarkerToMap(key);
+                        arena: true,
+                        todos: true
                     });
                 }
             });
@@ -88,84 +82,18 @@
                 });
                 $q.all(promises).then(function (requests) {
                     _.forEach(requests, function (arena) {
-                        setArena(arena);
+                        setArenaOnMarker(arena);
                     });
-                    addMarkersToMap();
                     deferred.resolve();
                 });
-
             }
-
-            function setArena(arena) {
-                var marker = _.find($rootScope.markers, { $id: arena.$id });
-                marker.data = arena;
-            }
-
-            function addMarkersToMap() {
-                $rootScope.markers.map(function (markArena) {
-                    if (markArena.marker) {
-                        markArena.marker.remove();
-                    }
-                    var latLng = new plugin.google.maps.LatLng(markArena.latitude, markArena.longitude);
-                    $timeout(function () {
-                        $rootScope.map.addMarker({
-                            'position': latLng,
-                            'title': markArena.data.nome,
-                            'icon': {
-                                'url': markArena.icon,
-                                'size': {
-                                    width: 79,
-                                    height: 48
-                                }
-                            }
-                        }, function (marker) {
-                            markArena.marker = marker;
-                            $rootScope.map.on('category_change', function (category) {
-                                $timeout(function () {
-                                    markArena.marker.setVisible(marker[category] ? true : false);
-                                }, 100);
-                            });
-                        });
-                    });
-                });
-            }
-
-            function addMarkerToMap(key) {
-                var markArena = _.find($rootScope.markers, { '$id': key });
-                if (markArena.marker) {
-                    markArena.marker.remove();
-                }
-                var latLng = new plugin.google.maps.LatLng(markArena.latitude, markArena.longitude);
-                $timeout(function () {
-                    $rootScope.map.addMarker({
-                        'position': latLng,
-                        'title': markArena.data.nome,
-                        'icon': {
-                            'url': markArena.icon,
-                            'size': {
-                                width: 79,
-                                height: 48
-                            }
-                        }
-                    }, function (marker) {
-                        markArena.marker = marker;
-                        $rootScope.map.on('category_change', function (category) {
-                            $timeout(function () {
-                                markArena.marker.setVisible(marker[category] ? true : false);
-                            }, 100);
-                        });
-                    });
-                });
-            }
-
 
             return deferred.promise;
-
         }
 
-        function onMarkerClicked(marker) {
-            $location.hash('anchor' + marker.$id);
-            $ionicScrollDelegate.anchorScroll(true);
+        function setArenaOnMarker(arena) {
+            var marker = _.find($rootScope.markers, { $id: arena.$id });
+            marker.data = arena;
         }
 
         function getArena(id) {
@@ -234,8 +162,6 @@
 
             getLocation: getLocation,
             navigateTo: navigateTo,
-            initMap: initMap,
-            onMapCameraChanged: onMapCameraChanged
         };
 
         return service;
@@ -243,11 +169,16 @@
         function getLocation() {
             var deferred = $q.defer();
 
-            //isLocationAvailable();
+            if (service.position.length === 0) {
+                isLocationAvailable();
 
-            service.position = [-19.872510, -43.930562];
-            setGeoQuery(service.position);
-            deferred.resolve(service.position);
+                // service.position = [-19.872510, -43.930562];
+                // setGeoQuery(service.position);
+                // deferred.resolve(service.position);
+            }
+            else{
+                deferred.resolve(service.position);
+            }
 
             function isLocationAvailable() {
                 console.log('Getting location');
@@ -395,55 +326,6 @@
             }
 
             return deferred.promise;
-        }
-
-        function initMap(div) {
-            console.log('Getting map');
-            var mapPosition = new plugin.google.maps.LatLng(service.position[0], service.position[1]);
-            var mapParams = {
-                'backgroundColor': '#ffffff',
-                'mapType': plugin.google.maps.MapTypeId.ROADMAP,
-                'controls': {
-                    'compass': false,
-                    'myLocationButton': false,
-                    'indoorPicker': true,
-                    'zoom': false
-                    // Only for Android
-                },
-                'gestures': {
-                    'scroll': true,
-                    'tilt': false,
-                    'rotate': true,
-                    'zoom': true,
-                },
-                'camera': {
-                    'latLng': mapPosition,
-                    'tilt': 0,
-                    'zoom': 5,
-                    'bearing': 0
-                }
-
-            };
-            $timeout(function () {
-                var map = plugin.google.maps.Map.getMap(div, mapParams);
-                map.on(plugin.google.maps.event.MAP_READY, function (map) {
-                    console.log('Map loaded');
-                    $rootScope.map = map;
-                    $rootScope.markers = [];
-                    $rootScope.map.animateCamera({
-                        'target': mapPosition,
-                        'tilt': 0,
-                        'zoom': 14,
-                        'bearing': 0,
-                        'duration': 2000
-                        // = 2 sec.
-                    });
-                    $rootScope.markers = [];
-                    ArenasService.getArenas();
-                    JogosService.getJogosRegiao();
-                    $rootScope.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, service.onMapCameraChanged);
-                });
-            }, 500);
         }
 
         function onMapCameraChanged(position) {

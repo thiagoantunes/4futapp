@@ -4,9 +4,9 @@
     angular.module('main')
         .controller('MapCtrl', MapCtrl);
 
-    MapCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'ArenasService', 'JogosService', '$ionicHistory', '$window', 'GeoService', '$ionicSideMenuDelegate', '$ionicModal'];
+    MapCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'ArenasService', 'JogosService', '$ionicHistory', '$window', 'GeoService', '$ionicSideMenuDelegate', '$ionicModal', '$ionicSlideBoxDelegate', '$location', '$ionicScrollDelegate'];
 
-    function MapCtrl($scope, $rootScope, $timeout, ArenasService, JogosService, $ionicHistory, $window, GeoService, $ionicSideMenuDelegate, $ionicModal) {
+    function MapCtrl($scope, $rootScope, $timeout, ArenasService, JogosService, $ionicHistory, $window, GeoService, $ionicSideMenuDelegate, $ionicModal, $ionicSlideBoxDelegate, $location, $ionicScrollDelegate) {
         var vm = this;
         vm.arenaService = ArenasService;
         vm.jogosService = JogosService;
@@ -20,21 +20,21 @@
         vm.jogoHoje = jogoHoje;
         vm.jogoAlgumasHoras = jogoAlgumasHoras;
         vm.jogoEmAndamento = jogoEmAndamento;
-
-        vm.openFiltroModal = openFiltroModal;
-        vm.applyFilter = applyFilter;
         vm.getLength = getLength;
+        vm.toggleMarkers = toggleMarkers;
+        vm.onSlideChange = onSlideChange;
 
         activate();
 
         function activate() {
+            vm.showDetails = true;
+            $ionicSlideBoxDelegate.update();
             vm.filtro = {
                 tipo: 'todos',
-                arenas: true,
-                jogos: true,
+                viewArenas: true
             };
 
-            if (isDevice()) {
+            if (isDevice() && !$rootScope.map) {
                 initMap();
             }
             else {
@@ -46,43 +46,170 @@
         }
 
         function initMap() {
-            if (!$rootScope.map) {
-                if(GeoService.position.length === 0){
-                    GeoService.getLocation().then(function (location) {
-                        GeoService.initMap(document.getElementById("map-arenas"));
-                    });
-                }
-                else{
-                    GeoService.initMap(document.getElementById("map-arenas"));
-                }
-            }
-        }
+            GeoService.getLocation().then(function (position) {
+                console.log('Getting map');
+                var mapPosition = new plugin.google.maps.LatLng(position[0], position[1]);
+                var mapParams = {
+                    'backgroundColor': '#ffffff',
+                    'mapType': plugin.google.maps.MapTypeId.ROADMAP,
+                    'controls': {
+                        'compass': false,
+                        'myLocationButton': false,
+                        'indoorPicker': true,
+                        'zoom': false
+                        // Only for Android
+                    },
+                    'gestures': {
+                        'scroll': true,
+                        'tilt': false,
+                        'rotate': true,
+                        'zoom': true,
+                    },
+                    'camera': {
+                        'latLng': mapPosition,
+                        'tilt': 0,
+                        'zoom': 5,
+                        'bearing': 0
+                    }
 
-        function openFiltroModal() {
-            $ionicModal.fromTemplateUrl('modal/filtro-mapa.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                vm.filtroModal = modal;
-                modal.show();
+                };
+                $timeout(function () {
+                    var map = plugin.google.maps.Map.getMap(document.getElementById("map-arenas"), mapParams);
+                    map.on(plugin.google.maps.event.MAP_READY, onMapInit);
+                }, 500);
+            }, function (err) {
+                console.log(err);
             });
         }
 
-        function applyFilter() {
-            console.log('clicked');
-            if(vm.filtro.arenas && vm.filtro.jogos){
-                vm.filtro.tipo = 'todos';
-                $rootScope.map.trigger('category_change', 'todos');
-            }
-            else if(vm.filtro.arenas){
-                vm.filtro.tipo = 'arena';
-                $rootScope.map.trigger('category_change', 'arena');
-            }
-            else if(vm.filtro.jogos) {
-                vm.filtro.tipo = 'jogo';
-                $rootScope.map.trigger('category_change', 'jogo');
-            }
+        function onMapInit(map) {
+            GeoService.getLocation().then(function (position) {
+                var mapPosition = new plugin.google.maps.LatLng(position[0], position[1]);
+                console.log('Map loaded');
+                $rootScope.map = map;
+                $rootScope.markers = [];
+                $rootScope.map.animateCamera({
+                    'target': mapPosition,
+                    'tilt': 0,
+                    'zoom': 14,
+                    'bearing': 0,
+                    'duration': 2000
+                    // = 2 sec.
+                });
+                $rootScope.markers = [];
+                $rootScope.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, onMapCameraChanged);
+
+                ArenasService.getArenas().then(function () {
+                    vm.showDetails = false;
+                    addMarkersToMap();
+                }, function (err) {
+                    console.log(err);
+                });
+
+                JogosService.getJogosRegiao().then(function () {
+                    vm.showDetails = false;
+                    addMarkersToMap();
+                }, function (err) {
+                    console.log(err);
+                });
+
+                //Watch for new items entering the query
+                JogosService.geoQuery.on('key_entered', function (key, location, distance) {
+                    if (JogosService.geoQueryLoaded) {
+                        JogosService.getJogo(key).$loaded().then(function (obj) {
+                            JogosService.setMatchOnMarker(obj);
+                            addMarkerToMap(key);
+                        });
+                    }
+                });
+
+                ArenasService.geoQuery.on('key_entered', function (key, location, distance) {
+                    if (ArenasService.geoQueryLoaded) {
+                        ArenasService.getArena(key).$loaded().then(function (obj) {
+                            ArenasService.setArenaOnMarker(obj);
+                            addMarkerToMap(key);
+                        });
+                    }
+                });
+            });
         }
+
+        function addMarkersToMap() {
+            $rootScope.markers.map(function (markerData) {
+                if (markerData.marker) {
+                    markerData.marker.remove();
+                }
+                var latLng = new plugin.google.maps.LatLng(markerData.latitude, markerData.longitude);
+                $timeout(function () {
+                    $rootScope.map.addMarker({
+                        'position': latLng,
+                        'title': markerData.data.nome,
+                        'icon': {
+                            'url': markerData.icon,
+                            'size': {
+                                width: 79,
+                                height: 48
+                            }
+                        }
+                    }, function (marker) {
+                        markerData.marker = marker;
+                        markerData.marker.$id = markerData.$id;
+                        markerData.marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, onMarkerClicked);
+                        $rootScope.map.on('category_change', function (category) {
+                            $timeout(function () {
+                                markerData.marker.setVisible(markerData[category] ? true : false);
+                            }, 100);
+                        });
+                    });
+                });
+            });
+        }
+
+        function addMarkerToMap(key) {
+            var markerData = _.find($rootScope.markers, { '$id': key });
+            if (markerData.marker) {
+                markerData.marker.remove();
+            }
+            var latLng = new plugin.google.maps.LatLng(markerData.latitude, markerData.longitude);
+            $timeout(function () {
+                $rootScope.map.addMarker({
+                    'position': latLng,
+                    'title': markerData.data.nome,
+                    'icon': {
+                        'url': markerData.icon,
+                        'size': {
+                            width: 79,
+                            height: 48
+                        }
+                    }
+                }, function (marker) {
+                    markerData.marker = marker;
+                    markerData.marker.$id = markerData.$id;
+                    markerData.marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, onMarkerClicked);
+                    $rootScope.map.on('category_change', function (category) {
+                        $timeout(function () {
+                            markerData.marker.setVisible(marker[category] ? true : false);
+                        }, 100);
+                    });
+                });
+            });
+        }
+
+        function onMarkerClicked(marker) {
+            $location.hash('anchor' + marker.$id);
+            $ionicScrollDelegate.anchorScroll(true);
+            // $timeout(function () {
+            //     vm.showDetails = true;
+            //     $ionicSlideBoxDelegate.update();
+            // });
+        }
+
+        function onMapCameraChanged(position) {
+            console.log(position);
+        }
+
+
+
 
         function acharNoMapa(marker) {
             var mapPosition = new plugin.google.maps.LatLng(marker.latitude, marker.longitude);
@@ -95,6 +222,21 @@
                 'duration': 500
                 // = 2 sec.
             });
+        }
+
+        function onSlideChange() {
+            $ionicSlideBoxDelegate.update();
+        }
+
+        function toggleMarkers() {
+            if (vm.filtro.viewArenas) {
+                vm.filtro.tipo = 'arena';
+                $rootScope.map.trigger('category_change', 'arena');
+            }
+            else {
+                vm.filtro.tipo = 'jogo';
+                $rootScope.map.trigger('category_change', 'jogo');
+            }
         }
 
         function orderByConfirmacao(jogador) {

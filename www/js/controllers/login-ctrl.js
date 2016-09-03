@@ -31,36 +31,36 @@
     function facebookLogin() {
       $ionicLoading.show({ template: 'Carregando...' });
       if (window.cordova) {
-        $ionicPlatform.ready(function () {
-          $cordovaOauth.facebook('1834143436814148', ['email', 'user_friends', 'public_profile']).then(function (result) {
-            var provider = new firebase.auth.FacebookAuthProvider();
-            provider.addScope('user_friends');
-            provider.addScope('email');
-            provider.addScope('public_profile');
-            var credential = firebase.auth.FacebookAuthProvider.credential(result.access_token);
-            firebase.auth().signInWithCredential(credential).then(function () {
-              $ionicLoading.hide();
-            });
-          }, function (error) {
-            $ionicLoading.hide();
-            $window.alert('Ops! Ocorreu um erro ao entrar no Rei da Quadra');
-            console.log("Error -> " + error);
-          });
-        });
-        // facebookConnectPlugin.login(['email', 'user_friends', 'public_profile'], function (result) {
-        //   var provider = new firebase.auth.FacebookAuthProvider();
-        //   provider.addScope('user_friends');
-        //   provider.addScope('email');
-        //   provider.addScope('public_profile');
-        //   var credential = firebase.auth.FacebookAuthProvider.credential(result.authResponse.accessToken);
-        //   firebase.auth().signInWithCredential(credential).then(function () {
+        // $ionicPlatform.ready(function () {
+        //   $cordovaOauth.facebook('1834143436814148', ['email', 'user_friends', 'public_profile']).then(function (result) {
+        //     var provider = new firebase.auth.FacebookAuthProvider();
+        //     provider.addScope('user_friends');
+        //     provider.addScope('email');
+        //     provider.addScope('public_profile');
+        //     var credential = firebase.auth.FacebookAuthProvider.credential(result.access_token);
+        //     firebase.auth().signInWithCredential(credential).then(function () {
+        //       $ionicLoading.hide();
+        //     });
+        //   }, function (error) {
         //     $ionicLoading.hide();
+        //     $window.alert('Ops! Ocorreu um erro ao entrar no Rei da Quadra');
+        //     console.log("Error -> " + error);
         //   });
-        // }, function (error) {
-        //   $ionicLoading.hide();
-        //   $window.alert('Ops! Ocorreu um erro ao entrar no Rei da Quadra');
-        //   console.log("Error -> " + error);
         // });
+        facebookConnectPlugin.login(['email', 'user_friends', 'public_profile'], function (result) {
+          var provider = new firebase.auth.FacebookAuthProvider();
+          provider.addScope('user_friends');
+          provider.addScope('email');
+          provider.addScope('public_profile');
+          var credential = firebase.auth.FacebookAuthProvider.credential(result.authResponse.accessToken);
+          firebase.auth().signInWithCredential(credential).then(function () {
+            $ionicLoading.hide();
+          });
+        }, function (error) {
+          $ionicLoading.hide();
+          $window.alert('Ops! Ocorreu um erro ao entrar no Rei da Quadra');
+          console.log("Error -> " + error);
+        });
       } else {
         $facebook.login().then(function (result) {
           var credential = firebase.auth.FacebookAuthProvider.credential(result.authResponse.accessToken);

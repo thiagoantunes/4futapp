@@ -8,6 +8,12 @@
         <button style="right: 45px; position: absolute;" ng-click="vm.openFiltroModal();" class="button button-icon button-clear ion-android-funnel icon"></button>
         <button ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="app.criar-partida" class="button button-icon button-clear ion-android-add icon"></button>
       </div>
+      <!--<div class="padding" style="position: absolute; top: 60px; background-color: #00303D">
+        <div class="button-bar">
+          <a class="small_button" style="border-radius: 5px 0px 0px 5px !important;" grouped-radio="true" ng-change="vm.toggleMarkers();"  ng-model="vm.filtro.viewArenas"> Arenas</a>
+          <a class="small_button" style="border-radius: 0px 5px 5px 0px !important;" grouped-radio="false" ng-change="vm.toggleMarkers();"  ng-model="vm.filtro.viewArenas"> Jogos</a>
+        </div>
+      </div>-->
       <ion-scroll class="scroll-markers" zooming="false" direction="y">
         <div id="anchor{{marker.$id}}" ng-repeat="marker in $root.markers | orderBy:'distance '">
           <div ng-if="marker[vm.filtro.tipo] && marker.arena" ng-click="vm.arenaService.arenaSelecionada = marker.data;" ui-sref="app.detalhes-arena({id: marker.$id})"
@@ -62,6 +68,24 @@
           </div>
         </div>
       </ion-scroll>
+      <!--<ion-slide-box style="top: 73vh; height: 28vh;" ng-show="vm.showDetails" class="item-animate" show-pager="false" on-slide-changed="vm.onSlideChange($index)">
+        <ion-slide ng-if="marker[vm.filtro.tipo] && marker.arena" ng-repeat="marker in $root.markers | orderBy:'distance '">
+          <div ng-click="vm.arenaService.arenaSelecionada = marker.data;" ui-sref="app.detalhes-arena({id: marker.$id})" href="#/app/arenas/{{marker.$id}}"
+            class="row item-arena">
+            <div class="col-20 avatar">
+              <img ng-src="{{marker.data.fotoPerfil}}" alt="">
+            </div>
+            <div class="col end">
+              <div class="nome-arena">{{marker.data.nome}}</div>
+              <small>{{marker.data.endereco}}</small><br/>
+              <small>{{marker.distance | number : 2}} km</small>
+            </div>
+            <div class="col-20 find-on-map" ng-click="vm.acharNoMapa(marker); $event.stopPropagation();">
+              <i class="icon ion-pinpoint positive"></i>
+            </div>
+          </div>
+        </ion-slide>
+      </ion-slide-box>-->
     </div>
   </ion-content>
 </ion-view>
