@@ -18124,13 +18124,29 @@ ion-side-menu ion-content {
   #map-view .bar-header {
     border-bottom: 0px !important;
     background: rgba(0, 36, 46, 0.85); }
-  #map-view .scroll-markers {
-    top: 73vh;
-    height: 28vh;
-    padding-bottom: 100px; }
+  #map-view .bar-subheader {
+    padding: 0px;
+    background: white;
+    color: #00303D;
+    box-shadow: 0 0 0.5rem #9da5ab;
+    height: 40px; }
+    #map-view .bar-subheader .row {
+      padding: 0px; }
+      #map-view .bar-subheader .row .col {
+        text-align: center;
+        line-height: 30px;
+        font-weight: bold;
+        border-bottom: 3px solid white; }
+      #map-view .bar-subheader .row .col-active {
+        border-bottom-color: #00303D !important; }
+  #map-view .slide-markers {
+    top: calc(100vh - 130px);
+    height: 130px; }
+    #map-view .slide-markers ion-slide {
+      border-top: solid 4px #AAF502; }
   #map-view .item-arena {
     background: rgba(0, 36, 46, 0.85);
-    height: 90px; }
+    height: 130px; }
     #map-view .item-arena .avatar {
       padding-top: 15px;
       text-align: center; }
@@ -18154,9 +18170,11 @@ ion-side-menu ion-content {
       font-size: 2em;
       padding-right: 22px; }
   #map-view .item-jogo {
-    background: rgba(170, 245, 2, 0.8);
-    color: #00242E;
-    padding-top: 15px; }
+    background: rgba(0, 36, 46, 0.85);
+    padding-top: 15px;
+    height: 130px; }
+    #map-view .item-jogo .card {
+      box-shadow: none; }
     #map-view .item-jogo .find-on-map {
       text-align: right;
       font-size: 2em;
@@ -18165,23 +18183,21 @@ ion-side-menu ion-content {
     #map-view .item-jogo .divider {
       font-size: 0.7em;
       padding: 0px 5px;
-      color: #87c202; }
+      color: #AAF502; }
     #map-view .item-jogo .nome-jogo {
-      font-size: 1.85em;
+      font-size: 1.4em;
       font-weight: bold;
       margin-bottom: 7px; }
     #map-view .item-jogo .dia-jogo {
-      font-size: 1.3em;
-      font-weight: bold;
-      color: #FF6A00; }
-    #map-view .item-jogo .hora-jogo {
-      font-size: 1.3em;
-      font-weight: bold;
-      color: #527701; }
-    #map-view .item-jogo .local-jogo {
       font-size: 1.2em;
-      font-weight: bold;
-      color: #527701; }
+      color: #AABDC2;
+      font-weight: bold; }
+    #map-view .item-jogo .hora-jogo {
+      font-size: 1.1em;
+      color: #AABDC2; }
+    #map-view .item-jogo .local-jogo {
+      font-size: 1.1em;
+      color: #AABDC2; }
     #map-view .item-jogo .jogadores {
       padding-top: 10px; }
       #map-view .item-jogo .jogadores .jogador {

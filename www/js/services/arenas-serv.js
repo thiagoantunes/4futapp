@@ -55,7 +55,6 @@
                         longitude: location[1],
                         icon: 'www/img/pin.png',
                         arena: true,
-                        todos: true
                     });
                 }
             });
@@ -73,8 +72,6 @@
             });
 
             function onFirstLoadReady() {
-                service.geoQueryLoaded = true;
-
                 var promises = [];
                 _.forEach($rootScope.markers, function (a) {
                     var promise = getArena(a.$id).$loaded();
@@ -170,11 +167,11 @@
             var deferred = $q.defer();
 
             if (service.position.length === 0) {
-                isLocationAvailable();
+                //isLocationAvailable();
 
-                // service.position = [-19.872510, -43.930562];
-                // setGeoQuery(service.position);
-                // deferred.resolve(service.position);
+                service.position = [-19.872510, -43.930562];
+                setGeoQuery(service.position);
+                deferred.resolve(service.position);
             }
             else{
                 deferred.resolve(service.position);

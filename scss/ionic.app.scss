@@ -279,15 +279,39 @@ ion-side-menu{
         border-bottom: 0px !important; background: rgba( $base-background-color, .85 ); 
     }
 
-    .scroll-markers{
-        top: 73vh;
-        height: 28vh;
-        padding-bottom: 100px;
+    .bar-subheader {
+        padding:0px; background:white; color: $dark; box-shadow: 0 0 0.5rem #9da5ab; height:40px;
+
+        .row{
+            padding:0px;
+            .col{
+            text-align:center; line-height:30px; font-weight: bold; border-bottom: 3px solid white;
+            }
+
+            .col-active{
+                border-bottom-color: $dark !important;
+            }
+        }
+    }
+
+    // .scroll-markers{
+    //     top: 73vh;
+    //     height: 28vh;
+    //     padding-bottom: 100px;
+    // }
+
+    .slide-markers{
+        top: calc(100vh - 130px);
+        height: 130px;
+
+        ion-slide{
+            border-top: solid 4px $positive;
+        }
     }
 
     .item-arena{
         background: rgba( $base-background-color, .85 ); 
-        height: 90px; 
+        height: 130px; 
 
         .avatar{
             padding-top:15px; text-align:center;
@@ -315,9 +339,14 @@ ion-side-menu{
     }
 
     .item-jogo{
-        background: rgba( $positive, .8 );
-        color:  $base-background-color;
+        background: rgba( $base-background-color, .85 );
+        //color:  #333;
         padding-top: 15px;
+        height: 130px;
+
+        .card{
+            box-shadow: none;
+        }
 
         .find-on-map{
             text-align: right;
@@ -329,30 +358,28 @@ ion-side-menu{
         .divider{
             font-size:0.7em;
             padding: 0px 5px;
-            color: darken($positive, 10%);
+            color: $positive;
         }
 
         .nome-jogo{
-            font-size:1.85em; font-weight: bold;
+            font-size:1.4em; font-weight: bold;
             margin-bottom: 7px;
         }
 
         .dia-jogo{
-            font-size: 1.3em;
+            font-size: 1.2em;
+            color: $light;
             font-weight: bold;
-            color: $energized
         }
 
         .hora-jogo{
-            font-size: 1.3em;
-            font-weight: bold;
-            color: darken($positive, 25%);
+            font-size: 1.1em;
+            color: $light;
         }
 
         .local-jogo{
-            font-size: 1.2em;
-            font-weight: bold;
-            color: darken($positive, 25%);
+            font-size: 1.1em;
+            color: $light;
         }
 
         .jogadores{

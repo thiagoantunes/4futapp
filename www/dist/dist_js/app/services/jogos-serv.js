@@ -64,7 +64,6 @@
                         longitude: location[1],
                         icon: 'www/img/pin-jogos.png',
                         jogo: true,
-                        todos: true
                     });
                 }
             });
@@ -82,8 +81,6 @@
             });
 
             function onFirstLoadReady() {
-                service.geoQueryLoaded = true;
-
                 var promises = [];
                 _.forEach($rootScope.markers, function (j) {
                     var promise = getJogo(j.$id).$loaded();

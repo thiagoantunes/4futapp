@@ -55,7 +55,6 @@
                         longitude: location[1],
                         icon: 'www/img/pin.png',
                         arena: true,
-                        todos: true
                     });
                 }
             });
@@ -73,8 +72,6 @@
             });
 
             function onFirstLoadReady() {
-                service.geoQueryLoaded = true;
-
                 var promises = [];
                 _.forEach($rootScope.markers, function (a) {
                     var promise = getArena(a.$id).$loaded();
