@@ -88,7 +88,7 @@
   }
 
   .info{
-      background-color: $dark;
+      background-color: $light;
       .row{
           border-bottom: 1px solid $stable;
           .col{
@@ -302,17 +302,17 @@
     .bar-header{
         background:transparent; border: 0px !important;
         button{
-            color:$dark
+            color:$light
         }
     }
 
     .hero{
         background-color:$positive;     
         box-shadow: none;
-        color: $dark;
+        color: $light;
 
         h1,h2,h3,h4,h5,h6{
-            color: $dark
+            color: $light
         }
     }
 
@@ -321,8 +321,8 @@
   }
 
   .info{
-      border-top: 1px solid darken($positive, 10%);
-      background-color:$positive; color: $dark;
+      border-top: 1px solid lighten($positive, 10%);
+      background-color:$positive; color: $light;
       .row{
           border-bottom: 1px solid $stable;
           .col{

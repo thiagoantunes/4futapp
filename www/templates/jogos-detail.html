@@ -1,15 +1,19 @@
 <ion-view id="jogos-detail" view-title="{{vm.jogo.nome}}">
-  <ion-nav-buttons side="right">
-    <button ng-if="vm.jogoEmAndamento();" ng-click="vm.finalizarPartida();" style="padding: 0px 10px;" class="button button-clear">FINALIZAR</button>
-    <button ng-if="vm.minhaPresenca && vm.jogoAgendado();" ng-click="vm.openChat();" style="padding: 0px 10px;" class="button button-icon button-clear ion-chatbubbles"></button>
-    <button ng-if="vm.checkOrganizador() && vm.jogoAgendado();" ng-click="vm.maisOpcoes();" style="padding: 0px 15px;" class="button button-icon button-clear ion-android-more-vertical"></button>
-  </ion-nav-buttons>
-  <ion-content>
+  <ion-nav-bar style="border-bottom:0px !important;" align-title="center" class="bar-positive">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="right" style="border:none!important;">
+      <button ng-if="vm.jogoEmAndamento();" ng-click="vm.finalizarPartida();" style="padding: 0px 10px;" class="button button-clear">FINALIZAR</button>
+      <button ng-if="vm.jogo.jogadores[vm.meuId]  && vm.jogoAgendado();" ng-click="vm.openChat();" style="padding: 0px 10px;" class="button button-icon button-clear ion-chatbubbles"></button>
+      <button ng-if="vm.checkOrganizador() && vm.jogoAgendado();" ng-click="vm.maisOpcoes();" style="padding: 0px 15px;" class="button button-icon button-clear ion-android-more-vertical"></button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content class="has-header">
     <div ng-if="vm.jogoAgendado()">
       <div class="header">
         <div class="row">
           <div class="col-50">
-            <span style="font-size:2.5em; font-weight: 200" class="positive">{{vm.jogo.inicio | date: 'dd/MM'}}</span>
+            <span style="font-size:2.5em; font-weight: 200" class="light">{{vm.jogo.inicio | date: 'dd/MM'}}</span>
           </div>
           <div class="col-50" style="text-align:right">
             <span style="font-size:2.5em;font-weight: 100">{{vm.jogo.inicio | date: 'HH:mm'}}</span>
@@ -23,7 +27,7 @@
         <div ng-if="vm.jogo.jogadores[vm.meuId] && !vm.jogo.jogadores[vm.meuId].aguardandoConfirmacao">
           <div class="row" ng-if="vm.jogo.jogadores[vm.meuId].confirmado === undefined">
             <div class="col-50" style="padding: 0px 5px;">
-              <button ng-click="vm.atualizaPresenca(true);" class="button button-small button-full button-positive">
+              <button ng-click="vm.atualizaPresenca(true);" class="button button-small button-full button-balanced">
                 VOU
               </button>
             </div>
@@ -35,7 +39,7 @@
           </div>
           <div class="row" ng-if="vm.jogo.jogadores[vm.meuId].confirmado">
             <div class="col-80" style="padding: 0px 5px;">
-              <button class="button button-small button-full button-positive">
+              <button class="button button-small button-full button-balanced">
               PRESENÇA CONFIRMADA
             </button>
             </div>
@@ -80,13 +84,11 @@
         </div>
       </div>
       <div class="list" style="padding-top: 20px;">
-        <pre>{{vm.minhaPresenca | json}}</pre>
         <div class="item" ng-if="vm.getNumJogadores(true) > 0" style="border: none; padding: 5px 15px;">
           <span class="positive" style="font-weight:bold; padding-left: 7px;">Confirmados ({{vm.getNumJogadores(true)}})</span>
           <div class="row flex-cols">
             <div class="col col-20" ng-if="jogador.confirmado && !jogador.aguardandoConfirmacao" ng-repeat="jogador in vm.jogo.jogadores | toArray : false | orderBy: vm.orderByConfirmacao">
-              <img ng-click="vm.openPerfilJogador(jogador.id);" style="width: 50px; height: 50px; border-radius: 50%; "
-                  src="{{jogador.fotoPerfil | defaultImage}} ">
+              <img ng-click="vm.openPerfilJogador(jogador.id);" style="width: 50px; height: 50px; border-radius: 50%; " src="{{jogador.fotoPerfil | defaultImage}} ">
             </div>
           </div>
         </div>
@@ -94,8 +96,7 @@
           <span style="font-weight:bold; padding-left: 7px;">Não responderam ({{vm.getNumJogadores()}})</span>
           <div class="row flex-cols">
             <div class="col col-20" ng-if="jogador.confirmado == undefined  && !jogador.aguardandoConfirmacao" ng-repeat="jogador in vm.jogo.jogadores | toArray : false | orderBy: vm.orderByConfirmacao">
-              <img ng-click="vm.openPerfilJogador(jogador.id);" style="width: 50px; height: 50px; border-radius: 50%; "
-                  src="{{jogador.fotoPerfil | defaultImage}} ">
+              <img ng-click="vm.openPerfilJogador(jogador.id);" style="width: 50px; height: 50px; border-radius: 50%; " src="{{jogador.fotoPerfil | defaultImage}} ">
             </div>
           </div>
         </div>
@@ -103,8 +104,7 @@
           <span class="assertive" style="font-weight:bold; padding-left: 7px;">Não vão ({{vm.getNumJogadores(false)}})</span>
           <div class="row flex-cols">
             <div class="col col-20" ng-if="jogador.confirmado == false && !jogador.aguardandoConfirmacao" ng-repeat="jogador in vm.jogo.jogadores | toArray : false | orderBy: vm.orderByConfirmacao">
-              <img ng-click="vm.openPerfilJogador(jogador.id);" style="width: 50px; height: 50px; border-radius: 50%; "
-                  src="{{jogador.fotoPerfil | defaultImage}} ">
+              <img ng-click="vm.openPerfilJogador(jogador.id);" style="width: 50px; height: 50px; border-radius: 50%; " src="{{jogador.fotoPerfil | defaultImage}} ">
             </div>
           </div>
         </div>

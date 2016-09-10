@@ -4,12 +4,14 @@
     angular.module('main')
         .controller('JogosCtrl', JogosCtrl)
         .controller('MeusJogosCtrl', MeusJogosCtrl)
+        .controller('MinhasReservasCtrl', MinhasReservasCtrl)
         .controller('ReservaCtrl', ReservaCtrl)
         .controller('NovaPartidaCtrl', NovaPartidaCtrl)
         .controller('JogosDetailCtrl', JogosDetailCtrl);
 
     JogosCtrl.$inject = ['$scope', '$rootScope', 'JogosService', '$ionicModal', '$window', 'ArenasService', '$ionicScrollDelegate', '$location', '$ionicHistory', 'GeoService', '$timeout'];
-    MeusJogosCtrl.$inject = ['JogosService', 'UserService', 'ReservasService', 'ArenasService', '$ionicModal'];
+    MeusJogosCtrl.$inject = ['JogosService', 'UserService', 'ArenasService'];
+    MinhasReservasCtrl.$inject = ['UserService', 'ReservasService', 'ArenasService'];
     ReservaCtrl.$inject = ['$scope', '$state', 'JogosService', 'UserService', 'ReservasService', 'ArenasService', 'GeoService', 'Enum', '$ionicModal', '$ionicPopup'];
     NovaPartidaCtrl.$inject = ['$scope', '$state', '$ionicHistory', 'Enum', 'UserService', 'ReservasService', 'JogosService', 'ArenasService', '$ionicModal', 'ionicTimePicker', 'ionicDatePicker', 'LocationService', '$ionicLoading', '$cordovaSocialSharing', '$window'];
     JogosDetailCtrl.$inject = ['$scope', '$state', '$stateParams', '$timeout', '$rootScope', '$ionicPlatform', '$ionicHistory', 'JogosService', 'UserService', '$ionicModal', 'GeoService', '$ionicLoading', '$window', '$ionicActionSheet', '$cordovaSocialSharing', '$ionicPopup', '$cordovaVibration'];
@@ -81,16 +83,12 @@
 
     }
 
-    function MeusJogosCtrl(JogosService, UserService, ReservasService, ArenasService, $ionicModal) {
+    function MeusJogosCtrl(JogosService, UserService, ArenasService) {
         var vm = this;
         vm.jogosService = JogosService;
-        vm.minhasReservas = UserService.reservas;
         vm.jogos = UserService.jogos;
-        vm.verPartidas = true;
-
         vm.orderByConfirmacao = orderByConfirmacao;
         vm.isAndroid = isAndroid;
-        vm.openReservamodal = openReservamodal;
 
         vm.jogoHoje = jogoHoje;
         vm.jogoAlgumasHoras = jogoAlgumasHoras;
@@ -103,11 +101,6 @@
         activate();
 
         function activate() {
-        }
-
-        function openReservamodal(reserva) {
-            var arena = _.find(ArenasService.arenas, { '$id': reserva.arenaId });
-            ReservasService.openReservaModal(reserva, arena);
         }
 
         function orderByConfirmacao(jogador) {
@@ -165,6 +158,23 @@
             if (obj) {
                 return Object.keys(obj).length;
             }
+        }
+
+    }
+
+    function MinhasReservasCtrl( UserService, ReservasService, ArenasService) {
+        var vm = this;
+        vm.minhasReservas = UserService.reservas;
+        vm.openReservamodal = openReservamodal;
+
+        activate();
+
+        function activate() {
+        }
+
+        function openReservamodal(reserva) {
+            var arena = _.find(ArenasService.arenas, { '$id': reserva.arenaId });
+            ReservasService.openReservaModal(reserva, arena);
         }
 
     }
@@ -546,7 +556,7 @@
                         type: 'button-assertive',
                         onTap: function (e) {
                             ReservasService.cancelarReserva(vm.reservaSelecionada.arenaId, vm.reservaSelecionada.$id);
-                            vm.modal.hide();
+                            closeModal();
                         }
                     }]
             });

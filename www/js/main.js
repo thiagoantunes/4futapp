@@ -87,27 +87,27 @@
             }
             if (window.StatusBar) {
                 StatusBar.overlaysWebView(true);
-                StatusBar.styleLightContent();
+                StatusBar.styleDefault();
                 //StatusBar.styleDefault();
             }
 
-            $ionicDeploy.check().then(function (snapshotAvailable) {
-                if (snapshotAvailable) {
-                    $ionicDeploy.download().then(function () {
-                        return $ionicDeploy.extract().then(function () {
-                            $ionicDeploy.load();
-                        });
-                    }, function (err) {
-                        console.log(err);
-                    });
+            // $ionicDeploy.check().then(function (snapshotAvailable) {
+            //     if (snapshotAvailable) {
+            //         $ionicDeploy.download().then(function () {
+            //             return $ionicDeploy.extract().then(function () {
+            //                 $ionicDeploy.load();
+            //             });
+            //         }, function (err) {
+            //             console.log(err);
+            //         });
 
-                    // $ionicDeploy.getVersions().then(function(snapshots) {
-                    //     _.forEach(snapshots, function(snap) {
-                    //         window.alert(snap);
-                    //     });
-                    // });
-                }
-            });
+            //         // $ionicDeploy.getVersions().then(function(snapshots) {
+            //         //     _.forEach(snapshots, function(snap) {
+            //         //         window.alert(snap);
+            //         //     });
+            //         // });
+            //     }
+            // });
 
         }).then(function () {
             if (window.cordova) {
@@ -347,7 +347,7 @@
                 views: {
                     'menuContent': {
                         templateUrl: 'minhas-reservas.html',
-                        controller: 'MeusJogosCtrl as vm',
+                        controller: 'MinhasReservasCtrl as vm',
                     }
                 }
             })

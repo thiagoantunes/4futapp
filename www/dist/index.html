@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-  <meta http-equiv="Content-Security-Policy" content="default-src *; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos; *; style-src  &apos;self&apos; &apos;unsafe-inline&apos; *">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'self' gap: ; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos; *; style-src  &apos;self&apos; &apos;unsafe-inline&apos; *">
   <title></title>
 
   <link rel="stylesheet" href="dist_css/styles.css">
@@ -56,10 +56,6 @@
 </head>
 
 <body ng-strict-di="">
-  <ion-nav-bar align-title="center" class="bar-positive">
-    <ion-nav-back-button class="no-text">
-    </ion-nav-back-button>
-  </ion-nav-bar>
   <ion-nav-view></ion-nav-view>
 
 </body>

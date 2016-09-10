@@ -103,7 +103,7 @@
             data.arenaId = snap.val();
             data.arenaNome = snapNomeArena.val();
             $timeout(function () {
-              _.remove(UserService.reservas, { 'id': snap.key });
+              _.remove(UserService.reservas, { '$id': snap.key });
               UserService.reservas.push(data);
             });
           });

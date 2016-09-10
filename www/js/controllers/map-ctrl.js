@@ -10,8 +10,6 @@
         var vm = this;
         vm.arenaService = ArenasService;
         vm.jogosService = JogosService;
-        vm.arenas = ArenasService.arenas;
-        vm.jogosRegiao = JogosService.jogosRegiao;
         vm.isDevice = isDevice;
         vm.acharNoMapa = acharNoMapa;
         vm.toggleLeftSideMenu = toggleLeftSideMenu;
@@ -177,6 +175,7 @@
                         vm.filtro = {
                             tipo: 'arena'
                         };
+                        vm.arenasView = true;
                         $rootScope.map.trigger('category_change', vm.filtro.tipo);
                     }
                 });

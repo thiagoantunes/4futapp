@@ -93,20 +93,20 @@
     }
 
     .chat-bubble.left {
-      background-color: $stable;
+      background-color: $light;
       float: left;
       margin-left: 55px;
     }
 
     .chat-bubble.left:before {
-      background-color: $stable;
+      background-color: $light;
       left: 10px;
       -webkit-transform: rotate(70deg) skew(5deg);
     }
 
     .chat-bubble.right {
       background-color: $positive;
-      color: $dark;
+      color: $light;
       float: right;
       margin-right: 55px;
     }
@@ -139,7 +139,7 @@
     }
 
     input, textarea, .item-input, .item-input-wrapper {
-      background-color: $dark !important;
+      background-color: $stable !important;
     }
 
     .bold {

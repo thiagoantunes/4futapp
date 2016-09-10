@@ -4,24 +4,24 @@
   SeguindoSeguidoresCtrl.$inject = ['$state', 'UserService', '$stateParams', '$ionicHistory'];
   PerfilJogadorCtrl.$inject = ['$state', '$timeout', 'ionicMaterialMotion', 'ionicMaterialInk', 'UserService', 'ChatService', '$ionicPopup', '$ionicModal', '$ionicHistory'];
   ListaJogadoresCtrl.$inject = ['$state', 'UserService', '$stateParams', '$ionicHistory'];
-  ChatCtrl.$inject = ['$scope', 'ChatService', 'JogosService', 'UserService', '$rootScope', '$state', '$stateParams', '$ionicActionSheet', '$ionicHistory', '$ionicScrollDelegate', '$timeout', '$interval'];
-  ChatsListCtrl.$inject = ['$scope', '$state', 'ChatService', 'UserService'];
+  ChatCtrl.$inject = ['$scope', 'ChatService', 'JogosService', 'UserService', '$rootScope', '$state', '$stateParams', '$ionicActionSheet', '$ionicHistory', '$ionicScrollDelegate', '$timeout', '$interval', '$ionicLoading'];
+  ChatsListCtrl.$inject = ['$scope', '$state', 'ChatService', 'UserService', 'JogosService', '$ionicLoading'];
   ConfigCtrl.$inject = ['$scope', 'UserService'];
   angular.module('main')
-  .controller('PerfilCtrl', PerfilCtrl)
-  .controller('SeguindoSeguidoresCtrl', SeguindoSeguidoresCtrl)
-  .controller('PerfilJogadorCtrl', PerfilJogadorCtrl)
-  .controller('ListaJogadoresCtrl', ListaJogadoresCtrl)
-  .controller('ChatCtrl', ChatCtrl)
-  .controller('ChatsListCtrl', ChatsListCtrl)
-  .controller('ConfigCtrl', ConfigCtrl);
+    .controller('PerfilCtrl', PerfilCtrl)
+    .controller('SeguindoSeguidoresCtrl', SeguindoSeguidoresCtrl)
+    .controller('PerfilJogadorCtrl', PerfilJogadorCtrl)
+    .controller('ListaJogadoresCtrl', ListaJogadoresCtrl)
+    .controller('ChatCtrl', ChatCtrl)
+    .controller('ChatsListCtrl', ChatsListCtrl)
+    .controller('ConfigCtrl', ConfigCtrl);
 
   PerfilCtrl.$inhect = ['selectedUser', '$state', '$timeout', '$stateParams', 'ionicMaterialMotion', 'ionicMaterialInk', 'UserService', '$ionicPopup'];
   SeguindoSeguidoresCtrl.$inhect = ['$state', 'UserService', '$stateParams', '$ionicHistory'];
   PerfilJogadorCtrl.$inhect = ['$state', '$timeout', 'ionicMaterialMotion', 'ionicMaterialInk', 'UserService', 'ChatService', '$ionicPopup', '$ionicModal', '$ionicHistory'];
   ListaJogadoresCtrl.$inhect = ['$state', 'UserService', '$stateParams', '$ionicHistory'];
-  ChatCtrl.$inhect = ['$scope', 'ChatService', 'JogosService', 'UserService', '$rootScope', '$state', '$stateParams', '$ionicActionSheet', '$ionicHistory', '$ionicScrollDelegate', '$timeout', '$interval'];
-  ChatsListCtrl.$inhect = ['$scope', '$state', 'ChatService', 'UserService'];
+  ChatCtrl.$inhect = ['$scope', 'ChatService', 'JogosService', 'UserService', '$rootScope', '$state', '$stateParams', '$ionicActionSheet', '$ionicHistory', '$ionicScrollDelegate', '$timeout', '$interval', '$ionicLoading'];
+  ChatsListCtrl.$inhect = ['$scope', '$state', 'ChatService', 'UserService', '$ionicLoading'];
   ConfigCtrl.$inhect = ['$scope', 'UserService'];
 
   function PerfilCtrl(selectedUser, $state, $timeout, $stateParams, ionicMaterialMotion, ionicMaterialInk, UserService, $ionicPopup) {
@@ -67,8 +67,8 @@
 
   function SeguindoSeguidoresCtrl($state, UserService, $stateParams, $ionicHistory) {
     var vm = this;
-    vm.seguindo = [];
-    vm.seguidores = [];
+    vm.seguindo = UserService.seguindo;
+    vm.seguidores = UserService.seguidores;
     vm.amigos = UserService.amigos;
     vm.checkAmizade = checkAmizade;
     vm.userService = UserService;
@@ -81,30 +81,7 @@
 
     function activate() {
       vm.verSeguindo = true;
-      getSeguidores();
-      getSeguindo();
-    }
-
-    function getSeguidores() {
-      if (UserService.meuPerfil.seguidores) {
-        var ids = Object.keys(UserService.meuPerfil.seguidores).map(function (key) {
-          return UserService.meuPerfil.seguidores[key];
-        });
-        UserService.getListaJogadores(ids).then(function (list) {
-          vm.seguidores = list;
-        });
-      }
-    }
-
-    function getSeguindo() {
-      if (UserService.meuPerfil.seguindo) {
-        var ids = Object.keys(UserService.meuPerfil.seguindo).map(function (key) {
-          return UserService.meuPerfil.seguindo[key];
-        });
-        UserService.getListaJogadores(ids).then(function (list) {
-          vm.seguindo = list;
-        });
-      }
+      UserService.getSeguindoSeguidores();
     }
 
     function openListaJogadores(tipoLista) {
@@ -124,11 +101,14 @@
     function deixarDeSeguir(jogador) {
       var options = {
         'title': 'Deixar de seguir ' + jogador.nome + '?',
+        'androidEnableCancelButton': true,
         'addDestructiveButtonWithLabel': 'Deixar de seguir',
         'addCancelButtonWithLabel': 'Cancelar'
       };
       window.plugins.actionsheet.show(options, function (_btnIndex) {
-        UserService.removerAmigo(jogador.$id);
+        if (_btnIndex === 1) {
+          UserService.removerAmigo(jogador.$id);
+        }
       });
     }
 
@@ -300,7 +280,7 @@
 
   }
 
-  function ChatCtrl($scope, ChatService, JogosService, UserService, $rootScope, $state, $stateParams, $ionicActionSheet, $ionicHistory, $ionicScrollDelegate, $timeout, $interval) {
+  function ChatCtrl($scope, ChatService, JogosService, UserService, $rootScope, $state, $stateParams, $ionicActionSheet, $ionicHistory, $ionicScrollDelegate, $timeout, $interval, $ionicLoading) {
     var vm = this;
     var messageCheckTimer;
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
@@ -332,10 +312,11 @@
       vm.jogadores = JogosService.jogoSelecionado.jogadores;
 
       ChatService.getChatPartida(JogosService.jogoSelecionado.$id);
+      $ionicLoading.show({ template: 'Carregando...' });
       ChatService.mensagensChatSelecionado.$loaded().then(function (data) {
-        vm.doneLoading = true;
+        $ionicLoading.hide();
         vm.mensagens = data;
-        vm.mensagens.$watch(function(event) {
+        vm.mensagens.$watch(function (event) {
           $timeout(function () {
             viewScroll.scrollBottom(true);
           }, 0);
@@ -344,17 +325,20 @@
         $timeout(function () {
           viewScroll.scrollBottom();
         }, 0);
+      }, function (err) {
+        console.log(err);
+        $ionicLoading.hide();
       });
     }
 
     function getChatJogador() {
       vm.jogadores.push(ChatService.destinatario);
-
+      $ionicLoading.show({ template: 'Carregando...' });
       ChatService.getChatJogador(vm.jogadores[0].$id).then(function () {
         ChatService.mensagensChatSelecionado.$loaded().then(function (data) {
-          vm.doneLoading = true;
+          $ionicLoading.hide();
           vm.mensagens = data;
-          vm.mensagens.$watch(function(event) {
+          vm.mensagens.$watch(function (event) {
             $timeout(function () {
               viewScroll.scrollBottom(true);
             }, 0);
@@ -363,7 +347,13 @@
           $timeout(function () {
             viewScroll.scrollBottom();
           }, 0);
+        }, function (err) {
+          console.log(err);
+          $ionicLoading.hide();
         });
+      }, function (err) {
+        console.log(err);
+        $ionicLoading.hide();
       });
     }
 
@@ -396,6 +386,7 @@
       console.log('keepKeyboardOpen');
       txtInput.on('blur', function () {
         console.log('textarea blur, focus back on it');
+        cordova.plugins.Keyboard.show();
         txtInput[0].focus();
       });
     }
@@ -435,7 +426,7 @@
     }
 
     function getUserData(id) {
-      return _.find(vm.jogadores, { $id: id });
+      return _.find(vm.jogadores, { id: id });
     }
 
     $scope.$on('$ionicView.enter', function () {
@@ -467,25 +458,11 @@
       }
     });
 
-    $scope.$on('taResize', function (e, ta) {
-      console.log('taResize');
-      if (!ta) return;
 
-      var taHeight = ta[0].offsetHeight;
-      console.log('taHeight: ' + taHeight);
-
-      if (!footerBar) return;
-
-      var newFooterHeight = taHeight + 10;
-      newFooterHeight = (newFooterHeight > 44) ? newFooterHeight : 44;
-
-      footerBar.style.height = newFooterHeight + 'px';
-      scroller.style.bottom = newFooterHeight + 'px';
-    });
 
   }
 
-  function ChatsListCtrl($scope, $state, ChatService, UserService) {
+  function ChatsListCtrl($scope, $state, ChatService, UserService, JogosService, $ionicLoading) {
     var vm = this;
     vm.chats = [];
 
@@ -494,13 +471,27 @@
     activate();
 
     function activate() {
-      vm.chats = ChatService.getListaChats();
+      $ionicLoading.show({ template: 'Carregando...' });
+      ChatService.getListaChats().$loaded().then(function (val) {
+        vm.chats = val;
+        $ionicLoading.hide();
+      }, function (err) {
+        console.log(err);
+        $ionicLoading.hide();
+      });
     }
 
-    function openChat(jogador) {
-      jogador.$id = jogador.id;
-      ChatService.destinatario = jogador;
-      $state.go('app.chat', { id: jogador.id, tipoChat: 'jogador' });
+    function openChat(chat) {
+      if (chat.tipoChat === 'jogador') {
+        var jogador = chat.destinatario;
+        jogador.$id = jogador.id;
+        ChatService.destinatario = jogador;
+        $state.go('app.chat', { id: jogador.id, tipoChat: 'jogador' });
+      }
+      else if (chat.tipoChat === 'partida') {
+        JogosService.jogoSelecionado = _.find(UserService.jogos, { '$id': chat.chat });
+        $state.go('app.chat', { id: chat.chat, tipoChat: 'partida' });
+      }
     }
 
   }

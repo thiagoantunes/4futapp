@@ -1,4 +1,5 @@
 .criar-partida{
+    color: $light;
     -webkit-box-align: center;
 	-webkit-align-items: center;
 	-ms-flex-align: center;
@@ -7,6 +8,10 @@
 	background-size: cover;
 	background-position: center center;
    
+    input[type="text"] {
+        border-bottom-color: $light !important;
+        color: $light !important;
+    }
 
     .bar-header{
         .back-button{
@@ -165,6 +170,7 @@
 
         .col-nome{
             font-weight: bold; 
+            color: $positive;
         }
 
         .col-data{
@@ -202,12 +208,27 @@
 }
 
 #jogos-detail{
+    ion-content{
+        background: $base-background-color !important;
+    }
+
+    .bar-header {
+        border: 0px !important;
+        border-bottom-color: transparent !important;
+        background-image: none !important;
+        border-bottom: none !important;
+    }
 
     .header{
-        background:$base-background-color; 
+        background:$positive;
+        color: $light !important;  
         width:100%; 
         height:230px; 
         padding: 20px;
+
+        h1,h2,h3,h4,h5,h6{
+            color: $light;
+        }
 
         .confirmacao{
             padding:10px 0px;
@@ -260,7 +281,7 @@
 
     .info{
         margin-top:-20px;
-        background-color:$base-background-color; color: $base-color;
+        background-color:$positive; color: $light;
         .row{
             border-bottom: 1px solid $stable;
             .col{
@@ -273,9 +294,8 @@
             }
         }
     }
-
-    ion-content{
-        background-color: $dark;
+    .item{ 
+        background: transparent !important;
     }
 
     .item h2{

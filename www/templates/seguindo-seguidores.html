@@ -3,7 +3,7 @@
         <button ng-click="vm.openListaJogadores( 'regiao') " class="button button-icon button-clear ion-android-person-add"></button>
     </ion-nav-buttons>
     <ion-content>
-        <div class="padding" style="background-color: #00303D">
+        <div class="padding" style="background:white;">
             <div class="button-bar">
                 <a class="small_button" style="border-radius: 5px 0px 0px 5px !important;" grouped-radio="true" ng-model="vm.verSeguindo"> SEGUINDO</a>
                 <a class="small_button" style="border-radius: 0px 5px 5px 0px !important;" grouped-radio="false" ng-model="vm.verSeguindo"> SEGUIDORES</a>
@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="list ">
-                <label class="item item-input" ng-if="vm.seguindo.length > 0">
+                <label class="item item-input" ng-if="vm.seguindo.length > 0" style="background:transparent !important;">
                     <i class="icon ion-search placeholder-icon"></i>
                     <input type="text" ng-model="searchSeguindo" placeholder="Buscar">
                 </label>

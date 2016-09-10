@@ -25,8 +25,8 @@
   <preference name="BackupWebStorage" value="none"/>
   <preference name="SplashScreen" value="screen"/>
   <preference name="StatusBarOverlaysWebView" value="true"/>
-  <preference name="StatusBarBackgroundColor" value="#00242E"/>
-  <preference name="StatusBarStyle" value="lightcontent"/>
+  <preference name="StatusBarBackgroundColor" value="#dfdfdf"/>
+  <preference name="StatusBarStyle" value="default"/>
   <preference name="AndroidPersistentFileLocation" value="Internal"/>
   <preference name="xwalkZOrderOnTop" value="true"/>
   <preference name="xwalkVersion" value="20+"/>

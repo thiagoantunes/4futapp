@@ -1,7 +1,4 @@
 <ion-view view-title="MINHAS PARTIDAS">
-  <ion-nav-buttons side="right">
-    <button ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="main.criar-partida" class="button button-icon button-clear ion-android-add icon"></button>
-  </ion-nav-buttons>
   <ion-content>
     <div ng-if="vm.minhasReservas.length == 0" class="lista-vazia text-center">
       <i class="icon ion-ios-calendar-outline"></i>
@@ -11,7 +8,7 @@
       </div>
     </div>
     <div ng-if="vm.minhasReservas.length > 0">
-      <div ng-if="vm.jogos.length > 0" class="item item-divider">
+      <div class="item item-divider">
         RESERVAS ATUAIS
       </div>
       <ion-list>

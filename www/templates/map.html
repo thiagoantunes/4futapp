@@ -8,7 +8,7 @@
         <!--<button style="right: 45px; position: absolute;" ng-click="vm.openFiltroModal();" class="button button-icon button-clear ion-android-funnel icon"></button>-->
         <button ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="app.criar-partida" class="button button-icon button-clear ion-android-add icon"></button>
       </div>
-      <div class="bar bar-subheader">
+      <!--<div class="bar bar-subheader">
         <div class="row">
           <div class="col" ng-click="vm.toggleMarkers('arena');" ng-class="{'col-active': vm.filtro.tipo == 'arena'}">
             Arenas
@@ -17,22 +17,14 @@
             Jogos
           </div>
         </div>
-      </div>
-      <!--<div class="padding" style="position: absolute; top: 60px;">
-        <div class="row">
-          <div class="col">
-            <button ng-click="vm.toggleMarkers('arena');" class="button button-block button-positive">
-              Arenas
-            </button>
-          </div>
-          <div class="col">
-            <button ng-click="vm.toggleMarkers('jogo');" class="button button-block button-positive">
-              Jogos
-            </button>
-          </div>
-        </div>
       </div>-->
-      <ion-slide-box ng-show="vm.showDetails" class="slide-markers item-animate"  show-pager="false" on-slide-changed="vm.onSlideChange($index)">
+      <div class="padding tipo-mapa" >
+        <div class="button-bar">
+          <a class="small_button" ng-click="vm.toggleMarkers('arena');"  style="border-radius: 5px 0px 0px 5px !important; " grouped-radio="true" ng-model="vm.arenasView"> ARENAS</a>
+          <a class="small_button" ng-click="vm.toggleMarkers('jogo');" style="border-radius: 0px 5px 5px 0px !important; " grouped-radio="false" ng-model="vm.arenasView"> PARTIDAS</a>
+        </div>
+      </div>
+      <ion-slide-box ng-show="vm.showDetails" class="slide-markers item-animate" show-pager="false" on-slide-changed="vm.onSlideChange($index)">
         <ion-slide ng-if="marker[vm.filtro.tipo] && marker.arena" ng-repeat="marker in $root.markers | orderBy:'distance '">
           <div ng-click="vm.arenaService.arenaSelecionada = marker.data;" ui-sref="app.detalhes-arena({id: marker.$id})" href="#/app/arenas/{{marker.$id}}"
             class="row item-arena">

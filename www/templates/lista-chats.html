@@ -2,7 +2,7 @@
     <ion-content>
 
         <div class="list">
-            <a class="item item-avatar" ng-click="vm.openChat(chat.destinatario);" ng-repeat="chat in vm.chats">
+            <a class="item item-avatar" ng-click="vm.openChat(chat);" ng-repeat="chat in vm.chats | orderBy: '-date'">
                 <img ng-if="chat.tipoChat == 'jogador'" ng-src="{{chat.destinatario.fotoPerfil}}">
                 <img ng-if="chat.tipoChat == 'partida'" ng-src="img/icons/soccer-ball.png">
                 <div class="row">

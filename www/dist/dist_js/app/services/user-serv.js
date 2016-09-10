@@ -35,6 +35,8 @@
 
     var service = {
       meuPerfil: {},
+      seguindo: [],
+      seguidores: [],
       jogos: [],
       amigos: [],
       times: [],
@@ -64,6 +66,7 @@
       schedulePushNotification: schedulePushNotification,
       setLocalizacaoJogador: setLocalizacaoJogador,
       setConexao: setConexao,
+      getSeguindoSeguidores: getSeguindoSeguidores
     };
 
     return service;
@@ -320,6 +323,26 @@
       //     lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
       //   }
       // });
+    }
+
+    function getSeguindoSeguidores() {
+      service.ref.child(firebase.auth().currentUser.uid + '/seguindo').on('child_added', function (snap) {
+        getUserProfile(snap.key).$loaded().then(function (val) {
+          $timeout(function () {
+            _.remove(service.seguindo, { '$id': val.$id });
+            service.seguindo.push(val);
+          });
+        });
+      });
+
+      service.ref.child(firebase.auth().currentUser.uid + '/seguidores').on('child_added', function (snap) {
+        getUserProfile(snap.key).$loaded().then(function (val) {
+          $timeout(function () {
+            _.remove(service.seguidores, { '$id': val.$id });
+            service.seguidores.push(val);
+          });
+        });
+      });
     }
 
   }

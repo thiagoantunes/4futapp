@@ -40,7 +40,7 @@
             </ui-gmap-marker>
         </ui-gmap-google-map>
         <div class="padding">
-            <button  ng-if="!vm.reservaSelecionada.partida"  ng-click="vm.criaPartida();" class="button button-full botton-small button-positive">
+            <button  ng-if="!vm.reservaSelecionada.partida && vm.reservaSelecionada.status !== 'cancelado'"  ng-click="vm.criaPartida();" class="button button-full botton-small button-positive">
                 CRIAR PARTIDA
             </button>
              <button ng-if="vm.reservaSelecionada.partida" ng-click="vm.idParaPartida();" class="button button-full botton-small button-positive">

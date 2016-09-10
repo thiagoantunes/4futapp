@@ -114,9 +114,11 @@
 
             UserService.getUserProfile(firebase.auth().currentUser.uid).$bindTo($scope, 'currentUser');
 
+            $ionicLoading.show({ template: 'Carregando...' });
             vm.quadras.$loaded().then(function () {
+                $ionicLoading.hide();
                 getReservas(new Date());
-            });
+            }, onError);
             vm.carouselOptions1 = {
                 carouselId: 'carousel-1',
                 align: 'left',
@@ -188,12 +190,13 @@
 
         function getReservas(date) {
             vm.intervaloSelecionado = getIntervaloDia(date);
+            $ionicLoading.show({ template: 'Carregando...' });
             vm.reservas = ReservasService
                 .getReservasDia(
                 $stateParams.id,
                 vm.intervaloSelecionado.start,
                 vm.intervaloSelecionado.end)
-                .$loaded().then(getHorariosLivres);
+                .$loaded().then(getHorariosLivres, onError);
         }
 
         function onSelectCarousel(item) {
@@ -202,6 +205,7 @@
         }
 
         function getHorariosLivres(reservas) {
+            $ionicLoading.hide();
             vm.reservas = reservas;
             vm.horariosPorQuadra = [];
             _.forEach(vm.quadras, function (quadra) {
@@ -326,8 +330,8 @@
                             if (!$scope.currentUser.telefone) {
                                 e.preventDefault();
                             } else {
-                                salvarNovaReserva();
-                                //enviarCodigoVerificacao();
+                                //salvarNovaReserva();
+                                enviarCodigoVerificacao();
                             }
                         }
                     },
@@ -427,6 +431,11 @@
                 $ionicLoading.hide();
                 $window.alert('Ops! ' + error);
             });
+        }
+
+        function onError(err) {
+            console.log( err);
+            $ionicLoading.hide();
         }
 
         // Set Motion

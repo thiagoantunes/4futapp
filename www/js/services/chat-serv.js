@@ -94,11 +94,11 @@
       chatData['chats/' + partida.$id + '/' + msgId] = mensagem;
 
       _.forEach(partida.jogadores, function (jogador) {
-        chatData['usersChats/' + jogador.$id + '/' + partida.$id + '/ultimaMsg'] = mensagem.text;
-        chatData['usersChats/' + jogador.$id + '/' + partida.$id + '/date'] = mensagem.date;
-        chatData['usersChats/' + jogador.$id + '/' + partida.$id + '/chat'] = partida.$id;
-        chatData['usersChats/' + jogador.$id + '/' + partida.$id + '/tipoChat'] = 'partida';
-        chatData['usersChats/' + jogador.$id + '/' + partida.$id + '/destinatario'] = {
+        chatData['usersChats/' + jogador.id + '/' + partida.$id + '/ultimaMsg'] = mensagem.text;
+        chatData['usersChats/' + jogador.id + '/' + partida.$id + '/date'] = mensagem.date;
+        chatData['usersChats/' + jogador.id + '/' + partida.$id + '/chat'] = partida.$id;
+        chatData['usersChats/' + jogador.id + '/' + partida.$id + '/tipoChat'] = 'partida';
+        chatData['usersChats/' + jogador.id + '/' + partida.$id + '/destinatario'] = {
           id: partida.$id,
           nome: partida.nome,
         };
@@ -107,12 +107,12 @@
       Ref.update(chatData).then(function () {
 
         _.forEach(partida.jogadores, function (jogador) {
-          if (jogador.$id !== firebase.auth().currentUser.uid) {
-            var naoLidasRef = service.refUserChats.child(jogador.$id + '/' + partida.$id + '/naoLidas');
+          if (jogador.id !== firebase.auth().currentUser.uid) {
+            var naoLidasRef = service.refUserChats.child(jogador.id + '/' + partida.$id + '/naoLidas');
             naoLidasRef.transaction(function (current_value) {
               return (current_value || 0) + 1;
             });
-            UserService.sendPushNotification(jogador.$id, firebase.auth().currentUser.displayName + ': ' + mensagem.text);
+            UserService.sendPushNotification(jogador.id, firebase.auth().currentUser.displayName + ': ' + mensagem.text);
           }
         });
 

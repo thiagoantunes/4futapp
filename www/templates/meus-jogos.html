@@ -21,7 +21,7 @@
       <ion-list class="jogo-card">
         <a ng-repeat="jogo in vm.jogos | filter:vm.proximosJogos | orderBy: 'inicio'" ng-click="vm.jogosService.jogoSelecionado = jogo;"
           href="#/app/jogos/{{jogo.$id}}">
-          <div class="card" style="margin: 3px 0px; padding:0 7px">
+          <div class="card" >
             <div class="row">
               <div class="col col-nome">{{jogo.nome}}</div>
               <div class="col col-data positive" ng-if="vm.jogoEmAndamento(jogo.inicio);">Em andamento...</div>
@@ -58,7 +58,7 @@
       <ion-list class="jogo-card">
         <a ng-repeat="jogo in vm.jogos | filter:vm.jogosAnteriores | orderBy: '-inicio'" ng-click="vm.jogosService.jogoSelecionado = jogo;"
           href="#/main/meus-jogos/{{jogo.$id}}">
-          <div class="card" style="margin: 3px 0px; padding:0 7px">
+          <div class="card" >
             <div class="row">
               <div class="col col-nome">{{jogo.nome}}</div>
               <div class="col col-data">{{jogo.inicio | date :"dd/MM 'às' H:mm"}}</div>

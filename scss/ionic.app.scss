@@ -1,47 +1,28 @@
-$light:                           #AABDC2 !default;
-$stable:                          #1A5463 !default;
-$positive:                        #AAF502 !default;
+$light:                           #fff !default;
+$stable:                          #DADFE2 !default;
+$positive:                        #22D59E !default;
 $calm:                            #0084A8 !default;
-$balanced:                        #03b7a5 !default;
+$balanced:                        #59E2BA !default;
 $energized:                       #FF6A00 !default;
 $assertive:                       #F34235 !default;
-$royal:                           #8a6de9 !default;
+$royal:                           #4F4F70 !default;
+$royal-dark:                      #3A3B51 !default;
 $dark:                            #00303D !default;
-$base-background-color:           #00242E !default;
+$base-background-color:           #F2F5F5 !default;
 
-$base-color:                      #F1F7E9 !default;
-$card-header-bg:                  #00242E !default;
-$card-body-bg:                    #00303D !default;
-$card-footer-bg:                  #00242E !default;
+$bar-light-text:               #22D59E !default;
+$base-color:                      #7C8585 !default;
+$input-color-placeholder:          $base-color !default;
+$item-divider-bg:                 $base-background-color !default;
+$item-divider-color:              $base-color !default;
+// .item{
+//     font-size: 16px !important;
+//     color: $base-color;
+// }
 
-$button-stable-bg:                $stable !default;
-$button-stable-text:              $base-color !default;
-$button-stable-border:            #00242E !default;
-$button-stable-active-bg:         #00242E !default;
-$button-stable-active-border:     #00303D !default;
-
-$button-positive-bg:              $positive !default;
-$button-positive-text:            $dark !default;
-$button-positive-border:          darken($positive, 10%) !default;
-$button-positive-active-bg:       darken($positive, 10%) !default;
-$button-positive-active-border:   darken($positive, 10%) !default;
-
-$button-light-bg:                 $light !default;
-$button-light-text:               $base-color !default;
-$button-light-border:             $base-background-color !default;
-
-$toggle-off-bg-color:              $button-stable-bg !default;
-$toggle-off-border-color:          darken($button-stable-bg, 10%) !default;
-$input-color-placeholder:          $light !default;
-
-.item{
-    font-size: 16px !important;
-    color: $base-color;
-}
-
-.placeholder-icon{
-    color: $light!important;
-}
+// .placeholder-icon{
+//     color: $light!important;
+// }
 
 
 .small_button{
@@ -55,6 +36,10 @@ $input-color-placeholder:          $light !default;
     color: $positive !important;
 }
 
+.item-divider {
+    border: none !important;
+}
+
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../fonts" !default;
 
@@ -62,102 +47,6 @@ $RobotoDraftFontPath: "../fonts" !default; // REMINDER: edit as appropriate!
 $RobotoDraftFontName: "RobotoDraft";
 $RobotoDraftFontVersion: "1.0.0";
 
-$input-color: #fff;
-
-input[readonly]{
-    background-color: $base-background-color !important;
-}
-
-.side-menu-hide{
-    display: none;
-}
-
-.input-label{
-    color: #ccc !important;
-}
-
-.list .item.item-floating-label, .item-floating-label{
-        border-bottom: solid 1px $stable !important;
-}
-
-.item-stacked-label{
-    border-bottom: solid 3px $stable !important;
-    input{
-        background-color: transparent !important;
-    }
-}
-
-.item-select{
-    select{
-        color: $base-color !important;
-    }
-}
-
-.item{
-    background-color: $dark !important;
-    p{
-        color: $base-color !important;
-    }
-}
-
-.item.item-divider{
-    background-color: $base-background-color !important;
-    color: $light !important;
-    line-height: 32px !important;
-}
-
-.modal{
-    background-color: $base-background-color !important;
-}
-
-
-
-.dark-popup{
-    .popup {
-        background: $stable !important;
-        color: $base-color !important;
-    }
-
-    .popup-title{
-        color: $base-color !important;
-    }
-}
-
-.popup-head{
-    h3{
-        font-size: 16px !important;
-    }
-}
-
-.popup-sub-title {
-    color: $dark;
-    padding: 0px 40px !important;
-}
-
-.popup-body{
-    textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"]{
-        color: $dark !important;
-    }
-}
-
-.item-button-right {
-    .button{
-        min-height: 24px !important;
-        font-size: 14px !important;
-        line-height: 22px !important;
-        padding: 0px 10px 0px 10px !important;
-    }
-}
-
-.swiper-pagination-bullet{
-    background: #FFF !important;
-}
-
-.button.button-light.button-outline{
-    border-color: $light !important;
-    color: $light !important;
-    box-shadow:  none !important;
-}
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic",
@@ -195,10 +84,18 @@ input[readonly]{
   }
 }
 
+//  .bar-header {
+//         border: 0px !important;
+//         border-bottom-color: transparent !important;
+//         background-image: none !important;
+//         border-bottom: none !important;
+//     }
+
 ion-side-menu{
 
     .header{
-        background: $base-background-color;
+        background: $royal-dark;
+        color: $light;
         padding: 40px 0px 0px 16px;
         height: 160px;
         .row{
@@ -214,17 +111,17 @@ ion-side-menu{
             width:80px; height:80px; border-radius:50%;
         }
         h1,h2,h3,h4,h5,h6{
-            color: $base-color;
+            color: $light;
             margin-bottom: 5px;
         }
         small{
-            color: $base-color;
+            color: $light;
         }
     }
     ion-content{
         top:160px !important;
-        color: $base-color;
-        background: $base-background-color;
+        color: $light;
+        background: $royal;
         ion-list{
             .list{
                 ion-item{
@@ -268,6 +165,17 @@ ion-side-menu{
         }
     }
 }
+
+ .platform-ios {
+        .tipo-mapa {
+        width:100%; margin-top:65px;
+        }
+}
+
+.tipo-mapa {
+        width:100%; margin-top:50px;
+    }
+
 #map-view{
     background:transparent!important;
 
@@ -276,22 +184,43 @@ ion-side-menu{
     }
 
     .bar-header{
-        border-bottom: 0px !important; background: rgba( $base-background-color, .85 ); 
+        border-bottom: 0px !important; 
+        background: $light;
+        //background: rgba( $positive, .85 ); 
     }
 
     .bar-subheader {
-        padding:0px; background:white; color: $dark; box-shadow: 0 0 0.5rem #9da5ab; height:40px;
+        padding:0px; 
+        background: $light;
+        //background:rgba( $positive, .85 ); 
+        //color: white; 
+        height:40px;
+
+        // border: 0px !important;
 
         .row{
             padding:0px;
             .col{
-            text-align:center; line-height:30px; font-weight: bold; border-bottom: 3px solid white;
+            text-align:center; line-height:30px; font-weight: bold; border-bottom: 1px solid #ccc;
             }
 
             .col-active{
-                border-bottom-color: $dark !important;
+                color: $positive;
+                border-bottom: solid 3px $positive !important;
+                //border-bottom-color: white !important;
             }
         }
+    }
+
+    .small_button{
+        height: 35px !important;
+        line-height:35px !important;
+        min-height: 35px !important;
+        border: none !important;
+    }
+    .small_button:not(.button-positive){
+        background: $light !important;
+        color: $positive !important;
     }
 
     // .scroll-markers{
@@ -305,12 +234,12 @@ ion-side-menu{
         height: 130px;
 
         ion-slide{
-            border-top: solid 4px $positive;
+            border-top: 1px solid #ddd;
         }
     }
 
     .item-arena{
-        background: rgba( $base-background-color, .85 ); 
+        background: $light; 
         height: 130px; 
 
         .avatar{
@@ -321,8 +250,7 @@ ion-side-menu{
         }
 
         .nome-arena{
-            font-size:1.4em;
-            color: $light;             
+            font-size:1.4em;         
             font-weight: bold; margin:5px 0px 3px 0px
         }
 
@@ -339,7 +267,7 @@ ion-side-menu{
     }
 
     .item-jogo{
-        background: rgba( $base-background-color, .85 );
+        background: $light;
         //color:  #333;
         padding-top: 15px;
         height: 130px;
@@ -368,18 +296,16 @@ ion-side-menu{
 
         .dia-jogo{
             font-size: 1.2em;
-            color: $light;
             font-weight: bold;
+            color: $positive;
         }
 
         .hora-jogo{
             font-size: 1.1em;
-            color: $light;
         }
 
         .local-jogo{
             font-size: 1.1em;
-            color: $light;
         }
 
         .jogadores{
@@ -482,34 +408,6 @@ ion-side-menu{
 .platform-ios {
     .hero{
         min-height: 200px;
-    }
-    .bar-positive{
-        background: $dark;
-    }
-
-    .tabs-background-positive .tabs, .tabs-background-positive > .tabs{
-        background: $dark !important;
-        border-top: 1px solid $stable !important;
-    }  
-    
-    .bar.bar-header{
-        border-bottom: 1px solid $stable !important;
-    }
-
-    .bar.bar-positive .title{
-        color: $positive !important;
-    }
-
-    .tabs-color-dark .tab-item{
-        color: rgba(255, 255, 255, 0.4)
-    }
-
-    a.tab-item.tab-item-active{
-        color: $positive;
-    }
-
-    .bar-positive .button.button-clear{
-        color: $positive !important;
     }
 }
 
