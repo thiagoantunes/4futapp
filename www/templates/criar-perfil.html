@@ -1,0 +1,79 @@
+<ion-view view-title="EDITAR PERFIL">
+    <ion-content>
+        <ul class="list">
+            <div class="list">
+                <label class="item item-input item-stacked-label">
+                  <span class="input-label">NOME</span>
+                  <input type="text" ng-model="user.nome">
+                </label>
+                <label class="item item-input item-stacked-label">
+                  <span class="input-label">APELIDO</span>
+                  <input type="text" ng-model="user.apelido" >
+                </label>
+                <label class="item item-input item-stacked-label">
+                  <span class="input-label">EMAIL</span>
+                  <input type="text" ng-model="user.email" >
+                </label>
+                <label for="dataNascimento" class="item item-input item-stacked-label">
+                  <span class="input-label">DATA DE NASCIMENTO</span>
+                  <input id="dataNascimento" name="dataNascimento" ng-model="vm.dataNascimentoFormatada" ng-focus="vm.openDatePicker();" ng-readonly="true" type="text">
+                </label>
+                <div class="item item-divider">
+                  POSIÇÃO
+                </div>
+                <ion-radio ng-model="user.posicao" ng-value="'Goleiro'">Goleiro</ion-radio>
+                <ion-radio ng-model="user.posicao" ng-value="'Defensor'">Defensor</ion-radio>
+                <ion-radio ng-model="user.posicao" ng-value="'Meia'">Meia</ion-radio>
+                <ion-radio ng-model="user.posicao" ng-value="'Atacante'">Atacante</ion-radio>
+            </div>
+            <!--<div class="item item-divider">
+                Notificações
+            </div>
+            <li class="item item-toggle">
+                Confirmação de presença em partida
+                <label class="toggle toggle-positive">
+               <input ng-model="config.notificacoes.confirmacaoPresenca" type="checkbox">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+             </label>
+            </li>
+            <li class="item item-toggle">
+                Convite para partida
+                <label class="toggle toggle-positive">
+               <input ng-model="config.notificacoes.convitePartida" type="checkbox">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+             </label>
+            </li>
+            <li class="item item-toggle">
+                Novos seguidores
+                <label class="toggle toggle-positive">
+               <input ng-model="config.notificacoes.solicitacaoAmizade" type="checkbox">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+             </label>
+            </li>
+            <li class="item item-toggle">
+                Promoções em arenas próximas a você
+                <label class="toggle toggle-positive">
+               <input ng-model="config.notificacoes.promocoesProximas" type="checkbox">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+             </label>
+            </li>
+            <li class="item item-toggle">
+                Partidas próximas a você
+                <label class="toggle toggle-positive">
+               <input ng-model="config.notificacoes.partidasProximas" type="checkbox">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+             </label>
+            </li>-->
+        </ul>
+    </ion-content>
+</ion-view>

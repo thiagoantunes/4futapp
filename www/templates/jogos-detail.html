@@ -3,13 +3,13 @@
     <ion-nav-back-button>
     </ion-nav-back-button>
     <ion-nav-buttons side="right" style="border:none!important;">
-      <button ng-if="vm.jogoEmAndamento();" ng-click="vm.finalizarPartida();" style="padding: 0px 10px;" class="button button-clear">FINALIZAR</button>
+      <!--<button ng-if="vm.jogoEmAndamento();" ng-click="vm.finalizarPartida();" style="padding: 0px 10px;" class="button button-clear">FINALIZAR</button>-->
       <button ng-if="vm.jogo.jogadores[vm.meuId]  && vm.jogoAgendado();" ng-click="vm.openChat();" style="padding: 0px 10px;" class="button button-icon button-clear ion-chatbubbles"></button>
       <button ng-if="vm.checkOrganizador() && vm.jogoAgendado();" ng-click="vm.maisOpcoes();" style="padding: 0px 15px;" class="button button-icon button-clear ion-android-more-vertical"></button>
     </ion-nav-buttons>
   </ion-nav-bar>
   <ion-content class="has-header">
-    <div ng-if="vm.jogoAgendado()">
+    <!--<div ng-if="vm.jogoAgendado()">-->
       <div class="header">
         <div class="row">
           <div class="col-50">
@@ -109,8 +109,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <div ng-if="vm.jogoEmAndamento()">
+    <!--</div>-->
+    <!--<div ng-if="vm.jogoEmAndamento()">
 
       <div class="row">
 
@@ -177,6 +177,6 @@
     </div>
     <div ng-if="vm.jogoEncerrado();">
       <h1>FINALIZADO</h1>
-    </div>
+    </div>-->
   </ion-content>
 </ion-view>

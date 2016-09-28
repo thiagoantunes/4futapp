@@ -19,8 +19,17 @@
           <img ng-src="{{menu.user.fotoPerfil}}" alt="" />
         </div>
         <div class="col">
-          <h4>{{menu.user.nome}}</h4>
-          <small><i class="icon ion-location"></i> {{menu.user.localizacao}}</small>
+          <div class="row">
+            <div class="col">
+              <h4>{{menu.user.nome}}</h4>
+              <small><i class="icon ion-location"></i> {{menu.user.localizacao}}</small>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <a menu-close href="#/app/criar-perfil" style="padding: 0px; margin-top: 10px;" class="button button-positive button-small button-clear"> Editar Perfil </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -44,11 +53,11 @@
         <ion-item menu-close href="#/app/seguindo-seguidores">
           <i class="icon ion-arrow-swap"></i> Seguindo/Seguidores
         </ion-item>
+        <!--<ion-item menu-close href="#/app/grupos">
+          <i class="icon ion-person-stalker"></i> Grupos
+        </ion-item>-->
         <ion-item menu-close href="#/app/mensagens">
           <i class="icon ion-chatbubbles"></i> Mensagens
-        </ion-item>
-        <ion-item menu-close href="#/app/configuracoes">
-          <i class="icon ion-ios-settings-strong"></i> Configurações
         </ion-item>
       </ion-list>
       <div ng-click="menu.logOut();" class="footer">

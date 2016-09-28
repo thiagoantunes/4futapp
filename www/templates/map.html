@@ -6,7 +6,7 @@
         </button>
         <h1 class="title"><img class="title-image" src="img/header-logo.png" width="151" height="43" /></h1>
         <!--<button style="right: 45px; position: absolute;" ng-click="vm.openFiltroModal();" class="button button-icon button-clear ion-android-funnel icon"></button>-->
-        <button ng-click="vm.jogosService.novaPartida = { data:{} };" ui-sref="app.criar-partida" class="button button-icon button-clear ion-android-add icon"></button>
+        <button ng-click="vm.criarPartida();" ui-sref="app.criar-partida" class="button button-icon button-clear ion-android-add icon"></button>
       </div>
       <!--<div class="bar bar-subheader">
         <div class="row">
@@ -18,14 +18,14 @@
           </div>
         </div>
       </div>-->
-      <div class="padding tipo-mapa" >
+      <div class="padding tipo-mapa" ng-if="vm.showTipoMapa">
         <div class="button-bar">
           <a class="small_button" ng-click="vm.toggleMarkers('arena');"  style="border-radius: 5px 0px 0px 5px !important; " grouped-radio="true" ng-model="vm.arenasView"> ARENAS</a>
           <a class="small_button" ng-click="vm.toggleMarkers('jogo');" style="border-radius: 0px 5px 5px 0px !important; " grouped-radio="false" ng-model="vm.arenasView"> PARTIDAS</a>
         </div>
       </div>
       <ion-slide-box ng-show="vm.showDetails" class="slide-markers item-animate" show-pager="false" on-slide-changed="vm.onSlideChange($index)">
-        <ion-slide ng-if="marker[vm.filtro.tipo] && marker.arena" ng-repeat="marker in $root.markers | orderBy:'distance '">
+        <ion-slide style="width: 90% !important" ng-if="marker[vm.filtro.tipo] && marker.arena" ng-repeat="marker in $root.markers | orderBy:'distance '">
           <div ng-click="vm.arenaService.arenaSelecionada = marker.data;" ui-sref="app.detalhes-arena({id: marker.$id})" href="#/app/arenas/{{marker.$id}}"
             class="row item-arena">
             <div class="col-20 avatar">
@@ -36,17 +36,17 @@
               <small>{{marker.data.endereco}}</small><br/>
               <small>{{marker.distance | number : 2}} km</small>
             </div>
-            <div class="col-20 find-on-map" ng-click="vm.acharNoMapa(marker); $event.stopPropagation();">
+            <!--<div class="col-20 find-on-map" ng-click="vm.acharNoMapa(marker); $event.stopPropagation();">
               <i class="icon ion-pinpoint positive"></i>
-            </div>
+            </div>-->
           </div>
         </ion-slide>
-        <ion-slide ng-if="marker[vm.filtro.tipo] && marker.jogo" ng-repeat="marker in $root.markers | orderBy:'distance '">
+        <ion-slide style="width: 90% !important" ng-if="marker[vm.filtro.tipo] && marker.jogo" ng-repeat="marker in $root.markers | orderBy:'distance '">
           <div ng-if="marker[vm.filtro.tipo] && marker.jogo" ng-click="vm.jogosService.jogoSelecionado = marker.data;" ui-sref="app.detalhes-jogo({id: marker.$id})"
             class="item-jogo">
             <div class="card" style="margin: 0px; padding:0 7px; background-color:transparent!important;">
               <div class="row" style="padding:0px 5px">
-                <div class="col-80">
+                <div class="col">
                   <div class="nome-jogo">{{marker.data.nome}}</div>
                   <span class="dia-jogo" ng-if="vm.jogoEmAndamento(marker.data.inicio);">Em andamento...</span>
                   <span class="dia-jogo" ng-if="vm.jogoAlgumasHoras(marker.data.inicio);" am-time-ago="marker.data.inicio"></span>
@@ -57,9 +57,9 @@
                   <span class="divider"><i class="icon ion-record"></i></span>
                   <span class="local-jogo">{{marker.data.local.nome}}</span>
                 </div>
-                <div class="col-20 find-on-map" ng-click="vm.acharNoMapa(marker); $event.stopPropagation();">
+                <!--<div class="col-20 find-on-map" ng-click="vm.acharNoMapa(marker); $event.stopPropagation();">
                   <i class="icon ion-pinpoint"></i>
-                </div>
+                </div>-->
               </div>
               <div class="row">
                 <div class="col-75">

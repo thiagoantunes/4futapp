@@ -168,18 +168,18 @@
             var deferred = $q.defer();
 
             if (service.position.length === 0) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    service.position = [position.coords.latitude, position.coords.longitude];
-                    setGeoQuery(service.position);
-                    watchPosition();
-                    deferred.resolve(service.position);
-                }, function (err) {
-                    isLocationAvailable();
-                });
+                // navigator.geolocation.getCurrentPosition(function (position) {
+                //     service.position = [position.coords.latitude, position.coords.longitude];
+                //     setGeoQuery(service.position);
+                //     watchPosition();
+                //     deferred.resolve(service.position);
+                // }, function (err) {
+                //     isLocationAvailable();
+                // });
 
-                // service.position = [-19.872510, -43.930562];
-                // setGeoQuery(service.position);
-                // deferred.resolve(service.position);
+                service.position = [-19.872510, -43.930562];
+                setGeoQuery(service.position);
+                deferred.resolve(service.position);
             }
             else{
                 deferred.resolve(service.position);

@@ -2,7 +2,7 @@
   <div class="bar bar-header">
     <button ng-click="vm.goBack()" class="button button-icon button-clear ion-android-arrow-back"></button>
     <div style="font-weight:bold" class="title"></div>
-    <button ng-if="vm.checkAmizade();" ng-click="vm.openChat();"  class="button button-icon button-clear ion-chatbubbles"></button>
+    <button ng-if="vm.checkAmizade();" ng-click="vm.openChat();" class="button button-icon button-clear ion-chatbubbles"></button>
     <button ng-if="!vm.checkAmizade();" ng-click="vm.addAmigo();" class="button button-icon button-clear ion-person-add"></button>
   </div>
   <ion-content>
@@ -17,20 +17,50 @@
     </div>
     <div class="info ">
         <div class="row ">
-            <div ng-click="vm.openListaJogadores('seguidores')" class="col text-center ">
+            <div ng-click="vm.openListaJogadores( 'seguidores') " class="col text-center ">
                 <span>{{ vm.getObjLength(vm.jogador.seguidores) }}</span>
                 <br/> Seguidores
             </div>
-            <div ng-click="vm.openListaJogadores('seguindo')" class="col text-center ">
+            <div ng-click="vm.openListaJogadores( 'seguindo') " class="col text-center ">
                 <span>{{ vm.getObjLength(vm.jogador.seguindo) }} </span>
                 <br/> Seguindo
             </div>
-            <div  class="col text-center ">
+            <!--<div  class="col text-center ">
                 <span>0</span>
                 <br/> Partidas
-            </div>
+            </div>-->
         </div>
     </div>
-    <button ng-if="!vm.meuPerfil && vm.checkAmizade();" ng-click="vm.removerAmigo();" class="button button-clear button-positive">Remover</button>
+    <div class="list">
+      <div class="item ">
+        <b>NOME</b>
+        <span class="item-note ">
+          {{vm.jogador.nome}}
+        </span>
+      </div>
+      <div class="item ">
+        <b>APELIDO</b>
+        <span class="item-note ">
+          {{vm.jogador.apelido}}
+        </span>
+      </div>
+      <div class="item ">
+        <b>IDADE</b>
+        <span class="item-note ">
+          {{vm.calculateAge(vm.jogador.dataNascimento) }}
+        </span>
+      </div>
+      <div class="item ">
+        <b>POSIÇÃO</b>
+        <span class="item-note ">
+          {{vm.jogador.posicao}}
+        </span>
+      </div>
+    </div>
+    <div class="text-center">
+      <button ng-if="!vm.meuPerfil && vm.checkAmizade(); " ng-click="vm.removerAmigo(); " class="button button-clear button-positive button-icon ion-sad-outline">
+         Deixar de Seguir
+      </button>
+    </div>
   </ion-content>
 </ion-view>

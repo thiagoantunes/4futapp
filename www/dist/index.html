@@ -29,7 +29,9 @@
         }, 500);
       });
   </script>
-    <script src="cordova.js"></script>
+  <script src="cordova.js"></script>
+
+  <script> var handleOpenURL = function(url){ setTimeout(function() { alert("received url: " + url); }, 50); } </script>
 
   <script src="dist_js/app.js"></script>
 

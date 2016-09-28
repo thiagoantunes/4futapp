@@ -4,9 +4,9 @@
     angular.module('main')
         .controller('MapCtrl', MapCtrl);
 
-    MapCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'ArenasService', 'JogosService', '$ionicHistory', '$window', 'GeoService', '$ionicSideMenuDelegate', '$ionicModal', '$ionicSlideBoxDelegate', '$location', '$ionicScrollDelegate', '$q'];
+    MapCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'ArenasService', 'JogosService', '$ionicHistory', '$window', 'GeoService', '$ionicSideMenuDelegate', '$ionicModal', '$ionicSlideBoxDelegate', '$location', '$ionicScrollDelegate', '$q', '$ionicLoading'];
 
-    function MapCtrl($scope, $rootScope, $timeout, ArenasService, JogosService, $ionicHistory, $window, GeoService, $ionicSideMenuDelegate, $ionicModal, $ionicSlideBoxDelegate, $location, $ionicScrollDelegate, $q) {
+    function MapCtrl($scope, $rootScope, $timeout, ArenasService, JogosService, $ionicHistory, $window, GeoService, $ionicSideMenuDelegate, $ionicModal, $ionicSlideBoxDelegate, $location, $ionicScrollDelegate, $q, $ionicLoading) {
         var vm = this;
         vm.arenaService = ArenasService;
         vm.jogosService = JogosService;
@@ -21,11 +21,13 @@
         vm.getLength = getLength;
         vm.toggleMarkers = toggleMarkers;
         vm.onSlideChange = onSlideChange;
+        vm.criarPartida = criarPartida;
 
         activate();
 
         function activate() {
             vm.showDetails = true;
+            vm.showTipoMapa = false;
             $ionicSlideBoxDelegate.update();
 
             if (isDevice() && !$rootScope.map) {
@@ -81,7 +83,7 @@
                 var mapPosition = new plugin.google.maps.LatLng(position[0], position[1]);
                 console.log('Map loaded');
                 $rootScope.map = map;
-                $rootScope.map.setMyLocationEnabled(true);
+                //$rootScope.map.setMyLocationEnabled(true);
                 $rootScope.markers = [];
                 $rootScope.map.animateCamera({
                     'target': mapPosition,
@@ -175,6 +177,7 @@
                         vm.filtro = {
                             tipo: 'arena'
                         };
+                        vm.showTipoMapa = true;
                         vm.arenasView = true;
                         $rootScope.map.trigger('category_change', vm.filtro.tipo);
                     }
@@ -297,6 +300,11 @@
             if (obj) {
                 return Object.keys(obj).length;
             }
+        }
+
+        function criarPartida() {
+            vm.jogosService.novaPartida = { data:{} };
+            $ionicLoading.show({ template: 'Carregando...' });
         }
 
     }

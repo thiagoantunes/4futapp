@@ -16,7 +16,7 @@
 
             // listen for Online event
             $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
-                $window.alert('Sem conexão com a internet.');
+                //$window.alert('Sem conexão com a internet.');
             });
 
             // listen for Offline event

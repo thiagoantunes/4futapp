@@ -1,5 +1,5 @@
 /*global Ionic cordova StatusBar firebase*/
-(function () {
+(function() {
     'use strict';
     var configFb = {
         apiKey: "AIzaSyCMgDkKuk3uMRhfIhcWTCgaCmOAqhDOoIY",
@@ -53,11 +53,11 @@
     function run($ionicPlatform, $state, Ref, $rootScope, UserService, $ionicLoading, $ionicDeploy) {
         firebase.auth().onAuthStateChanged(checkLogin);
 
-        $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
+        $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
             console.log(error);
         });
 
-        $ionicPlatform.onHardwareBackButton(function () {
+        $ionicPlatform.onHardwareBackButton(function() {
             console.log('back button');
         });
 
@@ -76,7 +76,7 @@
         //   });
         // }
 
-        $ionicPlatform.ready(function () {
+        $ionicPlatform.ready(function() {
             //$ionicAnalytics.register();
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -109,14 +109,14 @@
             //     }
             // });
 
-        }).then(function () {
+        }).then(function() {
             if (window.cordova) {
                 navigator.splashscreen.hide();
             }
         });
 
         // Load the facebook SDK asynchronously
-        (function () {
+        (function() {
             // If we've already installed the SDK, we're done
             if (document.getElementById('facebook-jssdk')) { return; }
 
@@ -141,9 +141,8 @@
                 $state.go('login');
             }
             else {
-                $state.go('app.map');
                 var providerData = {};
-                Ref.child('users/' + currentUser.uid).once('value', function (snap) {
+                Ref.child('users/' + currentUser.uid).once('value', function(snap) {
                     $ionicLoading.hide();
                     if (snap.val() === null || !snap.val().usuarioComum) {
                         providerData = _.find(currentUser.providerData, { 'providerId': 'facebook.com' });
@@ -153,7 +152,8 @@
                             fotoPerfil: providerData.photoURL,
                             email: providerData.email,
                             usuarioComum: true
-                        }, function () {
+                        }, function() {
+                            UserService.getCurrentUser(currentUser.uid);
                             UserService.refConfig.child(currentUser.uid).set({
                                 notificacoes: {
                                     confirmacaoPresenca: true,
@@ -171,11 +171,14 @@
                         });
                     }
                     else {
+
+                        $state.go('app.map');
+                        UserService.getCurrentUser(currentUser.uid);
                         providerData = _.find(currentUser.providerData, { 'providerId': 'facebook.com' });
                         console.log(providerData);
                         var user = snap.val();
                         user.fotoPerfil = providerData.photoURL;
-                        Ref.child('users/' + currentUser.uid).set(user, function () {
+                        Ref.child('users/' + currentUser.uid).set(user, function() {
                             UserService.setLocalizacaoJogador(currentUser.uid);
                         });
                         currentUser.updateProfile({
@@ -183,7 +186,7 @@
                             photoURL: providerData.photoURL,
                         });
                     }
-                }, function (errorObject) {
+                }, function(errorObject) {
                     $ionicLoading.hide();
                     console.log('The read failed: ' + errorObject.code);
                 });
@@ -282,7 +285,7 @@
                 templateUrl: 'startup-wizard.html',
                 controller: 'StartupCtrl as vm',
                 resolve: {
-                    user: ['UserService', function (UserService) {
+                    user: ['UserService', function(UserService) {
                         return UserService.getUserProfile(firebase.auth().currentUser.uid);
                     }]
                 }
@@ -294,12 +297,7 @@
                 url: '/app',
                 abstract: true,
                 templateUrl: 'menu.html',
-                controller: 'MenuCtrl as menu',
-                resolve: {
-                    currentUser: ['UserService', function (UserService) {
-                        return UserService.getCurrentUser();
-                    }]
-                }
+                controller: 'MenuCtrl as menu'
             })
 
             .state('app.map', {
@@ -405,6 +403,7 @@
             })
 
             .state('app.detalhes-jogador', {
+                cache: false,
                 url: '/perfilJogador/:id',
                 views: {
                     'menuContent': {
@@ -436,6 +435,16 @@
                 }
             })
 
+            .state('app.criar-perfil', {
+                url: '/criar-perfil',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'criar-perfil.html',
+                        controller: 'CriarPerfilCtrl as vm',
+                    }
+                }
+            })
+
 
 
             .state('app.chat', {
@@ -449,6 +458,7 @@
             })
 
             .state('app.listaJogadores', {
+                cache: false,
                 url: '/lista-jogadores/:tipoLista',
                 views: {
                     'menuContent': {
@@ -464,7 +474,7 @@
     }
 
     function defaultImage() {
-        return function (input, param) {
+        return function(input, param) {
             if (!input) {
                 return 'img/avatar_placeholder.jpg';
             }
@@ -473,7 +483,7 @@
     }
 
     function tel() {
-        return function (tel) {
+        return function(tel) {
             console.log(tel);
             if (!tel) { return ''; }
 

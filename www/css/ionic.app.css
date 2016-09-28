@@ -12,6 +12,15 @@
 .item-divider {
   border: none !important; }
 
+.button.button-light.button-outline {
+  color: #7C8585 !important; }
+
+.list label {
+  background: #fff !important; }
+
+input[disabled], select[disabled], textarea[disabled], input[readonly]:not(.cloned-text-input), textarea[readonly]:not(.cloned-text-input), select[readonly] {
+  background: #fff !important; }
+
 /*!
   Ionicons, v2.0.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/
@@ -17339,7 +17348,7 @@ For example, you might change some of the default colors:
   border: 5px solid rgba(242, 245, 245, 0.9) !important; }
 
 .modal-arena {
-  background-color: rgba(242, 245, 245, 0.9) !important; }
+  background-color: #F2F5F5; }
   .modal-arena .subheader {
     background-color: #22D59E;
     padding: 20px 30px 10px 20px; }
@@ -17347,7 +17356,7 @@ For example, you might change some of the default colors:
       font-size: 1.6em;
       margin-right: 10px; }
     .modal-arena .subheader h1, .modal-arena .subheader h2, .modal-arena .subheader h3, .modal-arena .subheader h4, .modal-arena .subheader h5, .modal-arena .subheader h6 {
-      color: #00303D;
+      color: #fff;
       margin: 0px 5px; }
   .modal-arena .button-bar {
     margin-top: 10px;
@@ -17499,6 +17508,8 @@ For example, you might change some of the default colors:
   .criar-partida input[type="text"] {
     border-bottom-color: #fff !important;
     color: #fff !important; }
+  .criar-partida h1, .criar-partida h2, .criar-partida h3, .criar-partida h4, .criar-partida h5, .criar-partida h6, .criar-partida .h1, .criar-partida .h2, .criar-partida .h3, .criar-partida .h4, .criar-partida .h5, .criar-partida .h6 {
+    color: #fff; }
   .criar-partida .bar-header .back-button {
     display: none !important; }
   .criar-partida .step-nome .nome-input {
@@ -18135,7 +18146,7 @@ ion-side-menu ion-content {
       padding-right: 22px; }
   #map-view .item-jogo {
     background: #fff;
-    padding-top: 15px;
+    padding-top: 5px;
     height: 130px; }
     #map-view .item-jogo .card {
       box-shadow: none; }

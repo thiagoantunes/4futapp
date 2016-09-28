@@ -2,6 +2,7 @@
   'use strict';
   angular.module('main')
     .controller('PerfilCtrl', PerfilCtrl)
+    .controller('CriarPerfilCtrl', CriarPerfilCtrl)
     .controller('SeguindoSeguidoresCtrl', SeguindoSeguidoresCtrl)
     .controller('PerfilJogadorCtrl', PerfilJogadorCtrl)
     .controller('ListaJogadoresCtrl', ListaJogadoresCtrl)
@@ -10,6 +11,7 @@
     .controller('ConfigCtrl', ConfigCtrl);
 
   PerfilCtrl.$inhect = ['selectedUser', '$state', '$timeout', '$stateParams', 'ionicMaterialMotion', 'ionicMaterialInk', 'UserService', '$ionicPopup'];
+  CriarPerfilCtrl.$inhect = ['$scope', 'UserService'];
   SeguindoSeguidoresCtrl.$inhect = ['$state', 'UserService', '$stateParams', '$ionicHistory'];
   PerfilJogadorCtrl.$inhect = ['$state', '$timeout', 'ionicMaterialMotion', 'ionicMaterialInk', 'UserService', 'ChatService', '$ionicPopup', '$ionicModal', '$ionicHistory'];
   ListaJogadoresCtrl.$inhect = ['$state', 'UserService', '$stateParams', '$ionicHistory'];
@@ -56,6 +58,46 @@
         console.log(error);
       });
     }
+  }
+
+  function CriarPerfilCtrl($scope, UserService) {
+    var vm = this;
+    vm.openDatePicker = openDatePicker;
+
+    activate();
+
+    function activate() {
+      UserService.meuPerfil.$bindTo($scope, 'user');
+      UserService.getConfiguracao().$bindTo($scope, 'config');
+    }
+
+    $scope.$watch('user.dataNascimento', function () {
+      vm.dataNascimentoFormatada = moment($scope.user.dataNascimento).format('DD/MM/YYYY');
+    });
+
+    function openDatePicker() {
+      var options = {
+        date: new Date(),
+        mode: 'date',
+        locale: 'pt_br',
+        doneButtonLabel: 'Ok',
+        cancelButtonLabel: 'Cancelar',
+        allowOldDates: true,
+        androidTheme: 4,
+        okText: 'Ok',
+        cancelText: 'Cancelar',
+      };
+      datePicker.show(options, function (date) {
+        $scope.$apply(function () {
+          var activeElement = document.activeElement;
+          if (activeElement) {
+            activeElement.blur();
+          }
+          $scope.user.dataNascimento = moment(date)._d.getTime();
+        });
+      });
+    }
+
   }
 
   function SeguindoSeguidoresCtrl($state, UserService, $stateParams, $ionicHistory) {
@@ -128,6 +170,7 @@
     vm.getObjLength = getObjLength;
     vm.openListaJogadores = openListaJogadores;
     vm.openChat = openChat;
+    vm.calculateAge = calculateAge;
 
     activate();
 
@@ -180,6 +223,12 @@
       $state.go('app.chat', { id: vm.jogador.$id, tipoChat: 'jogador' });
     }
 
+    function calculateAge(birthday) { // birthday is a date
+      if (birthday) {
+        return moment().diff(moment(birthday), 'years') + ' anos';
+      }
+    }
+
     // Set Motion
     $timeout(function () {
       ionicMaterialMotion.slideUp({
@@ -219,22 +268,26 @@
 
     function getSeguidores() {
       vm.viewTitle = 'SEGUIDORES';
-      var ids = Object.keys(UserService.jogadorSelecionado.seguidores).map(function (key) {
-        return UserService.jogadorSelecionado.seguidores[key];
-      });
-      UserService.getListaJogadores(ids).then(function (list) {
-        vm.jogadores = list;
-      });
+      if (UserService.jogadorSelecionado.seguidores) {
+        var ids = Object.keys(UserService.jogadorSelecionado.seguidores).map(function (key) {
+          return UserService.jogadorSelecionado.seguidores[key];
+        });
+        UserService.getListaJogadores(ids).then(function (list) {
+          vm.jogadores = list;
+        });
+      }
     }
 
     function getSeguindo() {
       vm.viewTitle = 'SEGUINDO';
-      var ids = Object.keys(UserService.jogadorSelecionado.seguindo).map(function (key) {
-        return UserService.jogadorSelecionado.seguindo[key];
-      });
-      UserService.getListaJogadores(ids).then(function (list) {
-        vm.jogadores = list;
-      });
+      if (UserService.jogadorSelecionado.seguindo) {
+        var ids = Object.keys(UserService.jogadorSelecionado.seguindo).map(function (key) {
+          return UserService.jogadorSelecionado.seguindo[key];
+        });
+        UserService.getListaJogadores(ids).then(function (list) {
+          vm.jogadores = list;
+        });
+      }
     }
 
     function getJogadoresRegiao() {

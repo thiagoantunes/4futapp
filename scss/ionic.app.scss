@@ -40,6 +40,18 @@ $item-divider-color:              $base-color !default;
     border: none !important;
 }
 
+.button.button-light.button-outline {
+    color: $base-color !important;
+}
+
+.list label{
+    background: $light !important;
+}
+
+input[disabled], select[disabled], textarea[disabled], input[readonly]:not(.cloned-text-input), textarea[readonly]:not(.cloned-text-input), select[readonly] {
+    background: $light !important;
+}
+
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../fonts" !default;
 
@@ -269,7 +281,7 @@ ion-side-menu{
     .item-jogo{
         background: $light;
         //color:  #333;
-        padding-top: 15px;
+        padding-top: 5px;
         height: 130px;
 
         .card{

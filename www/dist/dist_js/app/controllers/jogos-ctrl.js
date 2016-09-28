@@ -206,6 +206,10 @@
         vm.compartilharWhatsapp = compartilharWhatsapp;
         vm.compartilharEmail = compartilharEmail;
 
+        $scope.$on('$ionicView.enter', function () {
+            $ionicLoading.hide();
+        });
+
         activate();
 
         function activate() {
